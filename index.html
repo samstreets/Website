@@ -3,45 +3,58 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Streets Services</title>
-    <link rel="icon" type="image/x-icon" href="pictures/icon.png">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="description" content="Streets Services - Your Personal IT Hub. Professional IT support and tools.">
+    <meta name="author" content="Sam Streets">
+    <meta name="theme-color" content="#3b82f6">
+    
+    <title>Streets Services - Your Personal IT Hub</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="pictures/icon.png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 </head>
 <body>
+    <!-- Header -->
     <header class="main-header">
         <div class="header-content">
-            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon">
+            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="40" height="40">
             <h1>Streets Services</h1>
         </div>
         <p class="tagline">Your Personal IT Hub</p>
     </header>
 
-    <nav class="main-nav">
+    <!-- Navigation -->
+    <nav class="main-nav" aria-label="Main navigation">
         <a href="#about" class="nav-link">About</a>
-        <a href="#services" class="nav-link">Services</a>
         <a href="#tools" class="nav-link">Tools</a>
     </nav>
 
+    <!-- Main Content -->
     <main class="container">
         <!-- About Section -->
         <section id="about" class="content-section">
-            <div class="section-header" onclick="toggleSection('about-content')">
+            <div class="section-header" onclick="toggleSection('about-content')" aria-label="About section toggle">
                 <h2>About Me</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="about-content" class="section-content active">
                 <div class="about-grid">
-                    <div class="about-card">
+                    <article class="about-card">
                         <h3>Introduction</h3>
                         <p>Hello! My name is Sam, and this is my personal website. I'm passionate about IT and enjoy the outdoors. I'm a Senior First Line Support Engineer with experience since 2019.</p>
-                    </div>
+                    </article>
                     
-                    <div class="about-card">
+                    <article class="about-card">
                         <h3>Background</h3>
                         <p>I have a background in support desk and onsite support. I also run the scouts section of 4th Kenilworth Scouts, managing their Office 365 environment.</p>
-                    </div>
+                    </article>
 
-                    <div class="about-card">
+                    <article class="about-card">
                         <h3>Key Responsibilities</h3>
                         <ul>
                             <li>Monitoring Backups</li>
@@ -52,9 +65,9 @@
                             <li>User provisioning and Office 365 setup</li>
                             <li>Server migrations</li>
                         </ul>
-                    </div>
+                    </article>
 
-                    <div class="about-card">
+                    <article class="about-card">
                         <h3>Skills & Technologies</h3>
                         <ul>
                             <li>Active Directory (Local & Azure)</li>
@@ -66,9 +79,9 @@
                             <li>Cloudflare Tunnels and ZeroTrust</li>
                             <li>Basic Linux and Docker skills</li>
                         </ul>
-                    </div>
+                    </article>
 
-                    <div class="about-card">
+                    <article class="about-card">
                         <h3>Interests</h3>
                         <ul>
                             <li>Home Lab</li>
@@ -76,39 +89,39 @@
                             <li>Movies and TV Shows</li>
                             <li>Fitness & Gym</li>
                         </ul>
-                    </div>
+                    </article>
 
-                    <div class="about-card">
+                    <article class="about-card">
                         <h3>Home Lab</h3>
                         <p>I've been developing my home lab over the years. It consists of 2 servers: a large machine running file share and Hyper-V, and a smaller machine running Plex for streaming photos and media.</p>
-                    </div>
+                    </article>
                 </div>
 
                 <div class="contact-section">
                     <h3>Contact</h3>
-                    <p>Feel free to reach out at <a href="mailto:sam@streetsservices.co.uk">sam@streetsservices.co.uk</a> or connect on <a href="https://www.linkedin.com/in/sam-streets-535a90187/" target="_blank">LinkedIn</a>.</p>
+                    <p>Feel free to reach out at <a href="mailto:sam@streetsservices.co.uk">sam@streetsservices.co.uk</a> or connect on <a href="https://www.linkedin.com/in/sam-streets-535a90187/" target="_blank" rel="noopener noreferrer">LinkedIn</a>.</p>
                 </div>
             </div>
         </section>
 
         <!-- Tools & Utilities -->
         <section id="tools" class="content-section">
-            <div class="section-header" onclick="toggleSection('tools-content')">
+            <div class="section-header" onclick="toggleSection('tools-content')" aria-label="Tools section toggle">
                 <h2>Tools & Utilities</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="tools-content" class="section-content">
                 <div class="service-grid">
-                    <a href="food.html" class="service-card">
-                        <img src="pictures/food.png" alt="Food Generator">
+                    <a href="food.html" class="service-card" aria-label="Food Generator Tool">
+                        <img src="pictures/food.png" alt="" width="80" height="80">
                         <span>Food Generator</span>
                     </a>
-                    <a href="jackbox.html" class="service-card">
-                        <img src="pictures/jackbox.png" alt="Jackbox">
+                    <a href="jackbox.html" class="service-card" aria-label="Jackbox Games Information">
+                        <img src="pictures/jackbox.png" alt="" width="80" height="80">
                         <span>Jackbox Games</span>
                     </a>
-                    <a href="price-tb.html" class="service-card">
-                        <img src="pictures/price.png" alt="Price Calculator">
+                    <a href="price-tb.html" class="service-card" aria-label="Price per TB Calculator">
+                        <img src="pictures/price.png" alt="" width="80" height="80">
                         <span>Price per TB</span>
                     </a>
                 </div>
@@ -116,10 +129,12 @@
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="main-footer">
         <p>&copy; 2024 Sam Streets. All rights reserved.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Scripts -->
+    <script src="app.js"></script>
 </body>
 </html>
