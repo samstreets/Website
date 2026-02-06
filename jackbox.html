@@ -3,111 +3,25 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Complete guide to Jackbox Party Packs with game information and player counts.">
     <title>Jackbox Party Packs - Streets Services</title>
-    <link rel="icon" type="image/x-icon" href="pictures/icon.png">
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <style>
-        .game-card {
-            background: var(--background-dark);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 4px solid var(--primary-color);
-            margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .game-card:hover {
-            border-left-color: var(--accent-color);
-            transform: translateX(5px);
-        }
-
-        .game-card h3 {
-            color: var(--accent-color);
-            margin-bottom: 0.5rem;
-            font-size: 1.3rem;
-        }
-
-        .game-card .player-count {
-            display: inline-block;
-            background: var(--primary-color);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .game-card p {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin: 0;
-        }
-
-        .pack-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .pack-header h3 {
-            color: white;
-            margin: 0;
-            font-size: 1.5rem;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            background: var(--background-card);
-            transition: all 0.3s ease;
-            margin-bottom: 2rem;
-        }
-
-        .back-link:hover {
-            background: var(--background-hover);
-            transform: translateX(-5px);
-        }
-
-        .intro-text {
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 2rem;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-
-        @media (max-width: 768px) {
-            .game-card {
-                padding: 1.25rem;
-            }
-
-            .pack-header h3 {
-                font-size: 1.3rem;
-            }
-        }
-    </style>
+    <link rel="icon" type="image/png" href="pictures/icon.png">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Header -->
     <header class="main-header">
         <div class="header-content">
-            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon">
+            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="40" height="40">
             <h1>Jackbox Party Packs</h1>
         </div>
         <p class="tagline">Game Information & Player Counts</p>
     </header>
 
+    <!-- Main Content -->
     <main class="container">
         <a href="index.html" class="back-link">
-            <span>←</span>
+            <span aria-hidden="true">←</span>
             <span>Back to Home</span>
         </a>
 
@@ -120,38 +34,38 @@
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('pack1-content')">
                 <h2>🎮 Jackbox Party Pack 1</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="pack1-content" class="section-content">
-                <div class="game-card">
+                <article class="game-card">
                     <h3>YOU DON'T KNOW JACK 2015</h3>
                     <span class="player-count">👥 1-4 Players</span>
                     <p>The comedy trivia sensation returns with hundreds of new questions that you can tackle on a night in by yourself or when you're joined by friends.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Fibbage XL</h3>
                     <span class="player-count">👥 2-8 Players</span>
                     <p>The hilarious bluffing game now has 50% more questions added to the original hit game, Fibbage. Convince your friends that you know the answers to odd trivia questions OR aim to win the Thumbs Cup with the funniest answer.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Drawful</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The first installment of the wildly popular drawing game allows you to draw bizarre doodles on your phone or tablet.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Word Spud</h3>
                     <span class="player-count">👥 2-8 Players</span>
                     <p>Test your vocabulary chops in the racy-as-you-want-it-to-be fill-in-the-blank word game.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Lie Swatter</h3>
                     <span class="player-count">👥 1-100 Players</span>
                     <p>Need a game for a big group? Grab yourself or a crowd and play true-or-false with a timer. Don't get swatted in this wacky fact-filled game!</p>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -159,38 +73,38 @@
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('pack2-content')">
                 <h2>🎮 Jackbox Party Pack 2</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="pack2-content" class="section-content">
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Fibbage 2</h3>
                     <span class="player-count">👥 2-8 Players</span>
                     <p>The runaway hit bluffing game with over 500 brand-new questions, more than 2x the original! Plus new features, like the deFIBrillator!</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Earwax</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The hear-larious sound-effects game that will leave you up to your ears in laughter! Cow moo? Huge explosion? Or tiny fart? Which to choose?</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Bidiots</h3>
                     <span class="player-count">👥 3-6 Players</span>
                     <p>The absurd art auction game where you draw right there on your phone or tablet. Outbid your opponents for weird art pieces – drawn by players themselves – and win this strangely competitive auction game! Don't be a bidiot!</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Quiplash XL</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The say-anything, gut-busting Quiplash XL, which includes everything in Quiplash, Quip Pack 1, AND over 100 brand-new prompts!</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Bomb Corp.</h3>
                     <span class="player-count">👥 1-4 Players</span>
                     <p>The bomb-defusing nailbiter of a party game! As interns at Bomb Corp., you must defuse random bombs in the office in order to keep your jobs. You'll probably die, but it'll be good work experience!</p>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -198,38 +112,38 @@
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('pack3-content')">
                 <h2>🎮 Jackbox Party Pack 3</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="pack3-content" class="section-content">
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Quiplash 2</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The say-anything sequel. Play all new questions or make your own!</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Trivia Murder Party</h3>
                     <span class="player-count">👥 1-8 Players</span>
                     <p>A deadly quiz show where you match wits with a trivia-obsessed killer.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Guesspionage</h3>
                     <span class="player-count">👥 2-8 Players</span>
                     <p>The brain-battering data-mining guessing game.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Tee K.O.</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The t-shirt slugfest where you battle your custom t-shirts to the death!</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Fakin' It</h3>
                     <span class="player-count">👥 3-6 Players</span>
                     <p>One of your friends has something to hide in this sneaky game for tricksters.</p>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -237,38 +151,38 @@
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('pack4-content')">
                 <h2>🎮 Jackbox Party Pack 4</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="pack4-content" class="section-content">
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Fibbage 3</h3>
                     <span class="player-count">👥 2-8 Players</span>
                     <p>The blanking fun sequel with all-new question types and the game mode Fibbage: Enough About You where you guess the weird facts about your friends.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Survive the Internet</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The web-based frame game where you twist your friends' "online" comments in hilarious ways.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Monster Seeking Monster</h3>
                     <span class="player-count">👥 3-7 Players</span>
                     <p>The spooky date-a-thon where you message and date fellow monsters with special powers.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Bracketeering</h3>
                     <span class="player-count">👥 3-16 Players</span>
                     <p>The deranged debate match where you place smart bets on stupid arguments.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Civic Doodle</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The one-up art game where you compete to improve the town murals.</p>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -276,38 +190,38 @@
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('pack5-content')">
                 <h2>🎮 Jackbox Party Pack 5</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="pack5-content" class="section-content">
-                <div class="game-card">
+                <article class="game-card">
                     <h3>You Don't Know Jack: Full Stream</h3>
                     <span class="player-count">👥 1-8 Players</span>
                     <p>The pop-culture trivia mash-up YOU DON'T KNOW JACK: Full Stream. The classic returns, full of wild new surprises.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Split The Room</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The what-if game Split the Room. Create strange and divisive hypothetical situations.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Mad Verse City</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The lyric-writing game Mad Verse City. Channel your inner MC as a rap battling robot.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Patently Stupid</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The competitive drawing game Patently Stupid. Create odd inventions to solve bizarre problems.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Zeeple Dome</h3>
                     <span class="player-count">👥 1-6 Players</span>
                     <p>The deadliest game show in the Crab Nebula, Zeeple Dome! Fling yourself at bloodthirsty aliens to win millions of Zubabucks!</p>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -315,38 +229,38 @@
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('pack6-content')">
                 <h2>🎮 Jackbox Party Pack 6</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="pack6-content" class="section-content">
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Trivia Murder Party 2</h3>
                     <span class="player-count">👥 1-8 Players</span>
                     <p>The popular trivia deathmatch Trivia Murder Party 2. Try to survive the bizarre new minigames.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Role Models</h3>
                     <span class="player-count">👥 3-6 Players</span>
                     <p>The offbeat personality test Role Models. Find out who you really are. (Or at least what your friends think of you.)</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Joke Boat</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The comedy contest Joke Boat. Craft one-liners for a cruise ship talent show.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Dictionarium</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The weird word circus Dictionarium. May the funniest definition win.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Push The Button</h3>
                     <span class="player-count">👥 4-10 Players</span>
                     <p>The hidden identity game Push The Button. Can you discover the aliens in time?</p>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -354,38 +268,38 @@
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('pack7-content')">
                 <h2>🎮 Jackbox Party Pack 7</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="pack7-content" class="section-content">
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Quiplash 3</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The say-anything threequel Quiplash 3. It's a head-to-head battle of the wits as you give hilarious responses to quirky prompts while everyone else votes for their favorite!</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>The Devils and the Details</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The collaborative chaos game The Devils and the Details. You're a family of devils working together to survive in suburbia. Can you handle the daily torture of human life?</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Champ'd Up</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The drawing fighting game Champ'd Up. Create absurd characters that will battle over unusual titles. Can you take down the heavy favorite?</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Talking Points</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The on-the-spot public-speaking game Talking Points. Give a speech responding to picture slides you've never seen before or be the Assistant and approve pictures as fast as you can. Just keep talking whether it makes sense or not.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Blather 'Round</h3>
                     <span class="player-count">👥 2-6 Players</span>
                     <p>The pop culture guessing game Blather Round. Describe your secret prompt with a very limited vocabulary and hope that someone can figure it out in time. It's a "GOOD" "FUN TIME" "EXPERIENCE."</p>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -393,38 +307,38 @@
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('pack8-content')">
                 <h2>🎮 Jackbox Party Pack 8</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="pack8-content" class="section-content">
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Drawful Animate</h3>
                     <span class="player-count">👥 3-10 Players</span>
                     <p>It's alive! The guessing game with terrible drawings and hilariously wrong answers makes a dynamic return. In this revamped title, players create looping, two-frame animations based on weird and random titles.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Job Job</h3>
                     <span class="player-count">👥 3-10 Players</span>
                     <p>Use other people's words to create unique and funny answers to classic job interview questions. Go head to head to see who scores the job!</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>The Poll Mine</h3>
                     <span class="player-count">👥 2-10 Players</span>
                     <p>A survey game that's all about YOU! Split into teams and see who can escape from the witch's lair! Players individually rank their choices to a difficult question, then must guess how the group answered as a whole. How well do you know your friends?!</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Weapons Drawn</h3>
                     <span class="player-count">👥 4-8 Players</span>
                     <p>A social deduction game where everyone is both a murderer and a detective. Players doodle all the clues, hiding a letter from their name in the weapon drawings. Can you solve murders while trying to get away with your own?</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>The Wheel of Enormous Proportions</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>Trivia has never been so large! A fantastic, mystical wheel challenges you with a variety of trivia prompts. Winners are awarded slices of the Wheel's face with a chance to win big with each nail-biting spin. In the end, one player will have their most burning question answered by the great Wheel.</p>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -432,38 +346,38 @@
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('pack9-content')">
                 <h2>🎮 Jackbox Party Pack 9</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="pack9-content" class="section-content">
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Fibbage 4</h3>
                     <span class="player-count">👥 2-8 Players</span>
                     <p>The hilarious bluffing party game returns with an all new Final Fibbage, video questions, fan-submitted questions, and Fibbage Enough About You mode! It's a game so beloved that we decided to slap a 4 on it.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Quixort</h3>
                     <span class="player-count">👥 1-10 Players</span>
                     <p>In this trivia sorting factory, work with your team to sort falling answers into their proper order before they hit the floor! Or, play the single player mode and see how many blocks you can sort before topping out. It's as easy as A, C, B!</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Junktopia</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>A strange wizard has turned you into a frog! Create hilarious backstories for weird objects and then get them appraised. The player with the most valuable items becomes human again!</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Nonsensory</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>Professor Nanners is here to test your NSP (Nonsensory Perception) in this drawing, writing, and guessing game! How close can you get to guessing where another player's prompt ranks on the silliest of scales?</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Roomerang</h3>
                     <span class="player-count">👥 4-9 Players</span>
                     <p>Channel your inner reality TV star in an attempt to come out on top! Respond to prompts, bring the competition and role-play to avoid being voted out. Never fear though, even when you're out you'll find yourself Roomerang-ed right back into the drama!</p>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -471,46 +385,48 @@
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('pack10-content')">
                 <h2>🎮 Jackbox Party Pack 10</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="pack10-content" class="section-content">
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Fixy Text</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>Ever wished someone would answer your texts for you? Imagined the masterful comebacks you and your friends would create if you mashed all your brains together? You're in luck! This game lets you play out that fantasy with all of the chaos, and none of the backlash!</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Tee K.O. 2</h3>
                     <span class="player-count">👥 3-8 Players</span>
                     <p>The fan-favorite fashion throw down returns! Create the ultimate garment out of your own weird drawings and slogans, then send it into battle. But with new drawing tools, new clothing options like hoodies and tank tops, and a new button-pounding final round… who will emerge as the next champion of Tee Shirt Island?</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Dodo Re Mi</h3>
                     <span class="player-count">👥 1-9 Players</span>
                     <p>Hello gorgeous nature. Welcome to an uncharted jungle, inhabited by musical birds who play songs for a carnivorous plant that MIGHT eat them, if they don't play their notes accurately. Are they dodos? No. Did they evolve from dodos? Maybe…don't overthink it. We didn't.</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Timejinx</h3>
                     <span class="player-count">👥 1-8 Players</span>
                     <p>What would you do if you had a time machine? Would you go back and try to fix some mistakes? Would you travel into the future to see who you've become? No, of course not! You'd use it to play an immersive trivia game!</p>
-                </div>
+                </article>
 
-                <div class="game-card">
+                <article class="game-card">
                     <h3>Hypnotorious</h3>
                     <span class="player-count">👥 4-8 Players</span>
                     <p>HYPNOSIS, TEAMWORK AND HIDDEN IDENTITIES!!! In Hypnotorious, players are attending a hypnotist's show, where, as you might expect, they get hypnotized. Each player will take on a new, unique identity such as Frankenstein, a snowman or a carrot. They will then be asked to answer questions as their character would.</p>
-                </div>
+                </article>
             </div>
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="main-footer">
         <p>&copy; 2024 Sam Streets. All rights reserved.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Scripts -->
+    <script src="app.js"></script>
 </body>
 </html>
