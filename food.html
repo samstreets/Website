@@ -3,166 +3,36 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Can't decide what to eat? Use our food generator for random meal ideas.">
     <title>Food Generator - Streets Services</title>
-    <link rel="icon" type="image/x-icon" href="pictures/icon.png">
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <style>
-        .generator-section {
-            background: var(--background-dark);
-            padding: 2rem;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            border: 2px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-
-        .generator-section:hover {
-            border-color: var(--primary-color);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-        }
-
-        .generator-section h3 {
-            color: var(--accent-color);
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-            text-align: center;
-        }
-
-        .generator-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .generator-button {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .generator-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
-        }
-
-        .generator-button:active {
-            transform: translateY(0);
-        }
-
-        .result-display {
-            background: var(--background-card);
-            border: 2px solid var(--primary-color);
-            padding: 1.5rem;
-            border-radius: 8px;
-            font-size: 1.5rem;
-            text-align: center;
-            color: var(--text-primary);
-            font-weight: 600;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            max-width: 300px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .result-display:empty:before {
-            content: "Click button to generate";
-            color: var(--text-secondary);
-            font-size: 1rem;
-            font-weight: normal;
-        }
-
-        .result-display.animate {
-            animation: pulse 0.5s ease;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        .generators-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 1rem;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            background: var(--background-card);
-            transition: all 0.3s ease;
-            margin-bottom: 2rem;
-        }
-
-        .back-link:hover {
-            background: var(--background-hover);
-            transform: translateX(-5px);
-        }
-
-        @media (max-width: 768px) {
-            .generators-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .generator-button {
-                font-size: 1rem;
-                padding: 0.875rem 1.5rem;
-            }
-
-            .result-display {
-                font-size: 1.25rem;
-                min-height: 70px;
-            }
-        }
-    </style>
+    <link rel="icon" type="image/png" href="pictures/icon.png">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Header -->
     <header class="main-header">
         <div class="header-content">
-            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon">
+            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="40" height="40">
             <h1>Food Generator</h1>
         </div>
         <p class="tagline">Can't Decide What to Eat? Let Us Help!</p>
     </header>
 
+    <!-- Main Content -->
     <main class="container">
         <a href="index.html" class="back-link">
-            <span>←</span>
+            <span aria-hidden="true">←</span>
             <span>Back to Home</span>
         </a>
 
+        <!-- Info Section -->
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('info-content')">
                 <h2>About This Tool</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="info-content" class="section-content active">
-                <p style="color: var(--text-secondary); line-height: 1.8;">
+                <p class="intro-text">
                     Use this tool to generate random meal ideas when you can't decide what to eat! 
                     Choose from lunch options, dinner ideas, meal deals, or places to go out. 
                     Each category has been carefully curated with delicious options to make your decision easier.
@@ -170,68 +40,70 @@
             </div>
         </section>
 
+        <!-- Generators Section -->
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('generators-content')">
                 <h2>Food Generators</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="generators-content" class="section-content active">
                 <div class="generators-grid">
                     <!-- Lunch Generator -->
-                    <div class="generator-section">
+                    <article class="generator-section">
                         <h3>🥪 Lunch Ideas</h3>
                         <div class="generator-controls">
-                            <button class="generator-button" onclick="generateLunch()">
+                            <button class="generator-button" onclick="generateLunch()" aria-label="Generate random lunch idea">
                                 Generate Random Lunch
                             </button>
-                            <div id="lunch-result" class="result-display"></div>
+                            <div id="lunch-result" class="result-display" role="status" aria-live="polite"></div>
                         </div>
-                    </div>
+                    </article>
 
                     <!-- Dinner Generator -->
-                    <div class="generator-section">
+                    <article class="generator-section">
                         <h3>🍽️ Dinner Ideas</h3>
                         <div class="generator-controls">
-                            <button class="generator-button" onclick="generateDinner()">
+                            <button class="generator-button" onclick="generateDinner()" aria-label="Generate random dinner idea">
                                 Generate Random Dinner
                             </button>
-                            <div id="dinner-result" class="result-display"></div>
+                            <div id="dinner-result" class="result-display" role="status" aria-live="polite"></div>
                         </div>
-                    </div>
+                    </article>
 
                     <!-- Meal Deal Generator -->
-                    <div class="generator-section">
+                    <article class="generator-section">
                         <h3>💰 Meal Deals</h3>
                         <div class="generator-controls">
-                            <button class="generator-button" onclick="generateMealDeal()">
+                            <button class="generator-button" onclick="generateMealDeal()" aria-label="Generate random meal deal">
                                 Generate Random Meal Deal
                             </button>
-                            <div id="meal-deal-result" class="result-display"></div>
+                            <div id="meal-deal-result" class="result-display" role="status" aria-live="polite"></div>
                         </div>
-                    </div>
+                    </article>
 
                     <!-- Go Out Generator -->
-                    <div class="generator-section">
+                    <article class="generator-section">
                         <h3>🏪 Places to Go Out</h3>
                         <div class="generator-controls">
-                            <button class="generator-button" onclick="generateOut()">
+                            <button class="generator-button" onclick="generateOut()" aria-label="Generate random place to eat out">
                                 Generate Random Place
                             </button>
-                            <div id="out-result" class="result-display"></div>
+                            <div id="out-result" class="result-display" role="status" aria-live="polite"></div>
                         </div>
-                    </div>
+                    </article>
                 </div>
             </div>
         </section>
 
+        <!-- Options Section -->
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('options-content')">
                 <h2>Available Options</h2>
-                <span class="toggle-icon">▼</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="options-content" class="section-content">
                 <div class="about-grid">
-                    <div class="about-card">
+                    <article class="about-card">
                         <h3>Lunch Options</h3>
                         <ul>
                             <li>Wraps</li>
@@ -246,9 +118,9 @@
                             <li>Fried Egg Sandwich</li>
                             <li>Go Out</li>
                         </ul>
-                    </div>
+                    </article>
 
-                    <div class="about-card">
+                    <article class="about-card">
                         <h3>Dinner Options</h3>
                         <ul>
                             <li>Burgers</li>
@@ -268,18 +140,18 @@
                             <li>Stuffed Garlic Baguettes</li>
                             <li>Go Out</li>
                         </ul>
-                    </div>
+                    </article>
 
-                    <div class="about-card">
+                    <article class="about-card">
                         <h3>Meal Deal Options</h3>
                         <ul>
                             <li>Sausage & Mash</li>
                             <li>Chicken Korma</li>
                             <li>Meatballs & Pasta</li>
                         </ul>
-                    </div>
+                    </article>
 
-                    <div class="about-card">
+                    <article class="about-card">
                         <h3>Restaurant Options</h3>
                         <ul>
                             <li>McDonald's</li>
@@ -289,59 +161,18 @@
                             <li>Green King</li>
                             <li>Weatherspoon's</li>
                         </ul>
-                    </div>
+                    </article>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="main-footer">
         <p>&copy; 2024 Sam Streets. All rights reserved.</p>
     </footer>
 
-    <script src="script.js"></script>
-    <script>
-        const lunchOptions = ["Wraps", "Cheesy Wraps", "Toast", "Noodles", "Pate on Toast", "Sandwiches", "Bacon Sandwiches", "Warm Rolls", "Beans on Toast", "Fried Egg Sandwich", "Go Out"];
-        
-        const dinnerOptions = ["Burgers", "Pizza", "Homemade Pizza", "Korma", "Butter Chicken", "Spaghetti Bolognese", "Chilli Con Carne", "Cheesy Bacon Pasta", "Honey Sesame Chicken", "Chicken Nuggets & Chips", "Lasagna", "Pasta Bake", "Meatloaf", "Fish & Chips", "Stuffed Garlic Baguettes", "Go Out"];
-        
-        const mealDealOptions = ["Sausage & Mash", "Chicken Korma", "Meatballs & Pasta"];
-        
-        const outOptions = ["McDonald's", "Subway", "KFC", "Nandos", "Green King", "Weatherspoon's"];
-
-        function animateResult(element) {
-            element.classList.remove('animate');
-            void element.offsetWidth; // Trigger reflow
-            element.classList.add('animate');
-        }
-
-        function generateLunch() {
-            const randomLunch = lunchOptions[Math.floor(Math.random() * lunchOptions.length)];
-            const resultElement = document.getElementById("lunch-result");
-            resultElement.textContent = randomLunch;
-            animateResult(resultElement);
-        }
-
-        function generateDinner() {
-            const randomDinner = dinnerOptions[Math.floor(Math.random() * dinnerOptions.length)];
-            const resultElement = document.getElementById("dinner-result");
-            resultElement.textContent = randomDinner;
-            animateResult(resultElement);
-        }
-
-        function generateMealDeal() {
-            const randomMealDeal = mealDealOptions[Math.floor(Math.random() * mealDealOptions.length)];
-            const resultElement = document.getElementById("meal-deal-result");
-            resultElement.textContent = randomMealDeal;
-            animateResult(resultElement);
-        }
-
-        function generateOut() {
-            const randomOut = outOptions[Math.floor(Math.random() * outOptions.length)];
-            const resultElement = document.getElementById("out-result");
-            resultElement.textContent = randomOut;
-            animateResult(resultElement);
-        }
-    </script>
+    <!-- Scripts -->
+    <script src="app.js"></script>
 </body>
 </html>
