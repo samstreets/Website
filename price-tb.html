@@ -1,25 +1,361 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="basic.css">
-    <title>Street Services</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="java.js"></script>
-  </head>
-  <body>
-    <header>
-      <h1>Street Services Price per TB</h1>
+    <title>Price per TB Calculator - Streets Services</title>
+    <link rel="icon" type="image/x-icon" href="pictures/icon.png">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        .calculator-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--background-dark);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .calculator-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .form-group input {
+            background: var(--background-card);
+            border: 2px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .calculate-button {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            padding: 1.25rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            margin-top: 0.5rem;
+        }
+
+        .calculate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .calculate-button:active {
+            transform: translateY(0);
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 2rem;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .result-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-box .result-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .result-box .result-subtext {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 0.5rem;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .info-card {
+            background: var(--background-dark);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .info-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: var(--background-card);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .back-link:hover {
+            background: var(--background-hover);
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                padding: 1.5rem;
+            }
+
+            .result-box .result-text {
+                font-size: 1.5rem;
+            }
+
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon">
+            <h1>Price per TB Calculator</h1>
+        </div>
+        <p class="tagline">Compare Storage Drive Values</p>
     </header>
-    <hr>
-    <form onsubmit="return false;">
-      <label for="price">Price of Drive:</label>
-      <input type="text" id="price" name="price"><br><br>
-      <label for="size">Size of Drive:</label>
-      <input type="text" id="size" name="size"><br><br>
-      <button onclick="calculatePricePerTB()">Calculate</button>
-    </form>
-    <br><br>
-    <p id="result"></p>
-  </body>
+
+    <main class="container">
+        <a href="index.html" class="back-link">
+            <span>←</span>
+            <span>Back to Home</span>
+        </a>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('calculator-content')">
+                <h2>Calculator</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div id="calculator-content" class="section-content active">
+                <div class="calculator-container">
+                    <form class="calculator-form" onsubmit="return false;">
+                        <div class="form-group">
+                            <label for="price">💷 Price of Drive (£)</label>
+                            <input 
+                                type="number" 
+                                id="price" 
+                                name="price" 
+                                placeholder="e.g., 149.99"
+                                step="0.01"
+                                min="0"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="size">💾 Size of Drive (TB)</label>
+                            <input 
+                                type="number" 
+                                id="size" 
+                                name="size" 
+                                placeholder="e.g., 4"
+                                step="0.01"
+                                min="0.01"
+                                required
+                            >
+                        </div>
+
+                        <button type="button" class="calculate-button" onclick="calculatePricePerTB()">
+                            Calculate Price per TB
+                        </button>
+                    </form>
+
+                    <div id="result" class="result-box">
+                        <div>
+                            <div class="result-text">Enter values to calculate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('info-content')">
+                <h2>How to Use</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div id="info-content" class="section-content active">
+                <div class="info-cards">
+                    <div class="info-card">
+                        <h3>📊 Why Calculate Price per TB?</h3>
+                        <p>
+                            Comparing storage drives can be tricky when they come in different sizes and prices. 
+                            This calculator helps you determine the cost-effectiveness of storage by calculating 
+                            the price per terabyte, making it easy to compare different drives.
+                        </p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🎯 How to Use</h3>
+                        <p>
+                            Simply enter the total price of the drive and its storage capacity in terabytes. 
+                            The calculator will instantly show you the cost per TB, helping you make informed 
+                            purchasing decisions.
+                        </p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>💡 Pro Tip</h3>
+                        <p>
+                            Generally, larger drives offer better value per TB. However, consider your actual 
+                            storage needs—buying more capacity than you need might not be economical if you 
+                            won't use it within the drive's lifespan.
+                        </p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🔍 What to Look For</h3>
+                        <p>
+                            A lower price per TB indicates better value. However, also consider factors like 
+                            drive speed (RPM for HDDs, read/write speeds for SSDs), warranty period, and brand 
+                            reliability when making your final decision.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2024 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        function calculatePricePerTB() {
+            const priceInput = document.getElementById("price");
+            const sizeInput = document.getElementById("size");
+            const resultBox = document.getElementById("result");
+
+            const price = parseFloat(priceInput.value);
+            const size = parseFloat(sizeInput.value);
+
+            // Validation
+            if (!price || !size) {
+                resultBox.innerHTML = `
+                    <div>
+                        <div class="result-text">⚠️ Please enter both values</div>
+                    </div>
+                `;
+                resultBox.classList.add('show');
+                return;
+            }
+
+            if (price <= 0 || size <= 0) {
+                resultBox.innerHTML = `
+                    <div>
+                        <div class="result-text">⚠️ Values must be greater than 0</div>
+                    </div>
+                `;
+                resultBox.classList.add('show');
+                return;
+            }
+
+            const pricePerTB = (price / size).toFixed(2);
+
+            // Determine value rating
+            let rating = "";
+            let emoji = "";
+            if (pricePerTB < 15) {
+                rating = "Excellent Value!";
+                emoji = "🌟";
+            } else if (pricePerTB < 20) {
+                rating = "Good Value";
+                emoji = "✅";
+            } else if (pricePerTB < 30) {
+                rating = "Fair Value";
+                emoji = "👍";
+            } else {
+                rating = "Consider Other Options";
+                emoji = "💭";
+            }
+
+            resultBox.innerHTML = `
+                <div>
+                    <div class="result-text">£${pricePerTB} per TB ${emoji}</div>
+                    <div class="result-subtext">${rating}</div>
+                </div>
+            `;
+            resultBox.classList.add('show');
+        }
+
+        // Allow Enter key to calculate
+        document.getElementById("price").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                calculatePricePerTB();
+            }
+        });
+
+        document.getElementById("size").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                calculatePricePerTB();
+            }
+        });
+    </script>
+</body>
 </html>
