@@ -833,7 +833,8 @@
                 mask = mask || -1;
                 boostEcl = boostEcl !== false;
                 
-                for (let version = minVersion; ; version++) {
+                let version;
+                for (version = minVersion; ; version++) {
                     const dataCapacityBits = QrCode.getNumDataCodewords(version, ecl) * 8;
                     const dataUsedBits = QrSegment.getTotalBits(segs, version);
                     if (dataUsedBits <= dataCapacityBits) {
