@@ -502,15 +502,15 @@
                             <div class="slider-group">
                                 <div class="slider-label">
                                     <span>QR Code Size</span>
-                                    <span id="size-value" class="slider-value">256px</span>
+                                    <span id="size-value" class="slider-value">320px</span>
                                 </div>
                                 <input 
                                     type="range" 
                                     id="size-slider" 
-                                    min="128" 
-                                    max="512" 
-                                    value="256"
-                                    step="32"
+                                    min="200" 
+                                    max="600" 
+                                    value="320"
+                                    step="40"
                                     oninput="updateSizeDisplay(this.value); autoGenerate()"
                                 >
                             </div>
@@ -753,17 +753,22 @@
         function drawQR(qr, canvas, size, fgColor, bgColor) {
             // QR code spec requires minimum 4 modules quiet zone
             const quietZone = 4;
-            const totalSize = qr.size + (quietZone * 2);
-            const scale = Math.floor(size / totalSize);
+            const totalModules = qr.size + (quietZone * 2);
             
-            // Calculate actual canvas size with proper quiet zone
-            canvas.width = canvas.height = totalSize * scale;
+            // Calculate module size - ensure it's at least 4 pixels for mobile scanability
+            let moduleSize = Math.floor(size / totalModules);
+            if (moduleSize < 4) moduleSize = 4;
+            
+            // Set canvas to exact size needed
+            const canvasSize = totalModules * moduleSize;
+            canvas.width = canvasSize;
+            canvas.height = canvasSize;
             
             const ctx = canvas.getContext('2d');
             
-            // Draw background (quiet zone)
+            // Draw background (entire canvas including quiet zone)
             ctx.fillStyle = bgColor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(0, 0, canvasSize, canvasSize);
             
             // Draw QR modules with quiet zone offset
             ctx.fillStyle = fgColor;
@@ -771,10 +776,10 @@
                 for (let x = 0; x < qr.size; x++) {
                     if (qr.getModule(x, y)) {
                         ctx.fillRect(
-                            (x + quietZone) * scale,
-                            (y + quietZone) * scale,
-                            scale,
-                            scale
+                            (x + quietZone) * moduleSize,
+                            (y + quietZone) * moduleSize,
+                            moduleSize,
+                            moduleSize
                         );
                     }
                 }
@@ -838,10 +843,13 @@
                     const dataUsedBits = QrSegment.getTotalBits(segs, version);
                     if (dataUsedBits <= dataCapacityBits) {
                         if (boostEcl) {
-                            // Try higher error correction levels
-                            for (let newEcl of [QrCode.Ecc.M, QrCode.Ecc.Q, QrCode.Ecc.H]) {
-                                if (boostEcl && dataUsedBits <= QrCode.getNumDataCodewords(version, newEcl) * 8)
+                            // Try higher error correction levels in order
+                            const eccLevels = [Ecc.LOW, Ecc.MEDIUM, Ecc.QUARTILE, Ecc.HIGH];
+                            for (let newEcl of eccLevels) {
+                                if (newEcl.ordinal > ecl.ordinal && 
+                                    dataUsedBits <= QrCode.getNumDataCodewords(version, newEcl) * 8) {
                                     ecl = newEcl;
+                                }
                             }
                         }
                         break;
