@@ -566,10 +566,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <button class="generate-button" onclick="generateQR()" style="margin-top: 1.5rem;">
-                            🔄 Regenerate QR Code
-                        </button>
                     </div>
                 </div>
             </div>
@@ -755,24 +751,28 @@
         }
 
         function drawQR(qr, canvas, size, fgColor, bgColor) {
-            const border = 4;
-            const scale = Math.floor((size - border * 2) / qr.size);
-            canvas.width = canvas.height = qr.size * scale + border * 2;
+            // QR code spec requires minimum 4 modules quiet zone
+            const quietZone = 4;
+            const totalSize = qr.size + (quietZone * 2);
+            const scale = Math.floor(size / totalSize);
+            
+            // Calculate actual canvas size with proper quiet zone
+            canvas.width = canvas.height = totalSize * scale;
             
             const ctx = canvas.getContext('2d');
             
-            // Background
+            // Draw background (quiet zone)
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // QR modules
+            // Draw QR modules with quiet zone offset
             ctx.fillStyle = fgColor;
             for (let y = 0; y < qr.size; y++) {
                 for (let x = 0; x < qr.size; x++) {
                     if (qr.getModule(x, y)) {
                         ctx.fillRect(
-                            x * scale + border,
-                            y * scale + border,
+                            (x + quietZone) * scale,
+                            (y + quietZone) * scale,
                             scale,
                             scale
                         );
@@ -817,9 +817,8 @@
                 this.drawFunctionPatterns();
                 const allCodewords = this.addEccAndInterleave(dataCodewords);
                 this.drawCodewords(allCodewords);
-                this.mask = mask;
                 this.applyMask(mask);
-                this.drawFormatBits(mask);
+                this.drawFormatBits(this.mask);
             }
             
             QrCode.encodeText = function(text, ecl) {
