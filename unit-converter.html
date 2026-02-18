@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Convert between units of length, weight, temperature, volume, area and more.">
+    <meta property="og:title" content="Unit Converter - Streets Services">
+    <meta property="og:description" content="Convert between units of length, weight, temperature, volume, area and more.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/unit-converter.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>Unit Converter - Streets Services</title>
+    <link rel="icon" type="image/png" href="pictures/icon.png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .tab-bar { display:flex;gap:0.5rem;background:var(--bg-dark);padding:0.5rem;border-radius:var(--radius-lg);margin-bottom:2rem;flex-wrap:wrap; }
+        .tab-btn { flex:1;min-width:100px;padding:0.65rem;background:transparent;border:2px solid transparent;border-radius:var(--radius-sm);color:var(--text-secondary);font-family:var(--font-family);font-weight:600;cursor:pointer;transition:all var(--transition-base);white-space:nowrap; }
+        .tab-btn.active { background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));border-color:var(--primary-color);color:white; }
+        .tab-content { display:none; }
+        .tab-content.active { display:block;animation:fadeIn 0.3s ease; }
+        .conv-row { display:grid;grid-template-columns:1fr 2fr 1fr 2fr;gap:1rem;align-items:center;margin-bottom:0.75rem; }
+        .conv-label { color:var(--accent-color);font-weight:600;text-align:right;font-size:0.9rem; }
+        .conv-input { background:var(--bg-card);border:2px solid var(--border-color);color:var(--text-primary);padding:0.75rem;border-radius:var(--radius-sm);font-size:1rem;font-family:'Courier New',monospace;transition:border-color var(--transition-base); }
+        .conv-input:focus { outline:none;border-color:var(--primary-color); }
+        .section-divider { grid-column:1/-1;color:var(--text-secondary);font-size:0.8rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:0.75rem 0 0.25rem;border-top:1px solid var(--border-color);margin-top:0.5rem; }
+        .conv-grid { display:grid;grid-template-columns:1fr 1fr;gap:0 1rem; }
+        @media (max-width:768px) { .conv-row{grid-template-columns:1fr 1fr;} .conv-label{text-align:left;} }
+        @media (max-width:480px) { .conv-row{grid-template-columns:1fr;} .tab-btn{font-size:0.8rem;padding:0.5rem;} }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
+            <h1>Unit Converter</h1>
+        </div>
+        <p class="tagline">Convert Between Units Instantly</p>
+    </header>
+
+    <main class="container">
+        <a href="index.html" class="back-link"><span aria-hidden="true">←</span><span>Back to Home</span></a>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('conv-content')">
+                <h2>Converter</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="conv-content" class="section-content active">
+                <div class="tab-bar">
+                    <button class="tab-btn active" onclick="switchTab('length',this)">📏 Length</button>
+                    <button class="tab-btn" onclick="switchTab('weight',this)">⚖️ Weight</button>
+                    <button class="tab-btn" onclick="switchTab('temp',this)">🌡️ Temp</button>
+                    <button class="tab-btn" onclick="switchTab('volume',this)">🧪 Volume</button>
+                    <button class="tab-btn" onclick="switchTab('area',this)">📐 Area</button>
+                    <button class="tab-btn" onclick="switchTab('time',this)">⏱️ Time</button>
+                </div>
+
+                <!-- Length -->
+                <div id="tab-length" class="tab-content active">
+                    <p style="color:var(--text-secondary);margin-bottom:1.5rem;">Type in any field to convert all units instantly.</p>
+                    <div id="fields-length"></div>
+                </div>
+
+                <!-- Weight -->
+                <div id="tab-weight" class="tab-content">
+                    <p style="color:var(--text-secondary);margin-bottom:1.5rem;">Type in any field to convert all units instantly.</p>
+                    <div id="fields-weight"></div>
+                </div>
+
+                <!-- Temperature -->
+                <div id="tab-temp" class="tab-content">
+                    <p style="color:var(--text-secondary);margin-bottom:1.5rem;">Type in any field to convert all units instantly.</p>
+                    <div id="fields-temp"></div>
+                </div>
+
+                <!-- Volume -->
+                <div id="tab-volume" class="tab-content">
+                    <p style="color:var(--text-secondary);margin-bottom:1.5rem;">Type in any field to convert all units instantly.</p>
+                    <div id="fields-volume"></div>
+                </div>
+
+                <!-- Area -->
+                <div id="tab-area" class="tab-content">
+                    <p style="color:var(--text-secondary);margin-bottom:1.5rem;">Type in any field to convert all units instantly.</p>
+                    <div id="fields-area"></div>
+                </div>
+
+                <!-- Time -->
+                <div id="tab-time" class="tab-content">
+                    <p style="color:var(--text-secondary);margin-bottom:1.5rem;">Type in any field to convert all units instantly.</p>
+                    <div id="fields-time"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        // Unit definitions: [id, label, factor_from_base]
+        // Base units: metres, grams, celsius (special), litres, m², seconds
+        const UNITS = {
+            length: [
+                { id:'km',   label:'Kilometres (km)',    f: 1000 },
+                { id:'mi',   label:'Miles (mi)',         f: 1609.344 },
+                { id:'m',    label:'Metres (m)',         f: 1 },
+                { id:'yd',   label:'Yards (yd)',         f: 0.9144 },
+                { id:'ft',   label:'Feet (ft)',          f: 0.3048 },
+                { id:'in',   label:'Inches (in)',        f: 0.0254 },
+                { id:'cm',   label:'Centimetres (cm)',   f: 0.01 },
+                { id:'mm',   label:'Millimetres (mm)',   f: 0.001 },
+                { id:'nm',   label:'Nautical Miles',     f: 1852 },
+                { id:'ly',   label:'Light Years',        f: 9.461e15 },
+            ],
+            weight: [
+                { id:'t',    label:'Metric Tonnes (t)',  f: 1e6 },
+                { id:'kg',   label:'Kilograms (kg)',     f: 1000 },
+                { id:'lb',   label:'Pounds (lb)',        f: 453.592 },
+                { id:'g',    label:'Grams (g)',          f: 1 },
+                { id:'oz',   label:'Ounces (oz)',        f: 28.3495 },
+                { id:'st',   label:'Stone (st)',         f: 6350.29 },
+                { id:'mg',   label:'Milligrams (mg)',    f: 0.001 },
+                { id:'mcg',  label:'Micrograms (μg)',    f: 0.000001 },
+            ],
+            volume: [
+                { id:'m3',   label:'Cubic Metres (m³)', f: 1000 },
+                { id:'l',    label:'Litres (L)',         f: 1 },
+                { id:'gal',  label:'Gallons (US)',       f: 3.78541 },
+                { id:'ukgal',label:'Gallons (UK)',       f: 4.54609 },
+                { id:'qt',   label:'Quarts (US)',        f: 0.946353 },
+                { id:'pt',   label:'Pints (UK)',         f: 0.568261 },
+                { id:'cup',  label:'Cups (US)',          f: 0.236588 },
+                { id:'fl_oz',label:'Fl. Oz (UK)',        f: 0.0284131 },
+                { id:'ml',   label:'Millilitres (mL)',   f: 0.001 },
+                { id:'tsp',  label:'Teaspoons (tsp)',    f: 0.00492892 },
+                { id:'tbsp', label:'Tablespoons (tbsp)', f: 0.0147868 },
+            ],
+            area: [
+                { id:'km2',  label:'Sq Kilometres (km²)',f: 1e6 },
+                { id:'mi2',  label:'Sq Miles (mi²)',     f: 2589988 },
+                { id:'ha',   label:'Hectares (ha)',      f: 10000 },
+                { id:'ac',   label:'Acres (ac)',         f: 4046.86 },
+                { id:'m2',   label:'Sq Metres (m²)',     f: 1 },
+                { id:'yd2',  label:'Sq Yards (yd²)',     f: 0.836127 },
+                { id:'ft2',  label:'Sq Feet (ft²)',      f: 0.092903 },
+                { id:'in2',  label:'Sq Inches (in²)',    f: 0.00064516 },
+                { id:'cm2',  label:'Sq Centimetres (cm²)',f: 0.0001 },
+            ],
+            time: [
+                { id:'y',    label:'Years',              f: 31536000 },
+                { id:'mo',   label:'Months (avg)',       f: 2628000 },
+                { id:'wk',   label:'Weeks',              f: 604800 },
+                { id:'d',    label:'Days',               f: 86400 },
+                { id:'h',    label:'Hours',              f: 3600 },
+                { id:'min',  label:'Minutes',            f: 60 },
+                { id:'s',    label:'Seconds',            f: 1 },
+                { id:'ms',   label:'Milliseconds',       f: 0.001 },
+            ],
+        };
+
+        const TEMP = [
+            { id:'c', label:'Celsius (°C)' },
+            { id:'f', label:'Fahrenheit (°F)' },
+            { id:'k', label:'Kelvin (K)' },
+            { id:'r', label:'Rankine (°R)' },
+        ];
+
+        function toBase(id, val) {
+            // temperature special case
+        }
+
+        function buildFields(tab) {
+            const container = document.getElementById('fields-' + tab);
+            if (container.children.length > 0) return;
+
+            if (tab === 'temp') {
+                container.innerHTML = TEMP.map(u =>
+                    `<div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;">
+                        <label style="color:var(--accent-color);font-weight:600;min-width:160px;">${u.label}</label>
+                        <input class="conv-input" id="t-${u.id}" type="number" placeholder="0" style="flex:1;" oninput="convertTemp('${u.id}',this.value)">
+                    </div>`
+                ).join('');
+            } else {
+                container.innerHTML = UNITS[tab].map(u =>
+                    `<div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;">
+                        <label style="color:var(--accent-color);font-weight:600;min-width:200px;">${u.label}</label>
+                        <input class="conv-input" id="${tab}-${u.id}" type="number" placeholder="0" style="flex:1;" oninput="convertUnit('${tab}','${u.id}',this.value)">
+                    </div>`
+                ).join('');
+            }
+        }
+
+        function convertUnit(tab, from, val) {
+            const base = parseFloat(val) * UNITS[tab].find(u => u.id === from).f;
+            if (isNaN(base)) return;
+            UNITS[tab].forEach(u => {
+                if (u.id === from) return;
+                const el = document.getElementById(tab + '-' + u.id);
+                if (el !== document.activeElement) {
+                    const result = base / u.f;
+                    el.value = result === 0 ? '' : +result.toPrecision(8);
+                }
+            });
+        }
+
+        function convertTemp(from, val) {
+            const v = parseFloat(val);
+            if (isNaN(v)) return;
+            let c;
+            switch (from) {
+                case 'c': c = v; break;
+                case 'f': c = (v - 32) * 5/9; break;
+                case 'k': c = v - 273.15; break;
+                case 'r': c = (v - 491.67) * 5/9; break;
+            }
+            const vals = { c, f: c*9/5+32, k: c+273.15, r: (c+273.15)*9/5 };
+            Object.entries(vals).forEach(([id, result]) => {
+                if (id === from) return;
+                const el = document.getElementById('t-' + id);
+                if (el !== document.activeElement) el.value = +result.toPrecision(8);
+            });
+        }
+
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+            buildFields(tab);
+        }
+
+        // Build initial tab
+        buildFields('length');
+    </script>
+</body>
+</html>
