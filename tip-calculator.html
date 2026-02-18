@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Calculate tip amounts and split bills easily between multiple people.">
+    <meta property="og:title" content="Tip & Bill Splitter - Streets Services">
+    <meta property="og:description" content="Calculate tips and split bills between any number of people.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/tip-calculator.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>Tip & Bill Splitter - Streets Services</title>
+    <link rel="icon" type="image/png" href="pictures/icon.png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .tip-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem; }
+        .quick-tips { display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1rem; }
+        .tip-preset { background:var(--bg-hover);border:2px solid var(--border-color);color:var(--text-secondary);padding:0.5rem 1rem;border-radius:20px;cursor:pointer;transition:all var(--transition-base);font-weight:600; }
+        .tip-preset:hover,.tip-preset.active { background:var(--primary-color);border-color:var(--primary-color);color:white; }
+        .result-card { background:var(--bg-dark);padding:1.5rem;border-radius:var(--radius-lg);border-left:4px solid var(--primary-color);margin-bottom:1rem; }
+        .result-card h4 { color:var(--text-secondary);font-size:0.875rem;margin-bottom:0.5rem; }
+        .result-card .amount { color:var(--accent-color);font-size:2rem;font-weight:700;font-family:'Courier New',monospace; }
+        .highlight-card { background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));padding:1.5rem;border-radius:var(--radius-lg);margin-bottom:1rem;text-align:center; }
+        .highlight-card h4 { color:rgba(255,255,255,0.85);font-size:0.875rem;margin-bottom:0.5rem; }
+        .highlight-card .amount { color:white;font-size:2.5rem;font-weight:700;font-family:'Courier New',monospace; }
+        .slider-wrapper { margin-bottom:1.5rem; }
+        .slider-wrapper label { display:flex;justify-content:space-between;color:var(--accent-color);font-weight:600;margin-bottom:0.5rem; }
+        .slider-wrapper label span { background:var(--primary-color);color:white;padding:0.2rem 0.6rem;border-radius:12px;font-size:0.85rem; }
+        input[type=range] { width:100%;height:8px;border-radius:5px;background:var(--bg-card);outline:none;-webkit-appearance:none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--primary-color);cursor:pointer; }
+        .num-input { background:var(--bg-card);border:2px solid var(--border-color);color:var(--text-primary);padding:0.875rem;border-radius:var(--radius-sm);font-size:1.2rem;font-family:'Courier New',monospace;width:100%;transition:border-color var(--transition-base); }
+        .num-input:focus { outline:none;border-color:var(--primary-color); }
+        .people-counter { display:flex;align-items:center;gap:1rem; }
+        .people-btn { background:var(--primary-color);color:white;border:none;width:40px;height:40px;border-radius:50%;font-size:1.5rem;cursor:pointer;transition:all var(--transition-base);display:flex;align-items:center;justify-content:center; }
+        .people-btn:hover { background:var(--primary-dark);transform:scale(1.1); }
+        .people-display { font-size:2rem;font-weight:700;color:var(--accent-color);min-width:3rem;text-align:center; }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
+            <h1>Tip &amp; Bill Splitter</h1>
+        </div>
+        <p class="tagline">Calculate Tips &amp; Split Bills Instantly</p>
+    </header>
+
+    <main class="container">
+        <a href="index.html" class="back-link"><span aria-hidden="true">←</span><span>Back to Home</span></a>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('calc-content')">
+                <h2>Calculator</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="calc-content" class="section-content active">
+                <div class="tip-grid">
+                    <!-- Inputs -->
+                    <div>
+                        <div style="margin-bottom:1.5rem;">
+                            <label style="display:block;color:var(--accent-color);font-weight:600;margin-bottom:0.5rem;">💷 Bill Total (£)</label>
+                            <input type="number" id="bill" class="num-input" placeholder="0.00" min="0" step="0.01" oninput="calculate()">
+                        </div>
+
+                        <div class="slider-wrapper">
+                            <label>
+                                <span>Tip Percentage</span>
+                                <span id="tip-display">15%</span>
+                            </label>
+                            <div class="quick-tips">
+                                <button class="tip-preset" onclick="setTip(5)">5%</button>
+                                <button class="tip-preset" onclick="setTip(10)">10%</button>
+                                <button class="tip-preset active" onclick="setTip(15)">15%</button>
+                                <button class="tip-preset" onclick="setTip(20)">20%</button>
+                                <button class="tip-preset" onclick="setTip(25)">25%</button>
+                            </div>
+                            <input type="range" id="tip-slider" min="0" max="50" value="15" oninput="onSlider()">
+                        </div>
+
+                        <div>
+                            <label style="display:block;color:var(--accent-color);font-weight:600;margin-bottom:0.75rem;">👥 Number of People</label>
+                            <div class="people-counter">
+                                <button class="people-btn" onclick="changePeople(-1)">−</button>
+                                <div class="people-display" id="people-display">2</div>
+                                <button class="people-btn" onclick="changePeople(1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div>
+                        <div class="highlight-card">
+                            <h4>Each Person Pays</h4>
+                            <div class="amount" id="per-person">£0.00</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>Tip Amount</h4>
+                            <div class="amount" id="tip-amount">£0.00</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>Total (inc. tip)</h4>
+                            <div class="amount" id="total">£0.00</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>Tip per Person</h4>
+                            <div class="amount" id="tip-per-person">£0.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('info-content')">
+                <h2>Tipping Guide (UK)</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="info-content" class="section-content active">
+                <div class="info-cards">
+                    <article class="info-card"><h3>🍽️ Restaurants</h3><p>10–15% is customary if a service charge isn't already included. Check your bill — many London restaurants add a 12.5% discretionary service charge automatically.</p></article>
+                    <article class="info-card"><h3>🍺 Pubs &amp; Bars</h3><p>Tipping at pubs is not standard in the UK. If you want to show appreciation, offering to buy the staff a drink is a common alternative.</p></article>
+                    <article class="info-card"><h3>🚖 Taxis</h3><p>Rounding up to the nearest pound or adding 10–15% is common. For Uber and similar apps, in-app tipping is increasingly popular.</p></article>
+                    <article class="info-card"><h3>💇 Services</h3><p>10% is typical for hairdressers and similar personal services. Delivery drivers — a few pounds is appreciated but not obligatory.</p></article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        let people = 2;
+        let tipPct  = 15;
+
+        function calculate() {
+            const bill = parseFloat(document.getElementById('bill').value) || 0;
+            const tip  = bill * tipPct / 100;
+            const total = bill + tip;
+            const perPerson = total / people;
+            const tipPP = tip / people;
+
+            document.getElementById('tip-amount').textContent    = '£' + tip.toFixed(2);
+            document.getElementById('total').textContent         = '£' + total.toFixed(2);
+            document.getElementById('per-person').textContent    = '£' + perPerson.toFixed(2);
+            document.getElementById('tip-per-person').textContent= '£' + tipPP.toFixed(2);
+        }
+
+        function setTip(pct) {
+            tipPct = pct;
+            document.getElementById('tip-slider').value = pct;
+            document.getElementById('tip-display').textContent = pct + '%';
+            document.querySelectorAll('.tip-preset').forEach(b => {
+                b.classList.toggle('active', parseInt(b.textContent) === pct);
+            });
+            calculate();
+        }
+
+        function onSlider() {
+            tipPct = parseInt(document.getElementById('tip-slider').value);
+            document.getElementById('tip-display').textContent = tipPct + '%';
+            document.querySelectorAll('.tip-preset').forEach(b => b.classList.remove('active'));
+            calculate();
+        }
+
+        function changePeople(delta) {
+            people = Math.max(1, Math.min(50, people + delta));
+            document.getElementById('people-display').textContent = people;
+            calculate();
+        }
+
+        calculate();
+    </script>
+</body>
+</html>
