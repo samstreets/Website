@@ -3,6 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Convert colours between HEX, RGB, HSL, and CMYK formats instantly.">
+    <meta property="og:title" content="Color Converter - Streets Services">
+    <meta property="og:description" content="Convert colours between HEX, RGB, HSL, and CMYK formats instantly.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/color-converter.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
     <title>Color Converter - Streets Services</title>
     <link rel="icon" type="image/png" href="pictures/icon.png">
     <link rel="stylesheet" href="styles.css">
@@ -10,7 +17,7 @@
 <body>
     <header class="main-header">
         <div class="header-content">
-            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="40" height="40">
+            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
             <h1>Color Converter</h1>
         </div>
         <p class="tagline">Convert Between Color Formats</p>
@@ -26,15 +33,14 @@
             </div>
             <div id="picker-content" class="section-content active">
                 <div class="calculator-container">
-                    <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
-                        <input type="color" id="picker" value="#3b82f6" style="width: 120px; height: 120px; border: none; cursor: pointer; border-radius: var(--radius-sm);">
-                        <div style="flex: 1;">
-                            <div style="color: var(--text-secondary); margin-bottom: 0.5rem;">Selected Color</div>
-                            <div id="currentColor" style="font-size: 2rem; font-weight: 700; color: var(--accent-color);">#3B82F6</div>
+                    <div style="display:flex;align-items:center;gap:2rem;margin-bottom:2rem;">
+                        <input type="color" id="picker" value="#3b82f6" style="width:120px;height:120px;border:none;cursor:pointer;border-radius:var(--radius-sm);">
+                        <div style="flex:1;">
+                            <div style="color:var(--text-secondary);margin-bottom:0.5rem;">Selected Color</div>
+                            <div id="currentColor" style="font-size:2rem;font-weight:700;color:var(--accent-color);">#3B82F6</div>
                         </div>
                     </div>
-
-                    <div id="preview" style="height: 120px; border-radius: var(--radius-sm); margin-bottom: 2rem; background: #3b82f6; transition: background 0.3s;"></div>
+                    <div id="preview" style="height:120px;border-radius:var(--radius-sm);margin-bottom:2rem;background:#3b82f6;transition:background 0.3s;"></div>
                 </div>
             </div>
         </section>
@@ -48,23 +54,23 @@
                 <div class="generators-grid">
                     <div class="generator-section">
                         <h3>HEX</h3>
-                        <div class="result-display" id="hex" style="font-family: 'Courier New', monospace;">#3B82F6</div>
-                        <button class="generator-button" onclick="copy('hex')">Copy</button>
+                        <div class="result-display" id="hex" style="font-family:'Courier New',monospace;">#3B82F6</div>
+                        <button class="generator-button" onclick="copy('hex', this)">Copy</button>
                     </div>
                     <div class="generator-section">
                         <h3>RGB</h3>
-                        <div class="result-display" id="rgb" style="font-family: 'Courier New', monospace;">rgb(59, 130, 246)</div>
-                        <button class="generator-button" onclick="copy('rgb')">Copy</button>
+                        <div class="result-display" id="rgb" style="font-family:'Courier New',monospace;">rgb(59, 130, 246)</div>
+                        <button class="generator-button" onclick="copy('rgb', this)">Copy</button>
                     </div>
                     <div class="generator-section">
                         <h3>HSL</h3>
-                        <div class="result-display" id="hsl" style="font-family: 'Courier New', monospace;">hsl(217, 91%, 60%)</div>
-                        <button class="generator-button" onclick="copy('hsl')">Copy</button>
+                        <div class="result-display" id="hsl" style="font-family:'Courier New',monospace;">hsl(217, 91%, 60%)</div>
+                        <button class="generator-button" onclick="copy('hsl', this)">Copy</button>
                     </div>
                     <div class="generator-section">
                         <h3>CMYK</h3>
-                        <div class="result-display" id="cmyk" style="font-family: 'Courier New', monospace;">cmyk(76, 47, 0, 4)</div>
-                        <button class="generator-button" onclick="copy('cmyk')">Copy</button>
+                        <div class="result-display" id="cmyk" style="font-family:'Courier New',monospace;">cmyk(76, 47, 0, 4)</div>
+                        <button class="generator-button" onclick="copy('cmyk', this)">Copy</button>
                     </div>
                 </div>
             </div>
@@ -75,33 +81,44 @@
                 <h2>Input Color</h2>
                 <span class="toggle-icon">▼</span>
             </div>
-            <div id="input-content" class="section-content">
+            <!-- Input section now starts open -->
+            <div id="input-content" class="section-content active">
                 <div class="calculator-container">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                        <input type="text" id="hexInput" placeholder="#3B82F6" style="padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius-sm);">
-                        <input type="text" id="rgbInput" placeholder="59, 130, 246" style="padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius-sm);">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+                        <div>
+                            <label style="display:block;color:var(--accent-color);margin-bottom:0.5rem;font-weight:600;">HEX</label>
+                            <input type="text" id="hexInput" placeholder="#3B82F6" style="padding:0.75rem;background:var(--bg-dark);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);width:100%;">
+                        </div>
+                        <div>
+                            <label style="display:block;color:var(--accent-color);margin-bottom:0.5rem;font-weight:600;">RGB (r, g, b)</label>
+                            <input type="text" id="rgbInput" placeholder="59, 130, 246" style="padding:0.75rem;background:var(--bg-dark);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);width:100%;">
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <script src="script.js"></script>
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="app.js"></script>
     <script>
         function hexToRgb(hex) {
             const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return r ? {r: parseInt(r[1], 16), g: parseInt(r[2], 16), b: parseInt(r[3], 16)} : null;
+            return r ? { r: parseInt(r[1], 16), g: parseInt(r[2], 16), b: parseInt(r[3], 16) } : null;
         }
 
         function rgbToHex(r, g, b) {
-            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         }
 
         function rgbToHsl(r, g, b) {
             r /= 255; g /= 255; b /= 255;
             const max = Math.max(r, g, b), min = Math.min(r, g, b);
             let h, s, l = (max + min) / 2;
-            if (max === min) { h = s = 0; } 
+            if (max === min) { h = s = 0; }
             else {
                 const d = max - min;
                 s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
@@ -111,56 +128,50 @@
                     case b: h = ((r - g) / d + 4) / 6; break;
                 }
             }
-            return {h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100)};
+            return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
         }
 
         function rgbToCmyk(r, g, b) {
-            let c = 1 - r/255, m = 1 - g/255, y = 1 - b/255, k = Math.min(c, m, y);
+            let c = 1 - r / 255, m = 1 - g / 255, y = 1 - b / 255, k = Math.min(c, m, y);
             c = Math.round(((c - k) / (1 - k)) * 100) || 0;
             m = Math.round(((m - k) / (1 - k)) * 100) || 0;
             y = Math.round(((y - k) / (1 - k)) * 100) || 0;
             k = Math.round(k * 100);
-            return {c, m, y, k};
+            return { c, m, y, k };
         }
 
         function update(hex) {
             const rgb = hexToRgb(hex);
             if (!rgb) return;
-            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+            const hsl  = rgbToHsl(rgb.r, rgb.g, rgb.b);
             const cmyk = rgbToCmyk(rgb.r, rgb.g, rgb.b);
-            
             document.getElementById('currentColor').textContent = hex.toUpperCase();
             document.getElementById('preview').style.background = hex;
             document.getElementById('picker').value = hex;
-            document.getElementById('hex').textContent = hex.toUpperCase();
-            document.getElementById('rgb').textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-            document.getElementById('hsl').textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+            document.getElementById('hex').textContent  = hex.toUpperCase();
+            document.getElementById('rgb').textContent  = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+            document.getElementById('hsl').textContent  = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
             document.getElementById('cmyk').textContent = `cmyk(${cmyk.c}, ${cmyk.m}, ${cmyk.y}, ${cmyk.k})`;
         }
 
-        document.getElementById('picker').addEventListener('input', (e) => update(e.target.value));
-        
-        document.getElementById('hexInput').addEventListener('input', (e) => {
+        document.getElementById('picker').addEventListener('input', e => update(e.target.value));
+
+        document.getElementById('hexInput').addEventListener('input', e => {
             const hex = e.target.value.startsWith('#') ? e.target.value : '#' + e.target.value;
             if (/^#[0-9A-F]{6}$/i.test(hex)) update(hex);
         });
 
-        document.getElementById('rgbInput').addEventListener('input', (e) => {
+        document.getElementById('rgbInput').addEventListener('input', e => {
             const rgb = e.target.value.split(',').map(v => parseInt(v.trim()));
-            if (rgb.length === 3 && rgb.every(v => v >= 0 && v <= 255)) {
+            if (rgb.length === 3 && rgb.every(v => !isNaN(v) && v >= 0 && v <= 255)) {
                 update(rgbToHex(rgb[0], rgb[1], rgb[2]));
             }
         });
 
-        function copy(id) {
+        function copy(id, btn) {
             navigator.clipboard.writeText(document.getElementById(id).textContent);
-            event.target.textContent = '✓ Copied';
-            setTimeout(() => event.target.textContent = 'Copy', 2000);
-        }
-
-        function toggleSection(id) {
-            document.getElementById(id).classList.toggle('active');
-            event.currentTarget.classList.toggle('collapsed');
+            btn.textContent = '✓ Copied';
+            setTimeout(() => btn.textContent = 'Copy', 2000);
         }
 
         update('#3b82f6');

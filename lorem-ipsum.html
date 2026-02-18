@@ -3,6 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Generate Lorem Ipsum placeholder text — paragraphs, words, or sentences.">
+    <meta property="og:title" content="Lorem Ipsum Generator - Streets Services">
+    <meta property="og:description" content="Generate Lorem Ipsum placeholder text — paragraphs, words, or sentences.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/lorem-ipsum.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
     <title>Lorem Ipsum Generator - Streets Services</title>
     <link rel="icon" type="image/png" href="pictures/icon.png">
     <link rel="stylesheet" href="styles.css">
@@ -10,7 +17,7 @@
 <body>
     <header class="main-header">
         <div class="header-content">
-            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="40" height="40">
+            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
             <h1>Lorem Ipsum Generator</h1>
         </div>
         <p class="tagline">Generate Placeholder Text</p>
@@ -26,38 +33,36 @@
             </div>
             <div id="options-content" class="section-content active">
                 <div class="calculator-container">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
-                        <label style="display: flex; flex-direction: column; gap: 0.5rem;">
-                            <span style="color: var(--text-secondary);">Generate</span>
-                            <select id="type" style="padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius-sm);">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1rem;">
+                        <label style="display:flex;flex-direction:column;gap:0.5rem;">
+                            <span style="color:var(--text-secondary);">Generate</span>
+                            <select id="type" style="padding:0.75rem;background:var(--bg-dark);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);">
                                 <option value="paragraphs">Paragraphs</option>
                                 <option value="words">Words</option>
                                 <option value="sentences">Sentences</option>
                             </select>
                         </label>
-                        <label style="display: flex; flex-direction: column; gap: 0.5rem;">
-                            <span style="color: var(--text-secondary);">Amount</span>
-                            <input type="number" id="amount" min="1" max="50" value="5" style="padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius-sm);">
+                        <label style="display:flex;flex-direction:column;gap:0.5rem;">
+                            <span style="color:var(--text-secondary);">Amount</span>
+                            <input type="number" id="amount" min="1" max="50" value="5" style="padding:0.75rem;background:var(--bg-dark);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);">
                         </label>
-                        <label style="display: flex; flex-direction: column; gap: 0.5rem;">
-                            <span style="color: var(--text-secondary);">Start With</span>
-                            <select id="start" style="padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: var(--radius-sm);">
+                        <label style="display:flex;flex-direction:column;gap:0.5rem;">
+                            <span style="color:var(--text-secondary);">Start With</span>
+                            <select id="start" style="padding:0.75rem;background:var(--bg-dark);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);">
                                 <option value="lorem">Lorem ipsum...</option>
                                 <option value="random">Random</option>
                             </select>
                         </label>
                     </div>
-
-                    <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem;">
-                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="display:flex;gap:2rem;margin-bottom:1.5rem;">
+                        <label style="display:flex;align-items:center;gap:0.5rem;">
                             <input type="checkbox" id="htmlTags"> HTML Tags
                         </label>
                     </div>
-
-                    <div style="display: flex; gap: 1rem;">
-                        <button class="generator-button" onclick="generate()" style="flex: 1;">Generate</button>
-                        <button class="generator-button" onclick="copyText()" style="flex: 1;">Copy</button>
-                        <button class="generator-button" onclick="clearText()" style="flex: 1;">Clear</button>
+                    <div style="display:flex;gap:1rem;">
+                        <button class="generator-button" onclick="generate()" style="flex:1;">Generate</button>
+                        <button class="generator-button" onclick="copyText(this)" style="flex:1;">Copy</button>
+                        <button class="generator-button" onclick="clearText()" style="flex:1;">Clear</button>
                     </div>
                 </div>
             </div>
@@ -70,16 +75,15 @@
             </div>
             <div id="output-content" class="section-content active">
                 <div class="calculator-container">
-                    <div id="output" style="background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.5rem; min-height: 300px; color: var(--text-secondary); line-height: 1.8;">Click Generate to create text...</div>
-
-                    <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 1.5rem;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent-color);" id="words">0</div>
-                            <div style="font-size: 0.85rem; color: var(--text-secondary);">Words</div>
+                    <div id="output" style="background:var(--bg-dark);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:1.5rem;min-height:300px;color:var(--text-secondary);line-height:1.8;">Click Generate to create text...</div>
+                    <div style="display:flex;gap:2rem;justify-content:center;margin-top:1.5rem;">
+                        <div style="text-align:center;">
+                            <div style="font-size:1.5rem;font-weight:600;color:var(--accent-color);" id="wordCount">0</div>
+                            <div style="font-size:0.85rem;color:var(--text-secondary);">Words</div>
                         </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent-color);" id="chars">0</div>
-                            <div style="font-size: 0.85rem; color: var(--text-secondary);">Characters</div>
+                        <div style="text-align:center;">
+                            <div style="font-size:1.5rem;font-weight:600;color:var(--accent-color);" id="charCount">0</div>
+                            <div style="font-size:0.85rem;color:var(--text-secondary);">Characters</div>
                         </div>
                     </div>
                 </div>
@@ -87,78 +91,74 @@
         </section>
     </main>
 
-    <script src="script.js"></script>
-    <script>
-        const words = ['lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do','eiusmod','tempor','incididunt','ut','labore','et','dolore','magna','aliqua','enim','ad','minim','veniam','quis','nostrud','exercitation','ullamco','laboris','nisi','aliquip','ex','ea','commodo','consequat'];
-        const start = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
 
-        function randomWord() { return words[Math.floor(Math.random() * words.length)]; }
-        
-        function sentence(min = 8, max = 16) {
-            const arr = Array.from({length: Math.floor(Math.random() * (max - min + 1)) + min}, randomWord);
+    <script src="app.js"></script>
+    <script>
+        const wordList = ['lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do','eiusmod','tempor','incididunt','ut','labore','et','dolore','magna','aliqua','enim','ad','minim','veniam','quis','nostrud','exercitation','ullamco','laboris','nisi','aliquip','ex','ea','commodo','consequat'];
+        const loremStart = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
+
+        function randomWord() { return wordList[Math.floor(Math.random() * wordList.length)]; }
+
+        function makeSentence(min = 8, max = 16) {
+            const arr = Array.from({ length: Math.floor(Math.random() * (max - min + 1)) + min }, randomWord);
             arr[0] = arr[0].charAt(0).toUpperCase() + arr[0].slice(1);
             return arr.join(' ') + '.';
         }
 
-        function paragraph(n = 5) {
-            return Array.from({length: n}, () => sentence()).join(' ');
+        function makeParagraph(n = 5) {
+            return Array.from({ length: n }, () => makeSentence()).join(' ');
         }
 
         function generate() {
-            const type = document.getElementById('type').value;
-            const amount = parseInt(document.getElementById('amount').value);
+            const type     = document.getElementById('type').value;
+            const amount   = parseInt(document.getElementById('amount').value);
             const startWith = document.getElementById('start').value;
-            const html = document.getElementById('htmlTags').checked;
+            const useHtml  = document.getElementById('htmlTags').checked;
             let output = '';
 
-            switch (type) {
-                case 'paragraphs':
-                    for (let i = 0; i < amount; i++) {
-                        const p = i === 0 && startWith === 'lorem' ? start + '. ' + paragraph(4) : paragraph(5);
-                        output += html ? `<p>${p}</p>\n` : p + '\n\n';
-                    }
-                    break;
-                case 'words':
-                    const w = [];
-                    if (startWith === 'lorem') w.push(...start.split(' '));
-                    while (w.length < amount) w.push(randomWord());
-                    output = w.slice(0, amount).join(' ') + '.';
-                    break;
-                case 'sentences':
-                    for (let i = 0; i < amount; i++) {
-                        output += (i === 0 && startWith === 'lorem' ? start : sentence()) + ' ';
-                    }
-                    break;
+            if (type === 'paragraphs') {
+                for (let i = 0; i < amount; i++) {
+                    const p = (i === 0 && startWith === 'lorem') ? loremStart + '. ' + makeParagraph(4) : makeParagraph(5);
+                    output += useHtml ? `<p>${p}</p>\n` : p + '\n\n';
+                }
+            } else if (type === 'words') {
+                const w = startWith === 'lorem' ? loremStart.split(' ') : [];
+                while (w.length < amount) w.push(randomWord());
+                output = w.slice(0, amount).join(' ') + '.';
+            } else {
+                for (let i = 0; i < amount; i++) {
+                    output += (i === 0 && startWith === 'lorem' ? loremStart : makeSentence()) + ' ';
+                }
             }
 
             const el = document.getElementById('output');
-            el.innerHTML = html ? `<pre style="white-space: pre-wrap; font-family: 'Courier New', monospace;">${output.trim()}</pre>` : output.trim();
+            el.innerHTML = useHtml
+                ? `<pre style="white-space:pre-wrap;font-family:'Courier New',monospace;">${output.trim()}</pre>`
+                : output.trim();
             el.style.color = 'var(--text-primary)';
-            
+
             const clean = output.replace(/<[^>]*>/g, '');
-            document.getElementById('words').textContent = clean.split(/\s+/).filter(w => w).length;
-            document.getElementById('chars').textContent = clean.length;
+            document.getElementById('wordCount').textContent = clean.split(/\s+/).filter(w => w).length;
+            document.getElementById('charCount').textContent = clean.length;
         }
 
-        function copyText() {
+        function copyText(btn) {
             const text = document.getElementById('output').innerText;
-            if (text && !text.includes('Click')) {
+            if (text && !text.includes('Click Generate')) {
                 navigator.clipboard.writeText(text);
-                event.target.textContent = '✓ Copied';
-                setTimeout(() => event.target.textContent = 'Copy', 2000);
+                btn.textContent = '✓ Copied';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
             }
         }
 
         function clearText() {
             document.getElementById('output').innerHTML = 'Click Generate to create text...';
             document.getElementById('output').style.color = 'var(--text-secondary)';
-            document.getElementById('words').textContent = '0';
-            document.getElementById('chars').textContent = '0';
-        }
-
-        function toggleSection(id) {
-            document.getElementById(id).classList.toggle('active');
-            event.currentTarget.classList.toggle('collapsed');
+            document.getElementById('wordCount').textContent = '0';
+            document.getElementById('charCount').textContent = '0';
         }
 
         generate();

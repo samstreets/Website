@@ -3,169 +3,29 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Calculate subnet masks, IP ranges, and network information with this IP subnet calculator.">
-    <title>Subnet Calculator - Streets Services</title>
+    <meta name="description" content="Calculate price per terabyte to compare storage drive values.">
+    <meta property="og:title" content="Price per TB Calculator - Streets Services">
+    <meta property="og:description" content="Calculate and compare storage drive value with price per terabyte.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/price-tb.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>Price per TB Calculator - Streets Services</title>
     <link rel="icon" type="image/png" href="pictures/icon.png">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .result-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .result-item {
-            background: var(--bg-dark);
-            padding: 1rem;
-            border-radius: var(--radius-sm);
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .result-label {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .result-value {
-            color: var(--text-primary);
-            font-size: 1.1rem;
-            font-weight: 600;
-            font-family: 'Courier New', monospace;
-        }
-
-        .ip-input-group {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 1rem;
-            align-items: end;
-        }
-
-        .input-with-label {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .cidr-select {
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            padding: 1rem;
-            border-radius: var(--radius-sm);
-            font-size: var(--font-size-base);
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: all var(--transition-base);
-            width: 100%;
-        }
-
-        .cidr-select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .hosts-card {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            padding: 1.5rem;
-            border-radius: var(--radius-md);
-            text-align: center;
-            color: white;
-        }
-
-        .hosts-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .hosts-label {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        .binary-display {
-            background: var(--bg-dark);
-            padding: 1rem;
-            border-radius: var(--radius-sm);
-            font-family: 'Courier New', monospace;
-            font-size: 0.875rem;
-            color: var(--accent-color);
-            overflow-x: auto;
-        }
-
-        .binary-octet {
-            display: inline-block;
-            margin-right: 1rem;
-        }
-
-        .subnet-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            background: var(--bg-dark);
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-        }
-
-        .subnet-table th {
-            background: var(--bg-hover);
-            color: var(--accent-color);
-            padding: 0.75rem;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        .subnet-table td {
-            padding: 0.75rem;
-            border-top: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            font-family: 'Courier New', monospace;
-        }
-
-        .error-message {
-            background: #ef4444;
-            color: white;
-            padding: 1rem;
-            border-radius: var(--radius-sm);
-            margin-top: 1rem;
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .ip-input-group {
-                grid-template-columns: 1fr;
-            }
-
-            .result-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hosts-number {
-                font-size: 2rem;
-            }
-        }
-    </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="main-header">
         <div class="header-content">
-            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="40" height="40">
-            <h1>Subnet Calculator</h1>
+            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
+            <h1>Price per TB Calculator</h1>
         </div>
-        <p class="tagline">Calculate IP Subnets & Network Information</p>
+        <p class="tagline">Compare Storage Drive Values</p>
     </header>
 
-    <!-- Main Content -->
     <main class="container">
-        <a href="index.html" class="back-link">
-            <span aria-hidden="true">←</span>
-            <span>Back to Home</span>
-        </a>
+        <a href="index.html" class="back-link"><span aria-hidden="true">←</span><span>Back to Home</span></a>
 
-        <!-- Calculator Section -->
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('calculator-content')">
                 <h2>Calculator</h2>
@@ -173,277 +33,56 @@
             </div>
             <div id="calculator-content" class="section-content active">
                 <div class="calculator-container">
-                    <form class="calculator-form" onsubmit="return false;">
-                        <div class="ip-input-group">
-                            <div class="form-group">
-                                <label for="ip-address">🌐 IP Address</label>
-                                <input 
-                                    type="text" 
-                                    id="ip-address" 
-                                    placeholder="e.g., 192.168.1.0"
-                                    pattern="^(\d{1,3}\.){3}\d{1,3}$"
-                                    value="192.168.1.0"
-                                >
-                            </div>
-
-                            <div style="padding-top: 2rem; text-align: center; color: var(--text-secondary); font-size: 1.5rem;">
-                                /
-                            </div>
-
-                            <div class="form-group">
-                                <label for="cidr">📊 CIDR / Subnet Mask</label>
-                                <select id="cidr" class="cidr-select">
-                                    <option value="8">8 (255.0.0.0)</option>
-                                    <option value="9">9 (255.128.0.0)</option>
-                                    <option value="10">10 (255.192.0.0)</option>
-                                    <option value="11">11 (255.224.0.0)</option>
-                                    <option value="12">12 (255.240.0.0)</option>
-                                    <option value="13">13 (255.248.0.0)</option>
-                                    <option value="14">14 (255.252.0.0)</option>
-                                    <option value="15">15 (255.254.0.0)</option>
-                                    <option value="16">16 (255.255.0.0)</option>
-                                    <option value="17">17 (255.255.128.0)</option>
-                                    <option value="18">18 (255.255.192.0)</option>
-                                    <option value="19">19 (255.255.224.0)</option>
-                                    <option value="20">20 (255.255.240.0)</option>
-                                    <option value="21">21 (255.255.248.0)</option>
-                                    <option value="22">22 (255.255.252.0)</option>
-                                    <option value="23">23 (255.255.254.0)</option>
-                                    <option value="24" selected>24 (255.255.255.0)</option>
-                                    <option value="25">25 (255.255.255.128)</option>
-                                    <option value="26">26 (255.255.255.192)</option>
-                                    <option value="27">27 (255.255.255.224)</option>
-                                    <option value="28">28 (255.255.255.240)</option>
-                                    <option value="29">29 (255.255.255.248)</option>
-                                    <option value="30">30 (255.255.255.252)</option>
-                                    <option value="31">31 (255.255.255.254)</option>
-                                    <option value="32">32 (255.255.255.255)</option>
-                                </select>
-                            </div>
+                    <form class="calculator-form" onsubmit="return false;" aria-label="Price per TB calculator">
+                        <div class="form-group">
+                            <label for="price">💷 Price of Drive (£)</label>
+                            <input type="number" id="price" name="price" placeholder="e.g., 149.99" step="0.01" min="0" required aria-required="true">
                         </div>
-
-                        <button type="button" class="calculate-button" onclick="calculateSubnet()">
-                            Calculate Subnet
-                        </button>
+                        <div class="form-group">
+                            <label for="size">💾 Size of Drive (TB)</label>
+                            <input type="number" id="size" name="size" placeholder="e.g., 4" step="0.01" min="0.01" required aria-required="true">
+                        </div>
+                        <button type="button" class="calculate-button" onclick="calculatePricePerTB()">Calculate Price per TB</button>
                     </form>
-
-                    <div id="error-message" class="error-message"></div>
-
-                    <div id="results" style="display: none;">
-                        <!-- Usable Hosts Card -->
-                        <div class="hosts-card" style="margin-top: 2rem;">
-                            <div class="hosts-number" id="usable-hosts">0</div>
-                            <div class="hosts-label">Usable Hosts</div>
-                        </div>
-
-                        <!-- Results Grid -->
-                        <div class="result-grid">
-                            <div class="result-item">
-                                <div class="result-label">Network Address</div>
-                                <div class="result-value" id="network-address">-</div>
-                            </div>
-                            <div class="result-item">
-                                <div class="result-label">Broadcast Address</div>
-                                <div class="result-value" id="broadcast-address">-</div>
-                            </div>
-                            <div class="result-item">
-                                <div class="result-label">First Usable IP</div>
-                                <div class="result-value" id="first-ip">-</div>
-                            </div>
-                            <div class="result-item">
-                                <div class="result-label">Last Usable IP</div>
-                                <div class="result-value" id="last-ip">-</div>
-                            </div>
-                            <div class="result-item">
-                                <div class="result-label">Subnet Mask</div>
-                                <div class="result-value" id="subnet-mask">-</div>
-                            </div>
-                            <div class="result-item">
-                                <div class="result-label">Wildcard Mask</div>
-                                <div class="result-value" id="wildcard-mask">-</div>
-                            </div>
-                            <div class="result-item">
-                                <div class="result-label">Total Hosts</div>
-                                <div class="result-value" id="total-hosts">-</div>
-                            </div>
-                            <div class="result-item">
-                                <div class="result-label">IP Class</div>
-                                <div class="result-value" id="ip-class">-</div>
-                            </div>
-                        </div>
-
-                        <!-- Binary Display -->
-                        <div style="margin-top: 2rem;">
-                            <h3 style="color: var(--accent-color); margin-bottom: 1rem;">Binary Representation</h3>
-                            <div class="binary-display" id="binary-ip"></div>
-                            <div class="binary-display" id="binary-mask" style="margin-top: 0.5rem;"></div>
-                        </div>
+                    <div id="result" class="result-box" role="status" aria-live="polite">
+                        <div><div class="result-text">Enter values to calculate</div></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Info Section -->
         <section class="content-section">
             <div class="section-header" onclick="toggleSection('info-content')">
-                <h2>Subnet Guide</h2>
+                <h2>How to Use</h2>
                 <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="info-content" class="section-content active">
                 <div class="info-cards">
                     <article class="info-card">
-                        <h3>📋 What is Subnetting?</h3>
-                        <p>
-                            Subnetting divides a network into smaller sub-networks, improving network performance, 
-                            security, and management. It uses subnet masks to determine which portion of an IP 
-                            address represents the network and which represents hosts.
-                        </p>
+                        <h3>📊 Why Calculate Price per TB?</h3>
+                        <p>Comparing storage drives can be tricky when they come in different sizes and prices. This calculator helps determine cost-effectiveness by calculating the price per terabyte, making it easy to compare different drives side-by-side.</p>
                     </article>
-
                     <article class="info-card">
-                        <h3>🔢 CIDR Notation</h3>
-                        <p>
-                            CIDR (Classless Inter-Domain Routing) notation uses a slash followed by a number 
-                            (e.g., /24) to indicate how many bits are used for the network portion. /24 means 
-                            the first 24 bits are the network, leaving 8 bits for hosts.
-                        </p>
+                        <h3>🎯 How to Use</h3>
+                        <p>Simply enter the total price of the drive and its storage capacity in terabytes. The calculator will instantly show you the cost per TB and a value rating to help make informed purchasing decisions.</p>
                     </article>
-
                     <article class="info-card">
-                        <h3>🌐 Private IP Ranges</h3>
-                        <p>
-                            Common private IP ranges: 10.0.0.0/8 (10.x.x.x), 172.16.0.0/12 (172.16-31.x.x), 
-                            and 192.168.0.0/16 (192.168.x.x). These are reserved for internal networks and 
-                            not routable on the public internet.
-                        </p>
+                        <h3>💡 Pro Tip</h3>
+                        <p>Generally, larger drives offer better value per TB. However, consider your actual storage needs — buying more capacity than you need might not be economical if you won't use it within the drive's lifespan.</p>
                     </article>
-
                     <article class="info-card">
-                        <h3>💡 Common Subnet Sizes</h3>
-                        <p>
-                            /24 (254 hosts) - Small networks. /22 (1,022 hosts) - Medium networks. 
-                            /20 (4,094 hosts) - Large networks. /30 (2 hosts) - Point-to-point links. 
-                            Choose based on your needs with room for growth.
-                        </p>
+                        <h3>🔍 What to Look For</h3>
+                        <p>A lower price per TB indicates better value. However, also consider drive speed (RPM for HDDs, read/write speeds for SSDs), warranty period, and brand reliability when making your final decision.</p>
                     </article>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="main-footer">
-        <p>&copy; 2024 Sam Streets. All rights reserved.</p>
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
     </footer>
 
-    <!-- Scripts -->
     <script src="app.js"></script>
-    <script>
-        function ipToInt(ip) {
-            const parts = ip.split('.');
-            return (parseInt(parts[0]) << 24) + 
-                   (parseInt(parts[1]) << 16) + 
-                   (parseInt(parts[2]) << 8) + 
-                   parseInt(parts[3]);
-        }
-
-        function intToIp(int) {
-            return [
-                (int >>> 24) & 0xFF,
-                (int >>> 16) & 0xFF,
-                (int >>> 8) & 0xFF,
-                int & 0xFF
-            ].join('.');
-        }
-
-        function ipToBinary(ip) {
-            return ip.split('.').map(octet => {
-                return parseInt(octet).toString(2).padStart(8, '0');
-            }).map(binary => `<span class="binary-octet">${binary}</span>`).join('');
-        }
-
-        function getIpClass(firstOctet) {
-            if (firstOctet >= 1 && firstOctet <= 126) return 'A';
-            if (firstOctet >= 128 && firstOctet <= 191) return 'B';
-            if (firstOctet >= 192 && firstOctet <= 223) return 'C';
-            if (firstOctet >= 224 && firstOctet <= 239) return 'D (Multicast)';
-            if (firstOctet >= 240 && firstOctet <= 255) return 'E (Reserved)';
-            return 'Unknown';
-        }
-
-        function calculateSubnet() {
-            const ipInput = document.getElementById('ip-address').value.trim();
-            const cidr = parseInt(document.getElementById('cidr').value);
-            const errorDiv = document.getElementById('error-message');
-
-            // Validate IP
-            const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
-            if (!ipRegex.test(ipInput)) {
-                errorDiv.textContent = 'Invalid IP address format';
-                errorDiv.style.display = 'block';
-                document.getElementById('results').style.display = 'none';
-                return;
-            }
-
-            const octets = ipInput.split('.').map(Number);
-            if (octets.some(octet => octet < 0 || octet > 255)) {
-                errorDiv.textContent = 'IP octets must be between 0 and 255';
-                errorDiv.style.display = 'block';
-                document.getElementById('results').style.display = 'none';
-                return;
-            }
-
-            errorDiv.style.display = 'none';
-
-            // Calculate subnet mask
-            const mask = -1 << (32 - cidr);
-            const subnetMask = intToIp(mask);
-            const wildcardMask = intToIp(~mask);
-
-            // Calculate network and broadcast
-            const ipInt = ipToInt(ipInput);
-            const networkInt = ipInt & mask;
-            const broadcastInt = networkInt | ~mask;
-
-            const networkAddress = intToIp(networkInt);
-            const broadcastAddress = intToIp(broadcastInt);
-            const firstIp = intToIp(networkInt + 1);
-            const lastIp = intToIp(broadcastInt - 1);
-
-            // Calculate hosts
-            const totalHosts = Math.pow(2, 32 - cidr);
-            const usableHosts = cidr === 31 ? 2 : (cidr === 32 ? 1 : totalHosts - 2);
-
-            // Get IP class
-            const ipClass = getIpClass(octets[0]);
-
-            // Update display
-            document.getElementById('network-address').textContent = networkAddress;
-            document.getElementById('broadcast-address').textContent = broadcastAddress;
-            document.getElementById('first-ip').textContent = firstIp;
-            document.getElementById('last-ip').textContent = lastIp;
-            document.getElementById('subnet-mask').textContent = subnetMask;
-            document.getElementById('wildcard-mask').textContent = wildcardMask;
-            document.getElementById('total-hosts').textContent = totalHosts.toLocaleString();
-            document.getElementById('usable-hosts').textContent = usableHosts.toLocaleString();
-            document.getElementById('ip-class').textContent = ipClass;
-
-            // Binary display
-            document.getElementById('binary-ip').innerHTML = 
-                `<strong>IP:</strong> ${ipToBinary(ipInput)}`;
-            document.getElementById('binary-mask').innerHTML = 
-                `<strong>Mask:</strong> ${ipToBinary(subnetMask)}`;
-
-            // Show results
-            document.getElementById('results').style.display = 'block';
-        }
-
-        // Calculate on load
-        window.addEventListener('load', calculateSubnet);
-
-        // Calculate on input change
-        document.getElementById('ip-address').addEventListener('input', calculateSubnet);
-        document.getElementById('cidr').addEventListener('change', calculateSubnet);
-    </script>
 </body>
 </html>

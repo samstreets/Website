@@ -3,6 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Generate MD5, SHA-1, SHA-256, and SHA-512 cryptographic hashes from text or files.">
+    <meta property="og:title" content="Hash Generator - Streets Services">
+    <meta property="og:description" content="Generate MD5, SHA-1, SHA-256, and SHA-512 hashes from text or files.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/hash-generator.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
     <title>Hash Generator - Streets Services</title>
     <link rel="icon" type="image/png" href="pictures/icon.png">
     <link rel="stylesheet" href="styles.css">
@@ -11,7 +18,7 @@
 <body>
     <header class="main-header">
         <div class="header-content">
-            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="40" height="40">
+            <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
             <h1>Hash Generator</h1>
         </div>
         <p class="tagline">Generate Cryptographic Hashes</p>
@@ -27,11 +34,11 @@
             </div>
             <div id="input-content" class="section-content active">
                 <div class="calculator-container">
-                    <textarea id="textInput" placeholder="Enter text..." style="width: 100%; min-height: 120px; background: var(--bg-dark); color: var(--text-primary); border: 2px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; font-family: 'Courier New', monospace; margin-bottom: 1rem;"></textarea>
-                    
-                    <div onclick="document.getElementById('fileInput').click()" style="padding: 1.5rem; border: 2px dashed var(--border-color); border-radius: var(--radius-sm); text-align: center; cursor: pointer;">
-                        <input type="file" id="fileInput" style="display: none;">
-                        <div style="color: var(--accent-color);">📁 Upload File</div>
+                    <textarea id="textInput" placeholder="Enter text to hash..." style="width:100%;min-height:120px;background:var(--bg-dark);color:var(--text-primary);border:2px solid var(--border-color);border-radius:var(--radius-sm);padding:1rem;font-family:'Courier New',monospace;margin-bottom:1rem;"></textarea>
+                    <div onclick="document.getElementById('fileInput').click()" style="padding:1.5rem;border:2px dashed var(--border-color);border-radius:var(--radius-sm);text-align:center;cursor:pointer;transition:border-color 0.2s;" id="fileZone">
+                        <input type="file" id="fileInput" style="display:none;">
+                        <div style="color:var(--accent-color);">📁 Upload File to Hash</div>
+                        <div style="color:var(--text-secondary);font-size:0.85rem;margin-top:0.25rem;">or drag and drop</div>
                     </div>
                 </div>
             </div>
@@ -46,61 +53,74 @@
                 <div class="generators-grid">
                     <div class="generator-section">
                         <h3>MD5</h3>
-                        <div class="result-display" id="md5" style="font-size: 0.9rem; word-break: break-all; min-height: 60px;">-</div>
-                        <button class="generator-button" onclick="copyHash('md5')">Copy</button>
+                        <div class="result-display" id="md5" style="font-size:0.85rem;word-break:break-all;min-height:60px;">-</div>
+                        <button class="generator-button" onclick="copyHash('md5', this)">Copy</button>
                     </div>
                     <div class="generator-section">
                         <h3>SHA-1</h3>
-                        <div class="result-display" id="sha1" style="font-size: 0.9rem; word-break: break-all; min-height: 60px;">-</div>
-                        <button class="generator-button" onclick="copyHash('sha1')">Copy</button>
+                        <div class="result-display" id="sha1" style="font-size:0.85rem;word-break:break-all;min-height:60px;">-</div>
+                        <button class="generator-button" onclick="copyHash('sha1', this)">Copy</button>
                     </div>
                     <div class="generator-section">
                         <h3>SHA-256</h3>
-                        <div class="result-display" id="sha256" style="font-size: 0.9rem; word-break: break-all; min-height: 60px;">-</div>
-                        <button class="generator-button" onclick="copyHash('sha256')">Copy</button>
+                        <div class="result-display" id="sha256" style="font-size:0.85rem;word-break:break-all;min-height:60px;">-</div>
+                        <button class="generator-button" onclick="copyHash('sha256', this)">Copy</button>
                     </div>
                     <div class="generator-section">
                         <h3>SHA-512</h3>
-                        <div class="result-display" id="sha512" style="font-size: 0.9rem; word-break: break-all; min-height: 60px;">-</div>
-                        <button class="generator-button" onclick="copyHash('sha512')">Copy</button>
+                        <div class="result-display" id="sha512" style="font-size:0.7rem;word-break:break-all;min-height:60px;">-</div>
+                        <button class="generator-button" onclick="copyHash('sha512', this)">Copy</button>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <script src="script.js"></script>
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="app.js"></script>
     <script>
         function generate(input) {
-            document.getElementById('md5').textContent = CryptoJS.MD5(input).toString();
-            document.getElementById('sha1').textContent = CryptoJS.SHA1(input).toString();
+            document.getElementById('md5').textContent    = CryptoJS.MD5(input).toString();
+            document.getElementById('sha1').textContent   = CryptoJS.SHA1(input).toString();
             document.getElementById('sha256').textContent = CryptoJS.SHA256(input).toString();
             document.getElementById('sha512').textContent = CryptoJS.SHA512(input).toString();
         }
 
-        document.getElementById('textInput').addEventListener('input', (e) => {
+        document.getElementById('textInput').addEventListener('input', e => {
             if (e.target.value) generate(e.target.value);
         });
 
-        document.getElementById('fileInput').addEventListener('change', function() {
+        document.getElementById('fileInput').addEventListener('change', function () {
             const reader = new FileReader();
-            reader.onload = (e) => generate(CryptoJS.lib.WordArray.create(e.target.result));
+            reader.onload = e => generate(CryptoJS.lib.WordArray.create(e.target.result));
             reader.readAsArrayBuffer(this.files[0]);
         });
 
-        function copyHash(id) {
+        function copyHash(id, btn) {
             const text = document.getElementById(id).textContent;
             if (text && text !== '-') {
                 navigator.clipboard.writeText(text);
-                event.target.textContent = '✓ Copied';
-                setTimeout(() => event.target.textContent = 'Copy', 2000);
+                btn.textContent = '✓ Copied';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
             }
         }
 
-        function toggleSection(id) {
-            document.getElementById(id).classList.toggle('active');
-            event.currentTarget.classList.toggle('collapsed');
-        }
+        // Drag and drop
+        const zone = document.getElementById('fileZone');
+        zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--primary-color)'; });
+        zone.addEventListener('dragleave', () => { zone.style.borderColor = 'var(--border-color)'; });
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            zone.style.borderColor = 'var(--border-color)';
+            if (e.dataTransfer.files.length) {
+                const reader = new FileReader();
+                reader.onload = ev => generate(CryptoJS.lib.WordArray.create(ev.target.result));
+                reader.readAsArrayBuffer(e.dataTransfer.files[0]);
+            }
+        });
     </script>
 </body>
 </html>
