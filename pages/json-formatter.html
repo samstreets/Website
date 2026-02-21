@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Format, validate, and beautify JSON data instantly.">
+    <meta property="og:title" content="JSON Formatter - Streets Services">
+    <meta property="og:description" content="Format, validate, and beautify JSON data instantly.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/json-formatter.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>JSON Formatter - Streets Services</title>
+    <link rel="icon" type="image/png" href="../pictures/icon.png">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="../pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
+            <h1>JSON Formatter</h1>
+        </div>
+        <p class="tagline">Format, Validate &amp; Beautify JSON</p>
+    </header>
+
+    <main class="container">
+        <a href="../index.html" class="back-link"><span>←</span> <span>Back to Home</span></a>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('formatter-content')">
+                <h2>JSON Editor</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div id="formatter-content" class="section-content active">
+                <div class="calculator-container">
+                    <div style="margin-bottom:1rem;display:flex;gap:1rem;align-items:center;">
+                        <span style="color:var(--text-secondary);">Status:</span>
+                        <span id="status" style="padding:0.25rem 0.75rem;border-radius:20px;font-size:0.85rem;background:var(--bg-dark);">Ready</span>
+                    </div>
+                    <textarea id="jsonInput" placeholder='{"example": "json"}' style="width:100%;min-height:300px;background:var(--bg-dark);color:var(--text-primary);border:2px solid var(--border-color);border-radius:var(--radius-sm);padding:1rem;font-family:'Courier New',monospace;margin-bottom:1rem;"></textarea>
+                    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+                        <label style="display:flex;align-items:center;gap:0.5rem;">
+                            <input type="checkbox" id="sortKeys" checked> Sort Keys
+                        </label>
+                        <label style="display:flex;align-items:center;gap:0.5rem;">
+                            Indent: <input type="number" id="indent" min="1" max="8" value="2" style="width:60px;padding:0.25rem;background:var(--bg-dark);border:1px solid var(--border-color);color:var(--text-primary);border-radius:4px;">
+                        </label>
+                    </div>
+                    <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+                        <button class="generator-button" onclick="formatJSON()" style="flex:1;">Format</button>
+                        <button class="generator-button" onclick="minifyJSON()" style="flex:1;">Minify</button>
+                        <button class="generator-button" onclick="copyJSON(this)" style="flex:1;">Copy</button>
+                        <button class="generator-button" onclick="clearJSON()" style="flex:1;">Clear</button>
+                    </div>
+                    <div id="error" style="display:none;margin-top:1rem;padding:1rem;background:rgba(239,68,68,0.1);border-left:4px solid #ef4444;border-radius:var(--radius-sm);color:#ef4444;"></div>
+                    <div style="display:flex;gap:2rem;justify-content:center;margin-top:1.5rem;">
+                        <div style="text-align:center;">
+                            <div style="font-size:1.5rem;font-weight:600;color:var(--accent-color);" id="chars">0</div>
+                            <div style="font-size:0.85rem;color:var(--text-secondary);">Characters</div>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-size:1.5rem;font-weight:600;color:var(--accent-color);" id="lines">0</div>
+                            <div style="font-size:0.85rem;color:var(--text-secondary);">Lines</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="../app.js"></script>
+    <script>
+        const statusEl = document.getElementById('status');
+        const errorEl  = document.getElementById('error');
+        const input    = document.getElementById('jsonInput');
+
+        function updateStats(text) {
+            document.getElementById('chars').textContent = text.length.toLocaleString();
+            document.getElementById('lines').textContent = (text.match(/\n/g) || []).length + 1;
+        }
+
+        function setStatus(text, colour) {
+            statusEl.textContent     = text;
+            statusEl.style.background = colour;
+            statusEl.style.color      = colour === 'var(--bg-dark)' ? 'var(--text-secondary)' : 'white';
+        }
+
+        function formatJSON() {
+            const text = input.value.trim();
+            errorEl.style.display = 'none';
+            if (!text) return;
+            try {
+                let obj = JSON.parse(text);
+                if (document.getElementById('sortKeys').checked) obj = sortKeys(obj);
+                const formatted = JSON.stringify(obj, null, parseInt(document.getElementById('indent').value));
+                input.value = formatted;
+                setStatus('✓ Valid', '#10b981');
+                updateStats(formatted);
+            } catch (e) {
+                setStatus('✗ Invalid', '#ef4444');
+                errorEl.textContent    = e.message;
+                errorEl.style.display  = 'block';
+            }
+        }
+
+        function minifyJSON() {
+            const text = input.value.trim();
+            if (!text) return;
+            try {
+                input.value = JSON.stringify(JSON.parse(text));
+                setStatus('✓ Minified', '#10b981');
+                updateStats(input.value);
+            } catch (e) {
+                errorEl.textContent   = e.message;
+                errorEl.style.display = 'block';
+            }
+        }
+
+        function sortKeys(obj) {
+            if (Array.isArray(obj)) return obj.map(sortKeys);
+            if (obj !== null && typeof obj === 'object') {
+                return Object.keys(obj).sort().reduce((r, k) => { r[k] = sortKeys(obj[k]); return r; }, {});
+            }
+            return obj;
+        }
+
+        function copyJSON(btn) {
+            navigator.clipboard.writeText(input.value);
+            btn.textContent = '✓ Copied';
+            setTimeout(() => btn.textContent = 'Copy', 2000);
+        }
+
+        function clearJSON() {
+            input.value = '';
+            setStatus('Ready', 'var(--bg-dark)');
+            errorEl.style.display = 'none';
+            updateStats('');
+        }
+
+        input.addEventListener('input', () => { if (input.value) formatJSON(); });
+        updateStats('');
+    </script>
+</body>
+</html>

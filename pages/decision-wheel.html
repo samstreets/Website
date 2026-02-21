@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Can't decide? Let the wheel choose! Add your options and spin to get a random decision.">
+    <meta property="og:title" content="Decision Wheel - Streets Services">
+    <meta property="og:description" content="Add your options and spin the wheel for a random decision!">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/decision-wheel.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>Decision Wheel - Streets Services</title>
+    <link rel="icon" type="image/png" href="../pictures/icon.png">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .wheel-layout { display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start; }
+        @media(max-width:768px) { .wheel-layout { grid-template-columns:1fr; } }
+        .wheel-wrap { position:relative;display:flex;flex-direction:column;align-items:center;gap:1rem; }
+        .wheel-pointer { font-size:2.5rem;line-height:1;margin-bottom:-0.5rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+        canvas#wheel { border-radius:50%;box-shadow:0 0 30px rgba(59,130,246,0.4);cursor:pointer;transition:box-shadow var(--transition-base); }
+        canvas#wheel:hover { box-shadow:0 0 40px rgba(59,130,246,0.6); }
+        .options-list { list-style:none;padding:0;margin:0.75rem 0; }
+        .option-item { display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;padding:0.5rem;background:var(--bg-dark);border-radius:var(--radius-sm);border-left:4px solid var(--primary-color);transition:border-color var(--transition-base); }
+        .option-color { width:18px;height:18px;border-radius:50%;flex-shrink:0; }
+        .option-text { flex:1;color:var(--text-primary);font-size:0.95rem; }
+        .option-del { background:#ef4444;color:white;border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background var(--transition-base); }
+        .option-del:hover { background:#dc2626; }
+        .add-row { display:flex;gap:0.75rem;margin-top:0.75rem; }
+        .add-row input { flex:1;padding:0.6rem 0.75rem;background:var(--bg-card);border:2px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);font-family:var(--font-family); }
+        .add-row input:focus { outline:none;border-color:var(--primary-color); }
+        .add-btn { background:#10b981;color:white;border:none;padding:0.6rem 1rem;border-radius:var(--radius-sm);cursor:pointer;font-weight:600;transition:background var(--transition-base); }
+        .add-btn:hover { background:#059669; }
+        .winner-banner { background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));padding:1.5rem;border-radius:var(--radius-lg);text-align:center;margin-top:1rem;display:none; }
+        .winner-banner.show { display:block;animation:fadeIn 0.5s ease; }
+        .winner-label { color:rgba(255,255,255,0.8);font-size:0.875rem;margin-bottom:0.5rem; }
+        .winner-text { color:white;font-size:2rem;font-weight:700; }
+        .confetti-char { position:fixed;pointer-events:none;font-size:1.5rem;animation:fall linear forwards; }
+        @keyframes fall {
+            0%   { transform:translateY(-100px) rotate(0); opacity:1; }
+            100% { transform:translateY(110vh) rotate(720deg); opacity:0; }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="../pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
+            <h1>Decision Wheel</h1>
+        </div>
+        <p class="tagline">Spin the Wheel — Let Fate Decide!</p>
+    </header>
+
+    <main class="container">
+        <a href="../index.html" class="back-link"><span aria-hidden="true">←</span><span>Back to Home</span></a>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('wheel-content')">
+                <h2>Spin the Wheel</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="wheel-content" class="section-content active">
+                <div class="wheel-layout">
+                    <!-- Wheel -->
+                    <div class="wheel-wrap">
+                        <div class="wheel-pointer">▼</div>
+                        <canvas id="wheel" width="320" height="320" onclick="spin()" title="Click to spin!"></canvas>
+                        <button class="generator-button" onclick="spin()" id="spin-btn">🎡 Spin the Wheel!</button>
+                        <div class="winner-banner" id="winner-banner">
+                            <div class="winner-label">🎉 The wheel chose...</div>
+                            <div class="winner-text" id="winner-text"></div>
+                        </div>
+                    </div>
+
+                    <!-- Options -->
+                    <div>
+                        <h3 style="color:var(--accent-color);margin-bottom:1rem;">Your Options</h3>
+                        <ul class="options-list" id="options-list"></ul>
+                        <div class="add-row">
+                            <input type="text" id="new-option" placeholder="Add an option..." maxlength="40"
+                                onkeypress="if(event.key==='Enter')addOption()">
+                            <button class="add-btn" onclick="addOption()">+ Add</button>
+                        </div>
+                        <div style="display:flex;gap:0.75rem;margin-top:1rem;flex-wrap:wrap;">
+                            <button class="generator-button" onclick="clearOptions()" style="max-width:160px;padding:0.5rem 1rem;font-size:0.9rem;background:linear-gradient(135deg,#ef4444,#dc2626);">Clear All</button>
+                            <button class="generator-button" onclick="loadDefaults()" style="max-width:160px;padding:0.5rem 1rem;font-size:0.9rem;">Load Examples</button>
+                        </div>
+                        <div style="margin-top:1.5rem;">
+                            <label style="display:flex;align-items:center;gap:0.75rem;color:var(--text-secondary);">
+                                <input type="checkbox" id="remove-winner" style="width:18px;height:18px;accent-color:var(--primary-color);">
+                                Remove winner after spin
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="../app.js"></script>
+    <script>
+        const COLORS = ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#ec4899','#84cc16','#6366f1','#14b8a6','#fb923c'];
+        let options = [];
+        let spinning = false;
+        let angle = 0;
+
+        function addOption() {
+            const input = document.getElementById('new-option');
+            const val = input.value.trim();
+            if (!val) return;
+            options.push(val);
+            input.value = '';
+            renderList();
+            drawWheel();
+        }
+
+        function removeOption(idx) {
+            options.splice(idx, 1);
+            renderList();
+            drawWheel();
+        }
+
+        function clearOptions() {
+            options = [];
+            renderList();
+            drawWheel();
+            document.getElementById('winner-banner').classList.remove('show');
+        }
+
+        function loadDefaults() {
+            options = ['Option A', 'Option B', 'Option C', 'Option D', 'Option E', 'Option F'];
+            renderList();
+            drawWheel();
+        }
+
+        function renderList() {
+            const list = document.getElementById('options-list');
+            list.innerHTML = options.map((o, i) =>
+                `<li class="option-item">
+                    <div class="option-color" style="background:${COLORS[i % COLORS.length]};"></div>
+                    <span class="option-text">${o}</span>
+                    <button class="option-del" onclick="removeOption(${i})" title="Remove">✕</button>
+                </li>`
+            ).join('');
+        }
+
+        function drawWheel(highlightIdx = -1) {
+            const canvas = document.getElementById('wheel');
+            const ctx = canvas.getContext('2d');
+            const cx = canvas.width / 2, cy = canvas.height / 2, r = cx - 8;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (options.length === 0) {
+                ctx.fillStyle = '#1e293b';
+                ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#64748b';
+                ctx.font = '16px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('Add options above', cx, cy);
+                return;
+            }
+
+            const arc = (Math.PI * 2) / options.length;
+            options.forEach((opt, i) => {
+                const start = angle + i * arc - Math.PI / 2;
+                const end   = start + arc;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, r, start, end);
+                ctx.closePath();
+                ctx.fillStyle = i === highlightIdx ? '#fbbf24' : COLORS[i % COLORS.length];
+                ctx.fill();
+                ctx.strokeStyle = '#0f172a';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Label
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(start + arc / 2);
+                ctx.textAlign = 'right';
+                ctx.fillStyle = 'white';
+                ctx.font = `bold ${Math.min(14, 200 / options.length + 4)}px sans-serif`;
+                ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                ctx.shadowBlur = 3;
+                const label = opt.length > 14 ? opt.slice(0, 13) + '…' : opt;
+                ctx.fillText(label, r - 12, 5);
+                ctx.restore();
+            });
+
+            // Centre circle
+            ctx.beginPath(); ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+            ctx.fillStyle = '#0f172a'; ctx.fill();
+            ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3; ctx.stroke();
+        }
+
+        function spin() {
+            if (spinning || options.length < 2) {
+                if (options.length < 2) alert('Add at least 2 options to spin!');
+                return;
+            }
+            spinning = true;
+            document.getElementById('spin-btn').disabled = true;
+            document.getElementById('winner-banner').classList.remove('show');
+
+            const spins    = 5 + Math.random() * 5;
+            const totalDeg = spins * Math.PI * 2 + Math.random() * Math.PI * 2;
+            const duration = 3000 + Math.random() * 1000;
+            const start    = performance.now();
+            const startAngle = angle;
+
+            function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+            function frame(now) {
+                const t = Math.min((now - start) / duration, 1);
+                angle = startAngle + totalDeg * easeOut(t);
+                drawWheel();
+                if (t < 1) {
+                    requestAnimationFrame(frame);
+                } else {
+                    spinning = false;
+                    document.getElementById('spin-btn').disabled = false;
+                    revealWinner(angle, totalDeg);
+                }
+            }
+            requestAnimationFrame(frame);
+        }
+
+        function revealWinner(finalAngle, totalRot) {
+            const arc = (Math.PI * 2) / options.length;
+            // Pointer is at top (−π/2). Find which segment is there.
+            const norm = (((-finalAngle + Math.PI / 2) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+            const idx = Math.floor(norm / arc) % options.length;
+            drawWheel(idx);
+            const winner = options[idx];
+            document.getElementById('winner-text').textContent = winner;
+            document.getElementById('winner-banner').classList.add('show');
+            confetti();
+
+            if (document.getElementById('remove-winner').checked) {
+                setTimeout(() => {
+                    options.splice(idx, 1);
+                    renderList();
+                    drawWheel();
+                }, 1800);
+            }
+        }
+
+        function confetti() {
+            const chars = ['🎉','🎊','⭐','✨','🌟','🎈'];
+            for (let i = 0; i < 18; i++) {
+                const el = document.createElement('div');
+                el.className = 'confetti-char';
+                el.textContent = chars[Math.floor(Math.random() * chars.length)];
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+                el.style.animationDelay = (Math.random() * 0.5) + 's';
+                document.body.appendChild(el);
+                el.addEventListener('animationend', () => el.remove());
+            }
+        }
+
+        loadDefaults();
+    </script>
+</body>
+</html>

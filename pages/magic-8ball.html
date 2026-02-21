@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Ask the Magic 8-Ball your burning questions and receive mystical answers.">
+    <meta property="og:title" content="Magic 8-Ball - Streets Services">
+    <meta property="og:description" content="Ask the Magic 8-Ball your yes/no questions and receive a mystical answer.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/magic-8ball.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>Magic 8-Ball - Streets Services</title>
+    <link rel="icon" type="image/png" href="../pictures/icon.png">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .ball-scene { display:flex;justify-content:center;align-items:center;margin:2rem 0; }
+        .ball { width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#444,#111 60%,#000);box-shadow:0 0 40px rgba(59,130,246,0.4),inset -20px -20px 40px rgba(0,0,0,0.5),inset 10px 10px 20px rgba(255,255,255,0.05);cursor:pointer;position:relative;transition:transform 0.2s ease;user-select:none;flex-shrink:0; }
+        .ball:hover { transform:scale(1.03); }
+        .ball:active { transform:scale(0.97); }
+        .ball.shaking { animation:shake 0.5s ease; }
+        @keyframes shake { 0%,100%{transform:rotate(0)} 20%{transform:rotate(-8deg)} 40%{transform:rotate(8deg)} 60%{transform:rotate(-6deg)} 80%{transform:rotate(6deg)} }
+        .ball-window { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,#1e3a8a,#0f172a);border:3px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;padding:0.5rem; }
+        .ball-text { font-size:0.75rem;font-weight:700;text-align:center;color:#60a5fa;line-height:1.2;transition:opacity 0.3s ease;opacity:0; }
+        .ball-text.show { opacity:1; }
+        .ball-number { position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:2rem;font-weight:900;color:rgba(255,255,255,0.08); }
+        .answer-display { background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));padding:1.5rem;border-radius:var(--radius-lg);text-align:center;margin-top:1rem;display:none; }
+        .answer-display.show { display:block;animation:fadeIn 0.5s ease; }
+        .answer-type { font-size:0.8rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.8;margin-bottom:0.5rem; }
+        .answer-text { font-size:1.5rem;font-weight:700;color:white; }
+        .positive { background:linear-gradient(135deg,#10b981,#059669); }
+        .negative { background:linear-gradient(135deg,#ef4444,#dc2626); }
+        .neutral  { background:linear-gradient(135deg,#f59e0b,#d97706); }
+        .history-entry { background:var(--bg-dark);padding:0.75rem 1rem;border-radius:var(--radius-sm);margin-bottom:0.5rem;border-left:4px solid var(--primary-color); }
+        .history-q { color:var(--text-secondary);font-size:0.875rem;margin-bottom:0.25rem; }
+        .history-a { color:var(--text-primary);font-weight:600; }
+        .answer-type-dot { display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:0.5rem; }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="../pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
+            <h1>Magic 8-Ball</h1>
+        </div>
+        <p class="tagline">Ask the Oracle — Seek Your Destiny</p>
+    </header>
+
+    <main class="container">
+        <a href="../index.html" class="back-link"><span aria-hidden="true">←</span><span>Back to Home</span></a>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('ball-content')">
+                <h2>Ask a Question</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="ball-content" class="section-content active">
+                <div class="calculator-container">
+                    <div class="form-group">
+                        <label for="question">🔮 Your Question</label>
+                        <input type="text" id="question" placeholder="Will I get a promotion this year?" maxlength="200" onkeypress="if(event.key==='Enter')askBall()">
+                    </div>
+                    <button class="generator-button" onclick="askBall()" style="max-width:none;">🎱 Ask the 8-Ball</button>
+
+                    <div class="ball-scene">
+                        <div class="ball" id="ball" onclick="askBall()">
+                            <div class="ball-number">8</div>
+                            <div class="ball-window">
+                                <div class="ball-text" id="ball-text">?</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="answer-display" id="answer-display">
+                        <div class="answer-type" id="answer-type">POSITIVE</div>
+                        <div class="answer-text" id="answer-text">It is certain.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('history-content')">
+                <h2>Reading History</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="history-content" class="section-content active">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                    <span id="hist-count" style="color:var(--text-secondary);font-size:0.875rem;">No readings yet</span>
+                    <button class="generator-button" onclick="clearHistory()" style="max-width:160px;padding:0.5rem 1rem;font-size:0.875rem;background:linear-gradient(135deg,#ef4444,#dc2626);">Clear</button>
+                </div>
+                <div id="history-list"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="../app.js"></script>
+    <script>
+        const ANSWERS = [
+            { text:'It is certain.',           type:'positive' },
+            { text:'It is decidedly so.',       type:'positive' },
+            { text:'Without a doubt.',          type:'positive' },
+            { text:'Yes, definitely.',          type:'positive' },
+            { text:'You may rely on it.',       type:'positive' },
+            { text:'As I see it, yes.',         type:'positive' },
+            { text:'Most likely.',              type:'positive' },
+            { text:'Outlook good.',             type:'positive' },
+            { text:'Yes.',                      type:'positive' },
+            { text:'Signs point to yes.',       type:'positive' },
+            { text:'Reply hazy, try again.',    type:'neutral'  },
+            { text:'Ask again later.',          type:'neutral'  },
+            { text:'Better not tell you now.',  type:'neutral'  },
+            { text:'Cannot predict now.',       type:'neutral'  },
+            { text:'Concentrate and ask again.',type:'neutral'  },
+            { text:"Don't count on it.",        type:'negative' },
+            { text:'My reply is no.',           type:'negative' },
+            { text:'My sources say no.',        type:'negative' },
+            { text:'Outlook not so good.',      type:'negative' },
+            { text:'Very doubtful.',            type:'negative' },
+        ];
+        const history = [];
+        let answering = false;
+
+        function askBall() {
+            if (answering) return;
+            answering = true;
+            const q = document.getElementById('question').value.trim();
+            const answer = ANSWERS[Math.floor(Math.random() * ANSWERS.length)];
+            const ball = document.getElementById('ball');
+            const ballText = document.getElementById('ball-text');
+            const display = document.getElementById('answer-display');
+
+            ball.classList.remove('shaking');
+            void ball.offsetWidth;
+            ball.classList.add('shaking');
+            ballText.classList.remove('show');
+            display.classList.remove('show', 'positive', 'negative', 'neutral');
+
+            setTimeout(() => {
+                ballText.textContent = answer.text;
+                ballText.classList.add('show');
+                document.getElementById('answer-text').textContent = answer.text;
+                document.getElementById('answer-type').textContent = answer.type.toUpperCase();
+                display.className = 'answer-display show ' + answer.type;
+                if (q) addHistory(q, answer);
+                answering = false;
+            }, 700);
+        }
+
+        function addHistory(q, a) {
+            history.unshift({ q, a });
+            if (history.length > 20) history.pop();
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const colors = { positive:'#10b981', negative:'#ef4444', neutral:'#f59e0b' };
+            document.getElementById('hist-count').textContent = `${history.length} reading${history.length !== 1 ? 's' : ''}`;
+            document.getElementById('history-list').innerHTML = history.map(h =>
+                `<div class="history-entry">
+                    <div class="history-q">${h.q}</div>
+                    <div class="history-a"><span class="answer-type-dot" style="background:${colors[h.a.type]};"></span>${h.a.text}</div>
+                </div>`
+            ).join('');
+        }
+
+        function clearHistory() { history.length = 0; renderHistory(); document.getElementById('hist-count').textContent = 'No readings yet'; }
+    </script>
+</body>
+</html>

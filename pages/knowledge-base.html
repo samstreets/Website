@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="IT knowledge base with common solutions, troubleshooting guides, and helpful tips.">
+    <meta property="og:title" content="IT Knowledge Base - Streets Services">
+    <meta property="og:description" content="IT troubleshooting guides, common solutions, and tips by Sam Streets.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/knowledge-base.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>IT Knowledge Base - Streets Services</title>
+    <link rel="icon" type="image/png" href="../pictures/icon.png">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .search-input { width:100%;padding:1rem 1.5rem;font-size:1.1rem;border:2px solid var(--border-color);border-radius:var(--radius-lg);background:var(--bg-card);color:var(--text-primary);transition:all var(--transition-base); }
+        .search-input:focus { outline:none;border-color:var(--primary-color);box-shadow:0 0 0 3px rgba(59,130,246,0.1); }
+        .search-input::placeholder { color:var(--text-secondary); }
+        .kb-card { background:var(--bg-dark);padding:1.5rem;border-radius:var(--radius-lg);border-left:4px solid var(--primary-color);margin-bottom:1.5rem;transition:all var(--transition-base);cursor:pointer; }
+        .kb-card:hover { border-left-color:var(--accent-color);transform:translateX(5px); }
+        .kb-card.hidden { display:none; }
+        .kb-header { display:flex;justify-content:space-between;align-items:start;margin-bottom:1rem; }
+        .kb-title { color:var(--accent-color);font-size:var(--font-size-xl);margin-bottom:0.5rem; }
+        .kb-category { display:inline-block;background:var(--primary-color);color:white;padding:0.25rem 0.75rem;border-radius:20px;font-size:0.75rem;font-weight:600;margin-left:1rem; }
+        .kb-meta { display:flex;gap:1rem;color:var(--text-secondary);font-size:0.875rem;margin-bottom:1rem; }
+        .kb-description { color:var(--text-secondary);line-height:1.7;margin-bottom:1rem; }
+        .kb-solution { background:var(--bg-card);padding:1rem;border-radius:var(--radius-sm);border-left:3px solid var(--accent-color);max-height:0;overflow:hidden;transition:max-height 0.3s ease; }
+        .kb-card.expanded .kb-solution { max-height:2000px;margin-top:1rem; }
+        .kb-solution h4 { color:var(--accent-color);margin-bottom:0.75rem; }
+        .kb-solution ol,.kb-solution ul { margin-left:1.5rem;color:var(--text-secondary);line-height:1.8; }
+        .kb-solution li { margin-bottom:0.5rem; }
+        .kb-solution code { background:var(--bg-dark);padding:0.25rem 0.5rem;border-radius:3px;font-family:'Courier New',monospace;color:var(--accent-color);font-size:0.9em; }
+        .kb-tags { display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem; }
+        .kb-tag { background:var(--bg-card);color:var(--text-secondary);padding:0.25rem 0.75rem;border-radius:20px;font-size:0.75rem;border:1px solid var(--border-color); }
+        .expand-icon { transition:transform var(--transition-base);color:var(--accent-color);font-size:1.2rem; }
+        .kb-card.expanded .expand-icon { transform:rotate(180deg); }
+        .category-filter { display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.5rem; }
+        .filter-btn { background:var(--bg-card);border:2px solid var(--border-color);color:var(--text-secondary);padding:0.5rem 1rem;border-radius:20px;cursor:pointer;transition:all var(--transition-base);font-weight:500; }
+        .filter-btn:hover,.filter-btn.active { background:var(--primary-color);border-color:var(--primary-color);color:white; }
+        .no-results { text-align:center;padding:3rem;color:var(--text-secondary);display:none; }
+        .no-results.show { display:block; }
+        @media (max-width:768px) { .kb-header{flex-direction:column;} .kb-category{margin-left:0;margin-top:0.5rem;} .category-filter{justify-content:center;} }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="../pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
+            <h1>IT Knowledge Base</h1>
+        </div>
+        <p class="tagline">Solutions, Tips &amp; Troubleshooting Guides</p>
+    </header>
+
+    <main class="container">
+        <a href="../index.html" class="back-link"><span aria-hidden="true">←</span><span>Back to Home</span></a>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('kb-content')">
+                <h2>Knowledge Articles</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="kb-content" class="section-content active">
+                <div style="margin-bottom:1.5rem;">
+                    <input type="text" id="kb-search" class="search-input" placeholder="🔍 Search knowledge base..." oninput="searchKB(this.value)">
+                </div>
+                <div class="category-filter">
+                    <button class="filter-btn active" onclick="filterCategory('all', this)">All</button>
+                    <button class="filter-btn" onclick="filterCategory('Windows', this)">Windows</button>
+                    <button class="filter-btn" onclick="filterCategory('Office 365', this)">Office 365</button>
+                    <button class="filter-btn" onclick="filterCategory('Networking', this)">Networking</button>
+                    <button class="filter-btn" onclick="filterCategory('Backups', this)">Backups</button>
+                    <button class="filter-btn" onclick="filterCategory('Hardware', this)">Hardware</button>
+                </div>
+
+                <div id="kb-articles">
+                    <article class="kb-card" data-category="Windows" onclick="toggleKBCard(this)">
+                        <div class="kb-header"><div><h3 class="kb-title">Windows Update Stuck or Failing</h3><span class="kb-category">Windows</span></div><span class="expand-icon">▼</span></div>
+                        <div class="kb-meta"><span>🔧 Difficulty: Easy</span><span>⏱️ Time: 15–30 min</span></div>
+                        <p class="kb-description">Windows updates frequently get stuck at certain percentages or fail to install. One of the most common issues in Windows 10 and 11.</p>
+                        <div class="kb-solution">
+                            <h4>Solution Steps:</h4>
+                            <ol>
+                                <li>Run Windows Update Troubleshooter: Settings → Update &amp; Security → Troubleshoot</li>
+                                <li>Clear Windows Update cache: stop service with <code>net stop wuauserv</code>, delete <code>C:\Windows\SoftwareDistribution</code>, restart with <code>net start wuauserv</code></li>
+                                <li>Run <code>sfc /scannow</code> and <code>DISM /Online /Cleanup-Image /RestoreHealth</code></li>
+                                <li>Retry the update</li>
+                            </ol>
+                        </div>
+                        <div class="kb-tags"><span class="kb-tag">windows-update</span><span class="kb-tag">troubleshooting</span><span class="kb-tag">common-issue</span></div>
+                    </article>
+
+                    <article class="kb-card" data-category="Office 365" onclick="toggleKBCard(this)">
+                        <div class="kb-header"><div><h3 class="kb-title">User Unable to Access Shared Mailbox</h3><span class="kb-category">Office 365</span></div><span class="expand-icon">▼</span></div>
+                        <div class="kb-meta"><span>🔧 Difficulty: Easy</span><span>⏱️ Time: 10 min</span></div>
+                        <p class="kb-description">Users report they cannot see or access a shared mailbox that has been assigned to them in Office 365.</p>
+                        <div class="kb-solution">
+                            <h4>Solution Steps:</h4>
+                            <ol>
+                                <li>Verify permissions in Exchange Admin Center</li>
+                                <li>Ensure user has "Full Access" permission</li>
+                                <li>Wait 60 minutes for changes to propagate</li>
+                                <li>Have user close and restart Outlook</li>
+                                <li>If not auto-added, add manually: File → Account Settings → double-click account → More Settings → Advanced → add mailbox</li>
+                            </ol>
+                        </div>
+                        <div class="kb-tags"><span class="kb-tag">office-365</span><span class="kb-tag">exchange</span><span class="kb-tag">permissions</span></div>
+                    </article>
+
+                    <article class="kb-card" data-category="Networking" onclick="toggleKBCard(this)">
+                        <div class="kb-header"><div><h3 class="kb-title">Network Printer Offline or Not Responding</h3><span class="kb-category">Networking</span></div><span class="expand-icon">▼</span></div>
+                        <div class="kb-meta"><span>🔧 Difficulty: Easy</span><span>⏱️ Time: 10–15 min</span></div>
+                        <p class="kb-description">Network printer shows as offline or jobs get stuck in the print queue.</p>
+                        <div class="kb-solution">
+                            <h4>Solution Steps:</h4>
+                            <ol>
+                                <li>Check printer is powered on and connected to network</li>
+                                <li>Ping printer IP address to verify network connectivity</li>
+                                <li>Clear print queue: stop "Print Spooler", delete <code>C:\Windows\System32\spool\PRINTERS</code>, restart service</li>
+                                <li>Remove and re-add printer if issue persists</li>
+                                <li>Update printer drivers from manufacturer website</li>
+                            </ol>
+                        </div>
+                        <div class="kb-tags"><span class="kb-tag">printing</span><span class="kb-tag">network</span><span class="kb-tag">troubleshooting</span></div>
+                    </article>
+
+                    <article class="kb-card" data-category="Backups" onclick="toggleKBCard(this)">
+                        <div class="kb-header"><div><h3 class="kb-title">Veeam Backup Job Failing</h3><span class="kb-category">Backups</span></div><span class="expand-icon">▼</span></div>
+                        <div class="kb-meta"><span>🔧 Difficulty: Medium</span><span>⏱️ Time: 20–30 min</span></div>
+                        <p class="kb-description">Veeam backup jobs are failing with various errors or warnings.</p>
+                        <div class="kb-solution">
+                            <h4>Common Causes &amp; Solutions:</h4>
+                            <ul>
+                                <li><strong>Insufficient disk space:</strong> Check repository storage capacity</li>
+                                <li><strong>Network connectivity:</strong> Verify network path to backup repository</li>
+                                <li><strong>Snapshot issues:</strong> Remove old VM snapshots manually</li>
+                                <li><strong>VSS errors:</strong> Restart VSS service on VM, update VMware Tools</li>
+                            </ul>
+                            <h4>General Troubleshooting:</h4>
+                            <ol>
+                                <li>Check Veeam job logs for specific error messages</li>
+                                <li>Verify backup repository has sufficient space</li>
+                                <li>Ensure backup proxy and repository services are running</li>
+                                <li>Try running a manual backup to isolate scheduling issues</li>
+                            </ol>
+                        </div>
+                        <div class="kb-tags"><span class="kb-tag">veeam</span><span class="kb-tag">backup</span><span class="kb-tag">virtualization</span></div>
+                    </article>
+
+                    <article class="kb-card" data-category="Hardware" onclick="toggleKBCard(this)">
+                        <div class="kb-header"><div><h3 class="kb-title">Computer Running Slow</h3><span class="kb-category">Hardware</span></div><span class="expand-icon">▼</span></div>
+                        <div class="kb-meta"><span>🔧 Difficulty: Easy</span><span>⏱️ Time: 30–45 min</span></div>
+                        <p class="kb-description">Computer is running significantly slower than normal, applications take long to open, system freezes occasionally.</p>
+                        <div class="kb-solution">
+                            <h4>Diagnostic Steps:</h4>
+                            <ol>
+                                <li>Check Task Manager for high CPU/Memory/Disk usage</li>
+                                <li>Run Windows Defender full scan</li>
+                                <li>Review and disable unnecessary startup programs</li>
+                                <li>Check disk space — ensure at least 20% free on C:</li>
+                                <li>Run Disk Cleanup to remove temporary files</li>
+                                <li>Check for pending Windows updates</li>
+                                <li>Monitor disk health with CrystalDiskInfo</li>
+                                <li>Consider SSD upgrade if running on HDD</li>
+                            </ol>
+                        </div>
+                        <div class="kb-tags"><span class="kb-tag">performance</span><span class="kb-tag">hardware</span><span class="kb-tag">optimization</span></div>
+                    </article>
+
+                    <article class="kb-card" data-category="Networking" onclick="toggleKBCard(this)">
+                        <div class="kb-header"><div><h3 class="kb-title">Wi-Fi Connection Issues — Intermittent Drops</h3><span class="kb-category">Networking</span></div><span class="expand-icon">▼</span></div>
+                        <div class="kb-meta"><span>🔧 Difficulty: Medium</span><span>⏱️ Time: 20–30 min</span></div>
+                        <p class="kb-description">Wireless connection keeps dropping or shows as connected but no internet access.</p>
+                        <div class="kb-solution">
+                            <h4>Solution Steps:</h4>
+                            <ol>
+                                <li>Restart router and access point — unplug for 30 seconds</li>
+                                <li>Update wireless adapter drivers on client device</li>
+                                <li>Forget and reconnect to Wi-Fi network</li>
+                                <li>Change Wi-Fi channel to reduce interference (1, 6, or 11 for 2.4GHz)</li>
+                                <li>Verify router firmware is up to date</li>
+                                <li>Test with different devices to isolate client vs network issue</li>
+                                <li>Check for IP conflicts or DHCP exhaustion</li>
+                            </ol>
+                        </div>
+                        <div class="kb-tags"><span class="kb-tag">wireless</span><span class="kb-tag">connectivity</span><span class="kb-tag">network</span></div>
+                    </article>
+                </div>
+
+                <div id="no-results" class="no-results">
+                    <p style="font-size:3rem;margin-bottom:1rem;">🔍</p>
+                    <p style="font-size:1.2rem;">No articles found matching your search.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('tips-content')"><h2>Quick Tips</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
+            <div id="tips-content" class="section-content">
+                <div class="info-cards">
+                    <article class="info-card"><h3>💡 Documentation is Key</h3><p>Always document your solutions. The problem you solve today will likely appear again. Keep notes on fixes, configurations, and lessons learned.</p></article>
+                    <article class="info-card"><h3>🔄 Restart First</h3><p>Many issues resolve with a simple restart. Before diving deep into troubleshooting, try restarting the affected service, application, or device.</p></article>
+                    <article class="info-card"><h3>📋 Check the Basics</h3><p>Verify the fundamentals: Is it plugged in? Is it powered on? Is the network cable connected? Many "complex" issues have simple causes.</p></article>
+                    <article class="info-card"><h3>🔍 Search for Error Messages</h3><p>Search for exact error messages in quotes. Someone has likely encountered and solved the same issue. Microsoft and vendor forums are invaluable resources.</p></article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="../app.js"></script>
+    <script>
+        function toggleKBCard(card) {
+            const wasExpanded = card.classList.contains('expanded');
+            document.querySelectorAll('.kb-card').forEach(c => c.classList.remove('expanded'));
+            if (!wasExpanded) card.classList.add('expanded');
+        }
+
+        function searchKB(query) {
+            const cards = document.querySelectorAll('.kb-card');
+            query = query.toLowerCase().trim();
+            let count = 0;
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                const show = !query || text.includes(query);
+                card.classList.toggle('hidden', !show);
+                if (!show) card.classList.remove('expanded');
+                if (show) count++;
+            });
+            document.getElementById('no-results').classList.toggle('show', count === 0);
+        }
+
+        function filterCategory(category, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('kb-search').value = '';
+            let count = 0;
+            document.querySelectorAll('.kb-card').forEach(card => {
+                const show = category === 'all' || card.dataset.category === category;
+                card.classList.toggle('hidden', !show);
+                if (!show) card.classList.remove('expanded');
+                if (show) count++;
+            });
+            document.getElementById('no-results').classList.toggle('show', count === 0);
+        }
+    </script>
+</body>
+</html>

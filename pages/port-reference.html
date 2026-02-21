@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Quick reference for common TCP/UDP network ports and their services.">
+    <meta property="og:title" content="Port Reference - Streets Services">
+    <meta property="og:description" content="Searchable reference for common TCP/UDP network ports and services.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/port-reference.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>Port Reference - Streets Services</title>
+    <link rel="icon" type="image/png" href="../pictures/icon.png">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .search-input { width:100%;padding:1rem 1.5rem;font-size:1.1rem;border:2px solid var(--border-color);border-radius:var(--radius-lg);background:var(--bg-card);color:var(--text-primary);transition:all var(--transition-base); }
+        .search-input:focus { outline:none;border-color:var(--primary-color);box-shadow:0 0 0 3px rgba(59,130,246,0.1); }
+        .search-input::placeholder { color:var(--text-secondary); }
+        .port-table { width:100%;border-collapse:collapse;margin-top:1rem; }
+        .port-table th { background:linear-gradient(135deg,var(--primary-color) 0%,var(--secondary-color) 100%);color:white;padding:0.75rem 1rem;text-align:left;font-weight:600; }
+        .port-table th:first-child { border-radius:var(--radius-sm) 0 0 0; }
+        .port-table th:last-child  { border-radius:0 var(--radius-sm) 0 0; }
+        .port-table td { padding:0.75rem 1rem;border-bottom:1px solid var(--border-color);color:var(--text-secondary); }
+        .port-table tr:hover td { background:var(--bg-hover);color:var(--text-primary); }
+        .port-table tr.hidden { display:none; }
+        .port-num { font-family:'Courier New',monospace;color:var(--accent-color);font-weight:700; }
+        .badge { display:inline-block;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;margin-right:0.25rem; }
+        .tcp  { background:#3b82f6;color:white; }
+        .udp  { background:#10b981;color:white; }
+        .both { background:#8b5cf6;color:white; }
+        .cat-badge { display:inline-block;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.75rem;background:var(--bg-hover);color:var(--text-secondary); }
+        .filter-bar { display:flex;gap:0.75rem;flex-wrap:wrap;margin:1rem 0; }
+        .filter-btn { background:var(--bg-card);border:2px solid var(--border-color);color:var(--text-secondary);padding:0.4rem 1rem;border-radius:20px;cursor:pointer;transition:all var(--transition-base);font-weight:500;font-size:0.875rem; }
+        .filter-btn:hover,.filter-btn.active { background:var(--primary-color);border-color:var(--primary-color);color:white; }
+        .no-results { text-align:center;padding:3rem;color:var(--text-secondary);display:none; }
+        .no-results.show { display:block; }
+        .stats-bar { display:flex;gap:2rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap; }
+        .stat-pill { background:var(--bg-dark);padding:0.5rem 1.25rem;border-radius:20px;color:var(--text-secondary);font-size:0.9rem; }
+        .stat-pill span { color:var(--accent-color);font-weight:700; }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="../pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
+            <h1>Port Reference</h1>
+        </div>
+        <p class="tagline">Common TCP/UDP Network Ports</p>
+    </header>
+
+    <main class="container">
+        <a href="../index.html" class="back-link"><span aria-hidden="true">←</span><span>Back to Home</span></a>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('ports-content')">
+                <h2>Port Directory</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="ports-content" class="section-content active">
+                <div class="stats-bar">
+                    <div class="stat-pill">Total Ports: <span id="total-count">0</span></div>
+                    <div class="stat-pill">Showing: <span id="showing-count">0</span></div>
+                </div>
+                <input type="text" class="search-input" id="search" placeholder="🔍 Search port number, service name, or description..." oninput="filterPorts()">
+                <div class="filter-bar">
+                    <button class="filter-btn active" onclick="filterCategory('all', this)">All</button>
+                    <button class="filter-btn" onclick="filterCategory('Web', this)">Web</button>
+                    <button class="filter-btn" onclick="filterCategory('Email', this)">Email</button>
+                    <button class="filter-btn" onclick="filterCategory('File Transfer', this)">File Transfer</button>
+                    <button class="filter-btn" onclick="filterCategory('Database', this)">Database</button>
+                    <button class="filter-btn" onclick="filterCategory('Remote Access', this)">Remote Access</button>
+                    <button class="filter-btn" onclick="filterCategory('Network', this)">Network</button>
+                    <button class="filter-btn" onclick="filterCategory('Security', this)">Security</button>
+                    <button class="filter-btn" onclick="filterCategory('Media', this)">Media</button>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="port-table" id="port-table">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable(0)" style="cursor:pointer;">Port ↕</th>
+                                <th>Protocol</th>
+                                <th onclick="sortTable(2)" style="cursor:pointer;">Service ↕</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody id="port-body"></tbody>
+                    </table>
+                </div>
+                <div id="no-results" class="no-results"><p style="font-size:3rem;">🔌</p><p>No ports found matching your search.</p></div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('guide-content')">
+                <h2>Port Ranges Guide</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="guide-content" class="section-content active">
+                <div class="info-cards">
+                    <article class="info-card"><h3>📋 Well-Known Ports (0–1023)</h3><p>Reserved for system and widely-used services. Require root/admin privileges to bind. Assigned by IANA and universally recognised across operating systems.</p></article>
+                    <article class="info-card"><h3>🔧 Registered Ports (1024–49151)</h3><p>Registered by software vendors with IANA for specific applications. Don't require elevated privileges. Used by many popular applications and services.</p></article>
+                    <article class="info-card"><h3>🔄 Dynamic/Ephemeral (49152–65535)</h3><p>Assigned automatically by the OS for outbound client connections. Not permanently assigned to any service — used temporarily for the duration of a session.</p></article>
+                    <article class="info-card"><h3>🔐 TCP vs UDP</h3><p>TCP (Transmission Control Protocol) ensures reliable, ordered delivery — ideal for web, email, and file transfers. UDP (User Datagram Protocol) is faster but connectionless — used for streaming, DNS, and VoIP.</p></article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="../app.js"></script>
+    <script>
+        const PORTS = [
+            // Web
+            {port:80,   proto:'TCP',  service:'HTTP',        desc:'Hypertext Transfer Protocol — unencrypted web traffic',          cat:'Web'},
+            {port:443,  proto:'TCP',  service:'HTTPS',       desc:'HTTP Secure — TLS/SSL encrypted web traffic',                   cat:'Web'},
+            {port:8080, proto:'TCP',  service:'HTTP-Alt',    desc:'Alternative HTTP port, often used for proxies and dev servers',   cat:'Web'},
+            {port:8443, proto:'TCP',  service:'HTTPS-Alt',   desc:'Alternative HTTPS port',                                          cat:'Web'},
+            {port:3000, proto:'TCP',  service:'Dev Server',  desc:'Common default for Node.js / React development servers',          cat:'Web'},
+            {port:8888, proto:'TCP',  service:'HTTP-Alt',    desc:'Alternative HTTP, also used by Jupyter Notebook',                 cat:'Web'},
+            // Email
+            {port:25,   proto:'TCP',  service:'SMTP',        desc:'Simple Mail Transfer Protocol — sending email between servers',   cat:'Email'},
+            {port:465,  proto:'TCP',  service:'SMTPS',       desc:'SMTP over SSL — secure email submission',                         cat:'Email'},
+            {port:587,  proto:'TCP',  service:'SMTP-Sub',    desc:'SMTP submission port for authenticated clients',                  cat:'Email'},
+            {port:110,  proto:'TCP',  service:'POP3',        desc:'Post Office Protocol 3 — receiving email (download & delete)',    cat:'Email'},
+            {port:995,  proto:'TCP',  service:'POP3S',       desc:'POP3 over SSL/TLS',                                               cat:'Email'},
+            {port:143,  proto:'TCP',  service:'IMAP',        desc:'Internet Message Access Protocol — sync email from server',       cat:'Email'},
+            {port:993,  proto:'TCP',  service:'IMAPS',       desc:'IMAP over SSL/TLS',                                               cat:'Email'},
+            // File Transfer
+            {port:20,   proto:'TCP',  service:'FTP-Data',    desc:'FTP data transfer channel',                                       cat:'File Transfer'},
+            {port:21,   proto:'TCP',  service:'FTP',         desc:'File Transfer Protocol — control channel',                        cat:'File Transfer'},
+            {port:22,   proto:'TCP',  service:'SSH/SFTP',    desc:'Secure Shell & SFTP — encrypted remote login and file transfer',  cat:'File Transfer'},
+            {port:69,   proto:'UDP',  service:'TFTP',        desc:'Trivial File Transfer Protocol — simple, unauthenticated',        cat:'File Transfer'},
+            {port:445,  proto:'TCP',  service:'SMB',         desc:'Server Message Block — Windows file sharing and network drives',  cat:'File Transfer'},
+            {port:139,  proto:'TCP',  service:'NetBIOS',     desc:'NetBIOS session service — older Windows file sharing',            cat:'File Transfer'},
+            {port:2049, proto:'BOTH', service:'NFS',         desc:'Network File System — Unix/Linux file sharing',                   cat:'File Transfer'},
+            // Database
+            {port:1433, proto:'TCP',  service:'MSSQL',       desc:'Microsoft SQL Server',                                            cat:'Database'},
+            {port:1521, proto:'TCP',  service:'Oracle DB',   desc:'Oracle Database listener',                                        cat:'Database'},
+            {port:3306, proto:'TCP',  service:'MySQL',       desc:'MySQL / MariaDB database server',                                 cat:'Database'},
+            {port:5432, proto:'TCP',  service:'PostgreSQL',  desc:'PostgreSQL database server',                                      cat:'Database'},
+            {port:6379, proto:'TCP',  service:'Redis',       desc:'Redis in-memory data store',                                      cat:'Database'},
+            {port:27017,proto:'TCP',  service:'MongoDB',     desc:'MongoDB document database',                                       cat:'Database'},
+            {port:9200, proto:'TCP',  service:'Elasticsearch',desc:'Elasticsearch REST API',                                         cat:'Database'},
+            // Remote Access
+            {port:3389, proto:'TCP',  service:'RDP',         desc:'Remote Desktop Protocol — Windows remote desktop',                cat:'Remote Access'},
+            {port:5900, proto:'TCP',  service:'VNC',         desc:'Virtual Network Computing — remote desktop sharing',              cat:'Remote Access'},
+            {port:23,   proto:'TCP',  service:'Telnet',      desc:'Unencrypted remote terminal (legacy, insecure)',                  cat:'Remote Access'},
+            {port:5985, proto:'TCP',  service:'WinRM-HTTP',  desc:'Windows Remote Management over HTTP',                             cat:'Remote Access'},
+            {port:5986, proto:'TCP',  service:'WinRM-HTTPS', desc:'Windows Remote Management over HTTPS',                            cat:'Remote Access'},
+            // Network
+            {port:53,   proto:'BOTH', service:'DNS',         desc:'Domain Name System — resolves hostnames to IP addresses',         cat:'Network'},
+            {port:67,   proto:'UDP',  service:'DHCP-Server', desc:'DHCP server — assigns IP addresses to clients',                   cat:'Network'},
+            {port:68,   proto:'UDP',  service:'DHCP-Client', desc:'DHCP client — receives IP configuration',                         cat:'Network'},
+            {port:123,  proto:'UDP',  service:'NTP',         desc:'Network Time Protocol — synchronises clocks',                     cat:'Network'},
+            {port:161,  proto:'UDP',  service:'SNMP',        desc:'Simple Network Management Protocol — network device monitoring',  cat:'Network'},
+            {port:162,  proto:'UDP',  service:'SNMP-Trap',   desc:'SNMP trap receiver',                                              cat:'Network'},
+            {port:179,  proto:'TCP',  service:'BGP',         desc:'Border Gateway Protocol — internet routing between ASes',         cat:'Network'},
+            {port:389,  proto:'BOTH', service:'LDAP',        desc:'Lightweight Directory Access Protocol',                           cat:'Network'},
+            {port:636,  proto:'TCP',  service:'LDAPS',       desc:'LDAP over SSL/TLS',                                               cat:'Network'},
+            {port:514,  proto:'UDP',  service:'Syslog',      desc:'System logging — centralised log collection',                     cat:'Network'},
+            {port:520,  proto:'UDP',  service:'RIP',         desc:'Routing Information Protocol',                                    cat:'Network'},
+            // Security
+            {port:500,  proto:'UDP',  service:'IKE',         desc:'Internet Key Exchange — IPsec VPN negotiation',                   cat:'Security'},
+            {port:1194, proto:'UDP',  service:'OpenVPN',     desc:'OpenVPN — popular open-source VPN',                               cat:'Security'},
+            {port:1701, proto:'UDP',  service:'L2TP',        desc:'Layer 2 Tunneling Protocol — often paired with IPsec',            cat:'Security'},
+            {port:1723, proto:'TCP',  service:'PPTP',        desc:'Point-to-Point Tunneling Protocol — VPN (legacy, insecure)',      cat:'Security'},
+            {port:4500, proto:'UDP',  service:'IPsec-NAT',   desc:'IPsec NAT traversal',                                             cat:'Security'},
+            {port:51820,proto:'UDP',  service:'WireGuard',   desc:'WireGuard — modern, fast VPN protocol',                           cat:'Security'},
+            // Media
+            {port:554,  proto:'BOTH', service:'RTSP',        desc:'Real Time Streaming Protocol — media streaming control',          cat:'Media'},
+            {port:1935, proto:'TCP',  service:'RTMP',        desc:'Real-Time Messaging Protocol — live video streaming (Flash/OBS)', cat:'Media'},
+            {port:5004, proto:'UDP',  service:'RTP',         desc:'Real-time Transport Protocol — voice/video streams',              cat:'Media'},
+            {port:5060, proto:'BOTH', service:'SIP',         desc:'Session Initiation Protocol — VoIP call setup',                   cat:'Media'},
+            {port:32400,proto:'TCP',  service:'Plex',        desc:'Plex Media Server — local and remote media streaming',            cat:'Media'},
+        ];
+
+        let currentCategory = 'all';
+        let sortCol = 0, sortAsc = true;
+
+        function renderTable(data) {
+            const tbody = document.getElementById('port-body');
+            tbody.innerHTML = data.map(p => {
+                const protoBadge = p.proto === 'BOTH'
+                    ? '<span class="badge both">TCP</span><span class="badge both">UDP</span>'
+                    : `<span class="badge ${p.proto.toLowerCase()}">${p.proto}</span>`;
+                return `<tr data-cat="${p.cat}">
+                    <td><span class="port-num">${p.port}</span></td>
+                    <td>${protoBadge}</td>
+                    <td><strong>${p.service}</strong></td>
+                    <td>${p.desc}</td>
+                    <td><span class="cat-badge">${p.cat}</span></td>
+                </tr>`;
+            }).join('');
+            document.getElementById('showing-count').textContent = data.length;
+            document.getElementById('total-count').textContent = PORTS.length;
+            document.getElementById('no-results').classList.toggle('show', data.length === 0);
+        }
+
+        function getFiltered() {
+            const q = document.getElementById('search').value.toLowerCase().trim();
+            return PORTS.filter(p => {
+                const matchCat = currentCategory === 'all' || p.cat === currentCategory;
+                const matchQ   = !q || p.port.toString().includes(q) || p.service.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q);
+                return matchCat && matchQ;
+            });
+        }
+
+        function filterPorts() { renderTable(getFiltered()); }
+        function filterCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterPorts();
+        }
+
+        function sortTable(col) {
+            if (sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = true; }
+            const keys = ['port', null, 'service'];
+            const key = keys[col];
+            if (!key) return;
+            PORTS.sort((a, b) => {
+                const av = a[key], bv = b[key];
+                return sortAsc ? (av > bv ? 1 : -1) : (av < bv ? 1 : -1);
+            });
+            filterPorts();
+        }
+
+        renderTable(PORTS);
+    </script>
+</body>
+</html>

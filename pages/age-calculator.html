@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Calculate your exact age, days until your birthday, and date differences.">
+    <meta property="og:title" content="Age Calculator - Streets Services">
+    <meta property="og:description" content="Calculate your exact age in years, months, days and more.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/age-calculator.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>Age Calculator - Streets Services</title>
+    <link rel="icon" type="image/png" href="../pictures/icon.png">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .age-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-top:1.5rem; }
+        .age-card { background:var(--bg-dark);border:2px solid var(--border-color);border-radius:var(--radius-lg);padding:1.25rem;text-align:center;transition:all var(--transition-base); }
+        .age-card:hover { border-color:var(--primary-color); }
+        .age-number { font-size:2.5rem;font-weight:700;color:var(--accent-color);font-family:'Courier New',monospace;line-height:1; }
+        .age-unit { color:var(--text-secondary);font-size:0.85rem;margin-top:0.3rem; }
+        .highlight-age { background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));border:none;color:white; }
+        .highlight-age .age-number { color:white; }
+        .highlight-age .age-unit { color:rgba(255,255,255,0.85); }
+        .birthday-banner { background:linear-gradient(135deg,#f59e0b,#ef4444);padding:1.5rem;border-radius:var(--radius-lg);text-align:center;margin-top:1.5rem;display:none; }
+        .birthday-banner.show { display:block;animation:fadeIn 0.5s ease; }
+        .next-birthday { background:var(--bg-dark);padding:1rem;border-radius:var(--radius-md);text-align:center;margin-top:1rem;border-left:4px solid var(--primary-color); }
+        .date-diff-result { display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-top:1rem; }
+        .diff-item { background:var(--bg-card);border-radius:var(--radius-sm);padding:1rem;text-align:center;border-left:3px solid var(--primary-color); }
+        .diff-num { font-size:1.8rem;font-weight:700;color:var(--accent-color);font-family:'Courier New',monospace; }
+        .diff-lbl { font-size:0.8rem;color:var(--text-secondary); }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="../pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
+            <h1>Age Calculator</h1>
+        </div>
+        <p class="tagline">Calculate Age &amp; Date Differences</p>
+    </header>
+
+    <main class="container">
+        <a href="../index.html" class="back-link"><span aria-hidden="true">←</span><span>Back to Home</span></a>
+
+        <!-- Age Calculator -->
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('age-content')">
+                <h2>Age Calculator</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="age-content" class="section-content active">
+                <div class="calculator-container">
+                    <div class="form-group">
+                        <label for="dob">🎂 Date of Birth</label>
+                        <input type="date" id="dob" oninput="calcAge()">
+                    </div>
+                    <div class="form-group">
+                        <label for="calc-date">📅 Calculate Age As Of</label>
+                        <input type="date" id="calc-date" oninput="calcAge()">
+                    </div>
+
+                    <div id="age-result" style="display:none;">
+                        <div class="birthday-banner" id="bday-banner">
+                            <div style="font-size:3rem;margin-bottom:0.5rem;">🎉</div>
+                            <div style="font-size:1.5rem;font-weight:700;color:white;">Happy Birthday!</div>
+                        </div>
+
+                        <div class="age-grid">
+                            <div class="age-card highlight-age">
+                                <div class="age-number" id="age-years">0</div>
+                                <div class="age-unit">Years Old</div>
+                            </div>
+                            <div class="age-card">
+                                <div class="age-number" id="age-months">0</div>
+                                <div class="age-unit">Total Months</div>
+                            </div>
+                            <div class="age-card">
+                                <div class="age-number" id="age-weeks">0</div>
+                                <div class="age-unit">Total Weeks</div>
+                            </div>
+                            <div class="age-card">
+                                <div class="age-number" id="age-days">0</div>
+                                <div class="age-unit">Total Days</div>
+                            </div>
+                            <div class="age-card">
+                                <div class="age-number" id="age-hours">0</div>
+                                <div class="age-unit">Total Hours</div>
+                            </div>
+                        </div>
+
+                        <div class="next-birthday" id="next-bday">
+                            <div style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:0.25rem;">🎂 Next Birthday</div>
+                            <div id="bday-text" style="color:var(--accent-color);font-weight:600;font-size:1.1rem;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Date Difference -->
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('diff-content')">
+                <h2>Date Difference</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="diff-content" class="section-content active">
+                <div class="calculator-container">
+                    <div class="form-group">
+                        <label for="date1">📅 Start Date</label>
+                        <input type="date" id="date1" oninput="calcDiff()">
+                    </div>
+                    <div class="form-group">
+                        <label for="date2">📅 End Date</label>
+                        <input type="date" id="date2" oninput="calcDiff()">
+                    </div>
+                    <div id="diff-result" style="display:none;" class="date-diff-result">
+                        <div class="diff-item"><div class="diff-num" id="d-years">0</div><div class="diff-lbl">Years</div></div>
+                        <div class="diff-item"><div class="diff-num" id="d-months">0</div><div class="diff-lbl">Months</div></div>
+                        <div class="diff-item"><div class="diff-num" id="d-weeks">0</div><div class="diff-lbl">Weeks</div></div>
+                        <div class="diff-item"><div class="diff-num" id="d-days">0</div><div class="diff-lbl">Days</div></div>
+                        <div class="diff-item"><div class="diff-num" id="d-hours">0</div><div class="diff-lbl">Hours</div></div>
+                        <div class="diff-item"><div class="diff-num" id="d-minutes">0</div><div class="diff-lbl">Minutes</div></div>
+                    </div>
+                    <div id="diff-label" style="display:none;text-align:center;margin-top:1rem;color:var(--text-secondary);font-size:0.9rem;"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="../app.js"></script>
+    <script>
+        const today = new Date();
+        document.getElementById('dob').max    = today.toISOString().split('T')[0];
+        document.getElementById('calc-date').value = today.toISOString().split('T')[0];
+        document.getElementById('date2').value     = today.toISOString().split('T')[0];
+
+        function calcAge() {
+            const dob  = new Date(document.getElementById('dob').value);
+            const asOf = new Date(document.getElementById('calc-date').value);
+            if (!document.getElementById('dob').value) return;
+
+            let years  = asOf.getFullYear() - dob.getFullYear();
+            let months = asOf.getMonth()    - dob.getMonth();
+            let days   = asOf.getDate()     - dob.getDate();
+            if (days   < 0) { months--; days += new Date(asOf.getFullYear(), asOf.getMonth(), 0).getDate(); }
+            if (months < 0) { years--;  months += 12; }
+
+            const diffMs    = asOf - dob;
+            const totalDays = Math.floor(diffMs / 86400000);
+            const totalWeeks = Math.floor(totalDays / 7);
+            const totalMonths = years * 12 + months;
+            const totalHours = Math.floor(diffMs / 3600000);
+
+            document.getElementById('age-years').textContent  = years.toLocaleString();
+            document.getElementById('age-months').textContent = totalMonths.toLocaleString();
+            document.getElementById('age-weeks').textContent  = totalWeeks.toLocaleString();
+            document.getElementById('age-days').textContent   = totalDays.toLocaleString();
+            document.getElementById('age-hours').textContent  = totalHours.toLocaleString();
+
+            // Birthday check
+            const isBday = asOf.getMonth() === dob.getMonth() && asOf.getDate() === dob.getDate();
+            document.getElementById('bday-banner').classList.toggle('show', isBday);
+
+            // Next birthday
+            const nextBday = new Date(asOf.getFullYear(), dob.getMonth(), dob.getDate());
+            if (nextBday <= asOf) nextBday.setFullYear(nextBday.getFullYear() + 1);
+            const daysUntil = Math.round((nextBday - asOf) / 86400000);
+            document.getElementById('bday-text').textContent = isBday
+                ? '🎉 It\'s your birthday today!'
+                : `${nextBday.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })} (${daysUntil} day${daysUntil !== 1 ? 's' : ''} away)`;
+
+            document.getElementById('age-result').style.display = 'block';
+        }
+
+        function calcDiff() {
+            const d1 = new Date(document.getElementById('date1').value);
+            const d2 = new Date(document.getElementById('date2').value);
+            if (!document.getElementById('date1').value || !document.getElementById('date2').value) return;
+
+            const start = d1 < d2 ? d1 : d2;
+            const end   = d1 < d2 ? d2 : d1;
+            const diffMs = end - start;
+            const totalDays = Math.floor(diffMs / 86400000);
+
+            let years  = end.getFullYear() - start.getFullYear();
+            let months = end.getMonth()    - start.getMonth();
+            if (months < 0) { years--; months += 12; }
+
+            document.getElementById('d-years').textContent   = years.toLocaleString();
+            document.getElementById('d-months').textContent  = (years * 12 + months).toLocaleString();
+            document.getElementById('d-weeks').textContent   = Math.floor(totalDays / 7).toLocaleString();
+            document.getElementById('d-days').textContent    = totalDays.toLocaleString();
+            document.getElementById('d-hours').textContent   = Math.floor(diffMs / 3600000).toLocaleString();
+            document.getElementById('d-minutes').textContent = Math.floor(diffMs / 60000).toLocaleString();
+
+            const lbl = document.getElementById('diff-label');
+            lbl.textContent = d1 === d2 ? 'Same date' : d1 < d2 ? `From ${d1.toLocaleDateString('en-GB')} to ${d2.toLocaleDateString('en-GB')}` : `From ${d2.toLocaleDateString('en-GB')} to ${d1.toLocaleDateString('en-GB')}`;
+            lbl.style.display = 'block';
+            document.getElementById('diff-result').style.display = 'grid';
+        }
+    </script>
+</body>
+</html>

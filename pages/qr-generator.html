@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Generate custom QR codes for URLs, text, and WiFi networks with colour options.">
+    <meta property="og:title" content="QR Code Generator - Streets Services">
+    <meta property="og:description" content="Generate custom QR codes for URLs, text, and WiFi networks with colour options.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/qr-generator.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>QR Code Generator - Streets Services</title>
+    <link rel="icon" type="image/png" href="../pictures/icon.png">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        .mode-selector { display:flex;gap:1rem;margin-bottom:2rem;background:var(--bg-dark);padding:0.5rem;border-radius:var(--radius-lg); }
+        .mode-btn { flex:1;padding:1rem;background:transparent;border:2px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-secondary);font-family:var(--font-family);font-weight:600;font-size:var(--font-size-base);cursor:pointer;transition:all var(--transition-base); }
+        .mode-btn.active { background:linear-gradient(135deg,var(--primary-color) 0%,var(--secondary-color) 100%);border-color:var(--primary-color);color:white;box-shadow:0 4px 12px rgba(59,130,246,0.3); }
+        .mode-btn:not(.active):hover { border-color:var(--primary-color);background:var(--bg-hover); }
+        .mode-content { display:none; }
+        .mode-content.active { display:block;animation:fadeIn 0.4s ease; }
+        .options-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:1.5rem; }
+        .cidr-select { background:var(--bg-card);border:2px solid var(--border-color);padding:1rem;border-radius:var(--radius-sm);font-size:var(--font-size-base);color:var(--text-primary);cursor:pointer;transition:all var(--transition-base);width:100%; }
+        .qr-display { background:white;padding:2rem;border-radius:var(--radius-lg);text-align:center;margin:2rem 0;min-height:300px;display:flex;align-items:center;justify-content:center;border:2px solid var(--border-color); }
+        .result-section { display:none; }
+        .result-section.active { display:block;animation:fadeIn 0.5s ease; }
+        .button-group { display:flex;gap:1rem;margin-top:1.5rem; }
+        .download-btn { background:var(--accent-color);color:white;border:none;padding:1rem 2rem;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition-base);font-weight:600;font-size:var(--font-size-base);flex:1; }
+        .download-btn:hover { background:var(--primary-color);transform:translateY(-2px); }
+        .preview-info { text-align:center;margin-top:1rem;color:var(--text-secondary);font-size:0.875rem; }
+        .wifi-note { background:rgba(59,130,246,0.1);border-left:4px solid var(--primary-color);padding:0.75rem 1rem;border-radius:var(--radius-sm);color:var(--text-secondary);font-size:0.875rem;margin-top:1rem; }
+        @media (max-width:768px) { .mode-selector{flex-direction:column;} .options-grid{grid-template-columns:1fr;} .button-group{flex-direction:column;} }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="../pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
+            <h1>QR Code Generator</h1>
+        </div>
+        <p class="tagline">Create Custom QR Codes Instantly</p>
+    </header>
+
+    <main class="container">
+        <a href="../index.html" class="back-link"><span aria-hidden="true">←</span><span>Back to Home</span></a>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('generator-content')">
+                <h2>Generator</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="generator-content" class="section-content active">
+                <div class="calculator-container">
+                    <div class="mode-selector">
+                        <button class="mode-btn active" onclick="switchMode('text', this)">📝 Text / URL</button>
+                        <button class="mode-btn" onclick="switchMode('wifi', this)">📶 WiFi Network</button>
+                    </div>
+
+                    <div id="text-mode" class="mode-content active">
+                        <div class="form-group">
+                            <label for="text-input">Enter Text or URL</label>
+                            <input type="text" id="text-input" placeholder="https://example.com or any text..." autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div id="wifi-mode" class="mode-content">
+                        <div class="form-group">
+                            <label for="wifi-ssid">Network Name (SSID)</label>
+                            <input type="text" id="wifi-ssid" placeholder="MyWiFiNetwork" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="wifi-password">Password</label>
+                            <input type="text" id="wifi-password" placeholder="Enter WiFi password" autocomplete="off">
+                        </div>
+                        <div class="options-grid">
+                            <div class="form-group">
+                                <label for="wifi-security">Security Type</label>
+                                <select id="wifi-security" class="cidr-select">
+                                    <option value="WPA">WPA/WPA2</option>
+                                    <option value="WEP">WEP</option>
+                                    <option value="nopass">No Password</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="wifi-hidden">Network Visibility</label>
+                                <select id="wifi-hidden" class="cidr-select">
+                                    <option value="false">Visible</option>
+                                    <option value="true">Hidden</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="wifi-note">⚠️ <strong>Security note:</strong> Only share WiFi QR codes with trusted people. Avoid generating them on shared or untrusted devices.</div>
+                    </div>
+
+                    <div class="options-grid">
+                        <div class="form-group">
+                            <label for="size-input">Size (pixels)</label>
+                            <select id="size-input" class="cidr-select">
+                                <option value="128">128 × 128</option>
+                                <option value="256" selected>256 × 256</option>
+                                <option value="512">512 × 512</option>
+                                <option value="1024">1024 × 1024</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="color-dark">QR Code Colour</label>
+                            <input type="color" id="color-dark" value="#000000" style="width:100%;height:50px;border:none;cursor:pointer;">
+                        </div>
+                        <div class="form-group">
+                            <label for="color-light">Background Colour</label>
+                            <input type="color" id="color-light" value="#ffffff" style="width:100%;height:50px;border:none;cursor:pointer;">
+                        </div>
+                    </div>
+
+                    <button class="calculate-button" onclick="generateQR()" style="margin-top:2rem;">🔲 Generate QR Code</button>
+
+                    <div id="result-section" class="result-section">
+                        <div class="qr-display" id="qr-display"><div id="qrcode"></div></div>
+                        <div class="preview-info" id="preview-info"></div>
+                        <div class="button-group">
+                            <button class="download-btn" onclick="downloadQR()">💾 Download QR Code</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('guide-content')">
+                <h2>How to Use</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="guide-content" class="section-content active">
+                <div class="info-cards">
+                    <article class="info-card">
+                        <h3>📝 Text &amp; URLs</h3>
+                        <p>Create QR codes for any text or website URL. Perfect for sharing links, contact information, or messages. Simply paste your URL or type your text and generate.</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>📶 WiFi Networks</h3>
+                        <p>Share WiFi credentials easily. Enter your network name and password, select the security type, and generate a QR code that others can scan to connect automatically.</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>🎨 Customisation</h3>
+                        <p>Customise your QR code with different sizes and colours. Change the QR code colour and background to match your branding or preferences.</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>💾 Download &amp; Share</h3>
+                        <p>Download your generated QR code as a PNG image for use in presentations, print materials, websites, or anywhere you need quick access via scanning.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="../app.js"></script>
+    <script>
+        let currentMode = 'text';
+
+        function switchMode(mode, btn) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.mode-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(mode + '-mode').classList.add('active');
+            document.getElementById('result-section').classList.remove('active');
+        }
+
+        function generateQR() {
+            let text = '', infoText = '';
+
+            if (currentMode === 'text') {
+                text = document.getElementById('text-input').value.trim();
+                if (!text) { alert('Please enter some text or a URL'); return; }
+                infoText = text.length > 50 ? text.substring(0, 47) + '...' : text;
+            } else {
+                const ssid     = document.getElementById('wifi-ssid').value.trim();
+                const password = document.getElementById('wifi-password').value;
+                const security = document.getElementById('wifi-security').value;
+                const hidden   = document.getElementById('wifi-hidden').value;
+                if (!ssid) { alert('Please enter a network name (SSID)'); return; }
+                if (security !== 'nopass' && !password) { alert('Please enter a password for this network'); return; }
+                text     = `WIFI:T:${security};S:${esc(ssid)};P:${esc(password)};H:${hidden};;`;
+                infoText = `WiFi: ${ssid}`;
+            }
+
+            const size       = parseInt(document.getElementById('size-input').value);
+            const colorDark  = document.getElementById('color-dark').value;
+            const colorLight = document.getElementById('color-light').value;
+
+            document.getElementById('qrcode').innerHTML = '';
+            new QRCode(document.getElementById('qrcode'), {
+                text, width: size, height: size,
+                colorDark, colorLight,
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            document.getElementById('preview-info').textContent = infoText;
+            document.getElementById('result-section').classList.add('active');
+            setTimeout(() => document.getElementById('result-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+        }
+
+        function esc(str) { return str.replace(/([\\";,:])/g, '\\$1'); }
+
+        function downloadQR() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (!canvas) return;
+            const a = document.createElement('a');
+            a.href     = canvas.toDataURL('image/png');
+            a.download = `qrcode-${currentMode}-${new Date().toISOString().split('T')[0]}.png`;
+            a.click();
+        }
+
+        document.getElementById('text-input').addEventListener('keypress', e => { if (e.key === 'Enter') generateQR(); });
+        document.getElementById('wifi-ssid').addEventListener('keypress', e => { if (e.key === 'Enter') generateQR(); });
+        document.getElementById('wifi-password').addEventListener('keypress', e => { if (e.key === 'Enter') generateQR(); });
+        document.getElementById('wifi-security').addEventListener('change', e => {
+            document.getElementById('wifi-password').disabled = e.target.value === 'nopass';
+            if (e.target.value === 'nopass') document.getElementById('wifi-password').value = '';
+        });
+    </script>
+</body>
+</html>

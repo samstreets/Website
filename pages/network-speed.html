@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Convert between network speeds and data sizes — Mbps, MB/s, GB/s, Gbps and more.">
+    <meta property="og:title" content="Network Speed Converter - Streets Services">
+    <meta property="og:description" content="Convert between network speeds and data sizes instantly.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/network-speed.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>Network Speed Converter - Streets Services</title>
+    <link rel="icon" type="image/png" href="../pictures/icon.png">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .conv-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.5rem; }
+        .conv-item { background:var(--bg-dark);padding:1rem 1.25rem;border-radius:var(--radius-md);border:2px solid var(--border-color);transition:border-color var(--transition-base); }
+        .conv-item:focus-within { border-color:var(--primary-color); }
+        .conv-item label { display:block;color:var(--accent-color);font-weight:600;margin-bottom:0.5rem;font-size:0.9rem; }
+        .conv-item input { width:100%;background:transparent;border:none;color:var(--text-primary);font-size:1.3rem;font-weight:700;font-family:'Courier New',monospace;outline:none; }
+        .conv-item .unit { color:var(--text-secondary);font-size:0.8rem;margin-top:0.25rem; }
+        .tab-bar { display:flex;gap:0.5rem;background:var(--bg-dark);padding:0.5rem;border-radius:var(--radius-lg);margin-bottom:2rem; }
+        .tab-btn { flex:1;padding:0.75rem;background:transparent;border:2px solid transparent;border-radius:var(--radius-sm);color:var(--text-secondary);font-family:var(--font-family);font-weight:600;cursor:pointer;transition:all var(--transition-base); }
+        .tab-btn.active { background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));border-color:var(--primary-color);color:white; }
+        .tab-content { display:none; }
+        .tab-content.active { display:block;animation:fadeIn 0.3s ease; }
+        .transfer-result { background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));padding:1.5rem;border-radius:var(--radius-md);margin-top:1.5rem;text-align:center; }
+        .transfer-result h3 { color:white;margin-bottom:1rem; }
+        .transfer-times { display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem; }
+        .time-item { background:rgba(255,255,255,0.15);padding:0.75rem;border-radius:var(--radius-sm);color:white; }
+        .time-value { font-size:1.3rem;font-weight:700;margin-bottom:0.25rem; }
+        .time-label { font-size:0.8rem;opacity:0.85; }
+        .section-divider { color:var(--text-secondary);font-size:0.8rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin:1.5rem 0 0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border-color); }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="../pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
+            <h1>Network Speed Converter</h1>
+        </div>
+        <p class="tagline">Convert Speeds &amp; Estimate Transfer Times</p>
+    </header>
+
+    <main class="container">
+        <a href="../index.html" class="back-link"><span aria-hidden="true">←</span><span>Back to Home</span></a>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('converter-content')">
+                <h2>Speed Converter</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="converter-content" class="section-content active">
+                <div class="calculator-container" style="max-width:900px;">
+                    <div class="tab-bar">
+                        <button class="tab-btn active" onclick="switchTab('speeds', this)">⚡ Speeds</button>
+                        <button class="tab-btn" onclick="switchTab('sizes', this)">💾 Data Sizes</button>
+                        <button class="tab-btn" onclick="switchTab('transfer', this)">⏱️ Transfer Time</button>
+                    </div>
+
+                    <!-- Speeds Tab -->
+                    <div id="tab-speeds" class="tab-content active">
+                        <p style="color:var(--text-secondary);margin-bottom:1rem;">Type in any field to convert all units instantly.</p>
+                        <div class="section-divider">Bits per second</div>
+                        <div class="conv-grid">
+                            <div class="conv-item">
+                                <label>bps (bits/s)</label>
+                                <input id="s-bps"  type="number" min="0" oninput="convertSpeed('bps', this.value)" placeholder="0">
+                                <div class="unit">bits per second</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>Kbps (kilobits/s)</label>
+                                <input id="s-kbps" type="number" min="0" oninput="convertSpeed('kbps', this.value)" placeholder="0">
+                                <div class="unit">1 Kbps = 1,000 bps</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>Mbps (megabits/s)</label>
+                                <input id="s-mbps" type="number" min="0" oninput="convertSpeed('mbps', this.value)" placeholder="0">
+                                <div class="unit">1 Mbps = 1,000 Kbps</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>Gbps (gigabits/s)</label>
+                                <input id="s-gbps" type="number" min="0" oninput="convertSpeed('gbps', this.value)" placeholder="0">
+                                <div class="unit">1 Gbps = 1,000 Mbps</div>
+                            </div>
+                        </div>
+                        <div class="section-divider">Bytes per second</div>
+                        <div class="conv-grid">
+                            <div class="conv-item">
+                                <label>KB/s (kilobytes/s)</label>
+                                <input id="s-kbs" type="number" min="0" oninput="convertSpeed('kbs', this.value)" placeholder="0">
+                                <div class="unit">1 KB/s = 8,000 bps</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>MB/s (megabytes/s)</label>
+                                <input id="s-mbs" type="number" min="0" oninput="convertSpeed('mbs', this.value)" placeholder="0">
+                                <div class="unit">1 MB/s = 8 Mbps</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>GB/s (gigabytes/s)</label>
+                                <input id="s-gbs" type="number" min="0" oninput="convertSpeed('gbs', this.value)" placeholder="0">
+                                <div class="unit">1 GB/s = 8 Gbps</div>
+                            </div>
+                        </div>
+                        <button class="generator-button" onclick="clearSpeeds()" style="margin-top:1.5rem;max-width:180px;">Clear</button>
+                    </div>
+
+                    <!-- Sizes Tab -->
+                    <div id="tab-sizes" class="tab-content">
+                        <p style="color:var(--text-secondary);margin-bottom:1rem;">Type in any field to convert all units instantly.</p>
+                        <div class="section-divider">Decimal (SI)</div>
+                        <div class="conv-grid">
+                            <div class="conv-item">
+                                <label>Bytes (B)</label>
+                                <input id="d-b"  type="number" min="0" oninput="convertSize('b', this.value)" placeholder="0">
+                                <div class="unit">1 byte = 8 bits</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>Kilobytes (KB)</label>
+                                <input id="d-kb" type="number" min="0" oninput="convertSize('kb', this.value)" placeholder="0">
+                                <div class="unit">1 KB = 1,000 bytes</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>Megabytes (MB)</label>
+                                <input id="d-mb" type="number" min="0" oninput="convertSize('mb', this.value)" placeholder="0">
+                                <div class="unit">1 MB = 1,000 KB</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>Gigabytes (GB)</label>
+                                <input id="d-gb" type="number" min="0" oninput="convertSize('gb', this.value)" placeholder="0">
+                                <div class="unit">1 GB = 1,000 MB</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>Terabytes (TB)</label>
+                                <input id="d-tb" type="number" min="0" oninput="convertSize('tb', this.value)" placeholder="0">
+                                <div class="unit">1 TB = 1,000 GB</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>Petabytes (PB)</label>
+                                <input id="d-pb" type="number" min="0" oninput="convertSize('pb', this.value)" placeholder="0">
+                                <div class="unit">1 PB = 1,000 TB</div>
+                            </div>
+                        </div>
+                        <div class="section-divider">Binary (IEC)</div>
+                        <div class="conv-grid">
+                            <div class="conv-item">
+                                <label>Kibibytes (KiB)</label>
+                                <input id="i-kib" type="number" min="0" oninput="convertSize('kib', this.value)" placeholder="0">
+                                <div class="unit">1 KiB = 1,024 bytes</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>Mebibytes (MiB)</label>
+                                <input id="i-mib" type="number" min="0" oninput="convertSize('mib', this.value)" placeholder="0">
+                                <div class="unit">1 MiB = 1,024 KiB</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>Gibibytes (GiB)</label>
+                                <input id="i-gib" type="number" min="0" oninput="convertSize('gib', this.value)" placeholder="0">
+                                <div class="unit">1 GiB = 1,024 MiB</div>
+                            </div>
+                            <div class="conv-item">
+                                <label>Tebibytes (TiB)</label>
+                                <input id="i-tib" type="number" min="0" oninput="convertSize('tib', this.value)" placeholder="0">
+                                <div class="unit">1 TiB = 1,024 GiB</div>
+                            </div>
+                        </div>
+                        <button class="generator-button" onclick="clearSizes()" style="margin-top:1.5rem;max-width:180px;">Clear</button>
+                    </div>
+
+                    <!-- Transfer Time Tab -->
+                    <div id="tab-transfer" class="tab-content">
+                        <div class="form-group">
+                            <label>📁 File Size</label>
+                            <div style="display:grid;grid-template-columns:1fr auto;gap:1rem;">
+                                <input type="number" id="t-size" min="0" placeholder="e.g. 10" style="background:var(--bg-dark);border:2px solid var(--border-color);padding:0.875rem;border-radius:var(--radius-sm);color:var(--text-primary);font-size:1.1rem;">
+                                <select id="t-unit" style="padding:0.875rem;background:var(--bg-dark);border:2px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);">
+                                    <option value="1">Bytes</option>
+                                    <option value="1000">KB</option>
+                                    <option value="1e6" selected>MB</option>
+                                    <option value="1e9">GB</option>
+                                    <option value="1e12">TB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top:1rem;">
+                            <label>⚡ Connection Speed</label>
+                            <div style="display:grid;grid-template-columns:1fr auto;gap:1rem;">
+                                <input type="number" id="t-speed" min="0" placeholder="e.g. 100" style="background:var(--bg-dark);border:2px solid var(--border-color);padding:0.875rem;border-radius:var(--radius-sm);color:var(--text-primary);font-size:1.1rem;">
+                                <select id="t-speedunit" style="padding:0.875rem;background:var(--bg-dark);border:2px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);">
+                                    <option value="1">bps</option>
+                                    <option value="1000">Kbps</option>
+                                    <option value="1e6" selected>Mbps</option>
+                                    <option value="1e9">Gbps</option>
+                                    <option value="8000">KB/s</option>
+                                    <option value="8e6">MB/s</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="generator-button" onclick="calcTransfer()" style="margin-top:1.5rem;">Calculate Transfer Time</button>
+                        <div id="transfer-result" style="display:none;" class="transfer-result">
+                            <h3>Estimated Transfer Times</h3>
+                            <div class="transfer-times" id="transfer-times"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('ref-content')">
+                <h2>Quick Reference</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="ref-content" class="section-content active">
+                <div class="info-cards">
+                    <article class="info-card"><h3>💡 Bits vs Bytes</h3><p>Network speeds are measured in bits (lowercase b) — e.g. Mbps. Storage sizes use bytes (uppercase B) — e.g. MB. There are 8 bits in a byte, so 100 Mbps = 12.5 MB/s actual throughput.</p></article>
+                    <article class="info-card"><h3>📡 Common Speeds</h3><p>ADSL: 8–24 Mbps. FTTC: 40–80 Mbps. FTTP/Fiber: 100 Mbps–10 Gbps. 4G LTE: ~20–100 Mbps. 5G: up to 1 Gbps. 1GbE LAN: 1 Gbps. 10GbE: 10 Gbps.</p></article>
+                    <article class="info-card"><h3>🔢 SI vs Binary</h3><p>Manufacturers use decimal (1 KB = 1,000 bytes). Operating systems historically used binary (1 KiB = 1,024 bytes). A "500 GB" drive shows as ~465 GiB in Windows.</p></article>
+                    <article class="info-card"><h3>⚠️ Real-World Speeds</h3><p>Actual transfer speeds are typically 60–90% of the advertised link rate due to protocol overhead, network congestion, and hardware limitations. Always test with real-world tools like iPerf.</p></article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="../app.js"></script>
+    <script>
+        function switchTab(name, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tab-' + name).classList.add('active');
+        }
+
+        // ---- Speed converter ----
+        // Base unit: bps
+        const speedFactors = { bps:1, kbps:1e3, mbps:1e6, gbps:1e9, kbs:8e3, mbs:8e6, gbs:8e9 };
+
+        function setSpeedField(id, val) {
+            const el = document.getElementById('s-' + id);
+            if (el !== document.activeElement) el.value = val === 0 ? '' : +val.toPrecision(6);
+        }
+        function convertSpeed(from, val) {
+            const bps = parseFloat(val) * speedFactors[from];
+            if (isNaN(bps)) return;
+            for (const [k, f] of Object.entries(speedFactors)) {
+                if (k !== from) setSpeedField(k, bps / f);
+            }
+        }
+        function clearSpeeds() {
+            Object.keys(speedFactors).forEach(k => document.getElementById('s-' + k).value = '');
+        }
+
+        // ---- Size converter ----
+        // Base unit: bytes
+        const sizeFactors = { b:1, kb:1e3, mb:1e6, gb:1e9, tb:1e12, pb:1e15, kib:1024, mib:1048576, gib:1073741824, tib:1099511627776 };
+        const sizeIds = { b:'d-b', kb:'d-kb', mb:'d-mb', gb:'d-gb', tb:'d-tb', pb:'d-pb', kib:'i-kib', mib:'i-mib', gib:'i-gib', tib:'i-tib' };
+
+        function setSizeField(id, val) {
+            const el = document.getElementById(sizeIds[id]);
+            if (el !== document.activeElement) el.value = val === 0 ? '' : +val.toPrecision(6);
+        }
+        function convertSize(from, val) {
+            const bytes = parseFloat(val) * sizeFactors[from];
+            if (isNaN(bytes)) return;
+            for (const k of Object.keys(sizeFactors)) {
+                if (k !== from) setSizeField(k, bytes / sizeFactors[k]);
+            }
+        }
+        function clearSizes() {
+            Object.values(sizeIds).forEach(id => document.getElementById(id).value = '');
+        }
+
+        // ---- Transfer time ----
+        function calcTransfer() {
+            const size      = parseFloat(document.getElementById('t-size').value) * parseFloat(document.getElementById('t-unit').value);
+            const speedBps  = parseFloat(document.getElementById('t-speed').value) * parseFloat(document.getElementById('t-speedunit').value);
+            if (!size || !speedBps) return;
+            const seconds = (size * 8) / speedBps;
+            const items = [
+                { label:'Seconds', value: fmt(seconds, 's') },
+                { label:'Minutes', value: fmt(seconds/60, 'm') },
+                { label:'Hours',   value: fmt(seconds/3600, 'h') },
+                { label:'Days',    value: fmt(seconds/86400, 'd') },
+            ];
+            document.getElementById('transfer-times').innerHTML = items.map(i =>
+                `<div class="time-item"><div class="time-value">${i.value}</div><div class="time-label">${i.label}</div></div>`
+            ).join('');
+            document.getElementById('transfer-result').style.display = 'block';
+        }
+        function fmt(n, u) {
+            return n >= 10000 ? n.toExponential(2) + u : (n < 0.001 ? '<0.001' + u : +n.toPrecision(4) + u);
+        }
+    </script>
+</body>
+</html>

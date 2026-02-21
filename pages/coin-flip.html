@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Flip a virtual coin — heads or tails! With flip history and statistics.">
+    <meta property="og:title" content="Coin Flip - Streets Services">
+    <meta property="og:description" content="Flip a virtual coin — heads or tails! With history and statistics.">
+    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
+    <meta property="og:url" content="https://streetsservices.co.uk/coin-flip.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>Coin Flip - Streets Services</title>
+    <link rel="icon" type="image/png" href="../pictures/icon.png">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .coin-scene { perspective: 600px; display:flex;justify-content:center;margin:2rem 0; }
+        .coin { width:160px;height:160px;position:relative;transform-style:preserve-3d;cursor:pointer;transition:transform 0.8s ease;user-select:none; }
+        .coin.flipping { animation:coinFlip 1.2s ease forwards; }
+        @keyframes coinFlip {
+            0%   { transform:rotateY(0);    }
+            50%  { transform:rotateY(900deg) translateY(-80px); }
+            100% { transform:rotateY(var(--end-rotation)); }
+        }
+        .coin-face { width:100%;height:100%;position:absolute;backface-visibility:hidden;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:5rem;border:6px solid; box-shadow:0 8px 24px rgba(0,0,0,0.4); }
+        .coin-heads { background:linear-gradient(135deg,#f59e0b,#d97706);border-color:#b45309; }
+        .coin-tails { background:linear-gradient(135deg,#94a3b8,#64748b);border-color:#475569;transform:rotateY(180deg); }
+        .result-text { font-size:3rem;font-weight:700;text-align:center;margin-bottom:0.5rem;min-height:4rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease; }
+        .result-text.heads { color:#f59e0b; }
+        .result-text.tails { color:#94a3b8; }
+        .stats-bar { display:flex;gap:1rem;margin-top:1.5rem; }
+        .stat-side { flex:1;padding:1rem;border-radius:var(--radius-sm);text-align:center; }
+        .heads-bar { background:linear-gradient(135deg,#f59e0b,#d97706);color:white; }
+        .tails-bar { background:linear-gradient(135deg,#64748b,#475569);color:white; }
+        .stat-side .big { font-size:2rem;font-weight:700;line-height:1; }
+        .stat-side .small { font-size:0.85rem;opacity:0.9;margin-top:0.25rem; }
+        .proportion-bar { height:12px;background:var(--bg-card);border-radius:6px;overflow:hidden;margin:0.75rem 0;display:flex; }
+        .prop-heads { background:#f59e0b;height:100%;transition:width 0.5s ease; }
+        .prop-tails { background:#64748b;height:100%;transition:width 0.5s ease; }
+        .flip-chips { display:flex;flex-wrap:wrap;gap:0.4rem;max-height:120px;overflow-y:auto;margin-top:0.5rem; }
+        .flip-chip { width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white; }
+        .flip-chip.h { background:#f59e0b; }
+        .flip-chip.t { background:#64748b; }
+        .streak-display { background:var(--bg-dark);border-radius:var(--radius-sm);padding:1rem;text-align:center;border-left:4px solid var(--primary-color); }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="../pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
+            <h1>Coin Flip</h1>
+        </div>
+        <p class="tagline">Heads or Tails?</p>
+    </header>
+
+    <main class="container">
+        <a href="../index.html" class="back-link"><span aria-hidden="true">←</span><span>Back to Home</span></a>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('flip-content')">
+                <h2>Flip a Coin</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="flip-content" class="section-content active">
+                <div class="calculator-container">
+                    <div class="coin-scene">
+                        <div class="coin" id="coin" onclick="flip()">
+                            <div class="coin-face coin-heads">👑</div>
+                            <div class="coin-face coin-tails">🦅</div>
+                        </div>
+                    </div>
+                    <div class="result-text" id="result-text">Click the coin or press Flip!</div>
+                    <button class="generator-button" id="flip-btn" onclick="flip()" style="max-width:none;">🪙 Flip!</button>
+
+                    <div style="display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap;">
+                        <div class="form-group" style="flex:1;min-width:150px;">
+                            <label for="flip-count">Flip multiple times</label>
+                            <input type="number" id="flip-count" min="2" max="1000" value="10" placeholder="10">
+                        </div>
+                        <button class="generator-button" onclick="flipMultiple()" style="flex:1;margin-top:auto;">Flip Multiple</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-header" onclick="toggleSection('stats-content')">
+                <h2>Statistics</h2>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            </div>
+            <div id="stats-content" class="section-content active">
+                <div class="calculator-container">
+                    <div id="no-stats" style="text-align:center;padding:1rem;color:var(--text-secondary);">Flip some coins to see statistics!</div>
+                    <div id="stats-data" style="display:none;">
+                        <div class="stats-bar">
+                            <div class="stat-side heads-bar">
+                                <div class="big" id="heads-count">0</div>
+                                <div class="small">Heads 👑</div>
+                                <div id="heads-pct" style="font-size:1.2rem;font-weight:700;margin-top:0.25rem;">0%</div>
+                            </div>
+                            <div class="stat-side tails-bar">
+                                <div class="big" id="tails-count">0</div>
+                                <div class="small">Tails 🦅</div>
+                                <div id="tails-pct" style="font-size:1.2rem;font-weight:700;margin-top:0.25rem;">0%</div>
+                            </div>
+                        </div>
+                        <div class="proportion-bar">
+                            <div class="prop-heads" id="prop-bar"></div>
+                            <div class="prop-tails" style="flex:1;"></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;">
+                            <div class="streak-display">
+                                <div style="color:var(--text-secondary);font-size:0.8rem;">Current Streak</div>
+                                <div id="streak" style="color:var(--accent-color);font-size:1.5rem;font-weight:700;margin-top:0.25rem;">—</div>
+                            </div>
+                            <div class="streak-display">
+                                <div style="color:var(--text-secondary);font-size:0.8rem;">Total Flips</div>
+                                <div id="total-flips" style="color:var(--accent-color);font-size:1.5rem;font-weight:700;margin-top:0.25rem;">0</div>
+                            </div>
+                        </div>
+                        <div style="margin-top:1rem;">
+                            <div style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:0.5rem;">Flip history (newest first):</div>
+                            <div id="flip-chips" class="flip-chips"></div>
+                        </div>
+                        <button class="generator-button" onclick="resetStats()" style="margin-top:1rem;background:linear-gradient(135deg,#ef4444,#dc2626);max-width:none;">Reset Stats</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
+    </footer>
+
+    <script src="../app.js"></script>
+    <script>
+        let heads = 0, tails = 0, flipping = false;
+        let currentStreak = 0, currentStreakSide = null;
+        const flipLog = [];
+
+        function flip() {
+            if (flipping) return;
+            flipping = true;
+            const btn = document.getElementById('flip-btn');
+            btn.disabled = true;
+            const coin = document.getElementById('coin');
+            const result = Math.random() < 0.5 ? 'heads' : 'tails';
+            const baseRot = result === 'heads' ? 1440 : 1620;
+            coin.style.setProperty('--end-rotation', baseRot + 'deg');
+            coin.classList.remove('flipping');
+            void coin.offsetWidth;
+            coin.classList.add('flipping');
+            setTimeout(() => {
+                recordFlip(result);
+                flipping = false;
+                btn.disabled = false;
+            }, 1200);
+        }
+
+        function recordFlip(result) {
+            if (result === 'heads') heads++; else tails++;
+            flipLog.unshift(result);
+            if (flipLog.length > 100) flipLog.pop();
+            if (result === currentStreakSide) currentStreak++;
+            else { currentStreak = 1; currentStreakSide = result; }
+
+            const rt = document.getElementById('result-text');
+            rt.textContent = result === 'heads' ? '👑 Heads!' : '🦅 Tails!';
+            rt.className   = 'result-text ' + result;
+            updateStats();
+        }
+
+        function flipMultiple() {
+            const n = Math.min(1000, parseInt(document.getElementById('flip-count').value) || 10);
+            for (let i = 0; i < n; i++) {
+                const r = Math.random() < 0.5 ? 'heads' : 'tails';
+                if (r === 'heads') heads++; else tails++;
+                flipLog.unshift(r);
+                if (r === currentStreakSide) currentStreak++;
+                else { currentStreak = 1; currentStreakSide = r; }
+            }
+            if (flipLog.length > 100) flipLog.length = 100;
+            const last = flipLog[0];
+            const rt = document.getElementById('result-text');
+            rt.textContent = `Flipped ${n}× — last: ${last === 'heads' ? '👑 Heads' : '🦅 Tails'}`;
+            rt.className = 'result-text ' + last;
+            updateStats();
+        }
+
+        function updateStats() {
+            const total = heads + tails;
+            document.getElementById('heads-count').textContent = heads;
+            document.getElementById('tails-count').textContent = tails;
+            document.getElementById('heads-pct').textContent = total ? Math.round(heads / total * 100) + '%' : '0%';
+            document.getElementById('tails-pct').textContent = total ? Math.round(tails / total * 100) + '%' : '0%';
+            document.getElementById('prop-bar').style.width = total ? (heads / total * 100) + '%' : '50%';
+            document.getElementById('total-flips').textContent = total;
+            document.getElementById('streak').textContent = `${currentStreak}× ${currentStreakSide === 'heads' ? '👑' : '🦅'}`;
+            document.getElementById('flip-chips').innerHTML = flipLog.slice(0, 60).map(r =>
+                `<div class="flip-chip ${r[0]}" title="${r}">${r === 'heads' ? 'H' : 'T'}</div>`
+            ).join('');
+            document.getElementById('no-stats').style.display = 'none';
+            document.getElementById('stats-data').style.display = 'block';
+        }
+
+        function resetStats() {
+            heads = tails = currentStreak = 0; currentStreakSide = null; flipLog.length = 0;
+            document.getElementById('result-text').textContent = 'Click the coin or press Flip!';
+            document.getElementById('result-text').className = 'result-text';
+            document.getElementById('no-stats').style.display = 'block';
+            document.getElementById('stats-data').style.display = 'none';
+        }
+
+        document.addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); flip(); } });
+    </script>
+</body>
+</html>
