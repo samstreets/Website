@@ -296,6 +296,8 @@ document.addEventListener('DOMContentLoaded', function () {
     setupCalculatorKeys();
     setupLazyLoading();
     setupPrefetch();
+    setupBreadcrumb();
+    setupToolsSearch();
 
     // Food page init
     if (document.getElementById('edit-lunch')) {

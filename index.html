@@ -19,9 +19,10 @@
 
     <link rel="icon" type="image/png" href="pictures/icon.png">
     <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="canonical" href="https://streetsservices.co.uk/">
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="main-header">
         <div class="header-content">
             <img src="pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
@@ -36,7 +37,7 @@
         <a href="#resources" class="nav-link">Resources</a>
     </nav>
 
-    <main class="container">
+    <main id="main-content" class="container" tabindex="-1">
         <!-- About Section -->
         <section id="about" class="content-section">
             <div class="section-header" onclick="toggleSection('about-content')" aria-label="About section toggle">
@@ -91,10 +92,15 @@
                 <span class="toggle-icon" aria-hidden="true">▼</span>
             </div>
             <div id="tools-content" class="section-content">
-
+                <div class="tools-search-wrap" aria-label="Filter tools">
+                    <label for="tools-search">Search tools</label>
+                    <input type="search" id="tools-search" class="tools-search-input" placeholder="Type to filter tools..." autocomplete="off" aria-describedby="tools-search-desc">
+                    <p id="tools-search-desc" class="sr-only">Filters the list of tools below by name.</p>
+                </div>
+                <p id="no-tools-message" class="no-tools-message" role="status">No tools match your search.</p>
                 <!-- Text & Converters -->
                 <div class="pack-header"><h3>🔤 Text &amp; Converters</h3></div>
-                <div class="service-grid">
+                <div class="service-grid" id="tools-grid">
                     <a href="pages/base64-tool.html" class="service-card" aria-label="Base64 Encoder/Decoder">
                         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E" alt="" width="80" height="80">
                         <span>Base64 Tool</span>
@@ -179,7 +185,7 @@
                 <div class="pack-header"><h3>🎲 Generators</h3></div>
                 <div class="service-grid">
                     <a href="pages/food.html" class="service-card" aria-label="Food Generator Tool">
-                        <img src="pictures/food.png" alt="" width="80" height="80">
+                        <img src="pictures/food.png" alt="" width="80" height="80" loading="lazy">
                         <span>Food Generator</span>
                     </a>
                     <a href="pages/password-generator.html" class="service-card" aria-label="Password Generator">
@@ -200,7 +206,7 @@
                 <div class="pack-header"><h3>🎮 Fun &amp; Games</h3></div>
                 <div class="service-grid">
                     <a href="pages/jackbox.html" class="service-card" aria-label="Jackbox Games Tool">
-                        <img src="pictures/jackbox.png" alt="" width="80" height="80">
+                        <img src="pictures/jackbox.png" alt="" width="80" height="80" loading="lazy">
                         <span>Jackbox Games</span>
                     </a>
                     <a href="pages/dice-roller.html" class="service-card" aria-label="Dice Roller">
