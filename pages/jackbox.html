@@ -14,6 +14,159 @@
     <link rel="icon" type="image/png" href="../pictures/icon.png">
     <link rel="stylesheet" href="../styles.css">
     <link rel="canonical" href="https://streetsservices.co.uk/pages/jackbox.html">
+    <style>
+        /* ── Filter Panel ─────────────────────────────────────────── */
+        #filter-panel {
+            background: #1a1a2e;
+            border: 1px solid #3a3a5c;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 28px;
+            color: #e0e0f0;
+        }
+
+        #filter-panel h2 {
+            margin: 0 0 16px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #a0a0cc;
+            font-weight: 600;
+        }
+
+        /* Player count row */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .filter-row label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        #player-count-input {
+            width: 70px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid #3a3a5c;
+            background: #12122a;
+            color: #e0e0f0;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        #player-count-input:focus {
+            outline: none;
+            border-color: #7c7cff;
+        }
+
+        #player-filter-hint {
+            font-size: 0.82rem;
+            color: #7070aa;
+        }
+
+        /* Pack ownership grid */
+        .packs-label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .pack-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .pack-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #12122a;
+            border: 1px solid #3a3a5c;
+            border-radius: 8px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+            user-select: none;
+        }
+
+        .pack-checkbox-item:hover {
+            border-color: #7c7cff;
+            background: #1e1e40;
+        }
+
+        .pack-checkbox-item input[type="checkbox"] {
+            accent-color: #7c7cff;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .pack-checkbox-item span {
+            font-size: 0.88rem;
+            white-space: nowrap;
+        }
+
+        /* Owned state highlight */
+        .pack-checkbox-item.is-owned {
+            border-color: #7c7cff;
+            background: #1e1e40;
+        }
+
+        /* Quick-select buttons */
+        .filter-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 5px 12px;
+            border-radius: 6px;
+            border: 1px solid #3a3a5c;
+            background: transparent;
+            color: #a0a0cc;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .filter-btn:hover {
+            border-color: #7c7cff;
+            color: #e0e0f0;
+            background: #1e1e40;
+        }
+
+        /* Results summary */
+        #filter-summary {
+            font-size: 0.85rem;
+            color: #7070aa;
+            margin-bottom: 12px;
+            min-height: 1.2em;
+        }
+
+        /* Hide filtered-out sections / cards */
+        .section-hidden {
+            display: none !important;
+        }
+
+        .game-card.card-hidden {
+            display: none !important;
+        }
+
+        /* Dim a section whose pack isn't owned */
+        .section-unowned > .section-header {
+            opacity: 0.45;
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -29,135 +182,159 @@
 
         <p class="intro-text">Browse through all Jackbox Party Pack collections and their games. Each pack contains unique party games perfect for game nights with friends and family. Click on any pack to see the included games and player counts.</p>
 
+        <!-- ── Filter Panel ─────────────────────────────── -->
+        <div id="filter-panel">
+            <h2>🎛️ Filter Games</h2>
+
+            <div class="filter-row">
+                <label for="player-count-input">👥 Number of players:</label>
+                <input type="number" id="player-count-input" min="1" max="100" placeholder="—">
+                <span id="player-filter-hint">Enter a number to show only compatible games</span>
+            </div>
+
+            <div class="packs-label">📦 Packs I own:</div>
+            <div class="pack-checkboxes" id="pack-checkboxes">
+                <!-- Generated by JS -->
+            </div>
+
+            <div class="filter-actions">
+                <button class="filter-btn" id="btn-all">Select all</button>
+                <button class="filter-btn" id="btn-none">Select none</button>
+                <button class="filter-btn" id="btn-reset">Reset filters</button>
+            </div>
+        </div>
+
+        <div id="filter-summary"></div>
+
         <!-- Pack 1 -->
-        <section class="content-section">
+        <section class="content-section" data-pack="1">
             <div class="section-header" onclick="toggleSection('pack1-content')"><h2>🎮 Jackbox Party Pack 1</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
             <div id="pack1-content" class="section-content">
-                <article class="game-card"><h3>YOU DON'T KNOW JACK 2015</h3><span class="player-count">👥 1–4 Players</span><p>The comedy trivia sensation returns with hundreds of new questions for solo or group play.</p></article>
-                <article class="game-card"><h3>Fibbage XL</h3><span class="player-count">👥 2–8 Players</span><p>The hilarious bluffing game with 50% more questions. Convince your friends or win with the funniest answer.</p></article>
-                <article class="game-card"><h3>Drawful</h3><span class="player-count">👥 3–8 Players</span><p>The first installment of the wildly popular drawing game. Draw bizarre doodles on your phone or tablet.</p></article>
-                <article class="game-card"><h3>Word Spud</h3><span class="player-count">👥 2–8 Players</span><p>Test your vocabulary in this racy-as-you-want-it-to-be fill-in-the-blank word game.</p></article>
-                <article class="game-card"><h3>Lie Swatter</h3><span class="player-count">👥 1–100 Players</span><p>Play true-or-false with a timer. Great for large groups — don't get swatted!</p></article>
+                <article class="game-card" data-min="1" data-max="4"><h3>YOU DON'T KNOW JACK 2015</h3><span class="player-count">👥 1–4 Players</span><p>The comedy trivia sensation returns with hundreds of new questions for solo or group play.</p></article>
+                <article class="game-card" data-min="2" data-max="8"><h3>Fibbage XL</h3><span class="player-count">👥 2–8 Players</span><p>The hilarious bluffing game with 50% more questions. Convince your friends or win with the funniest answer.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Drawful</h3><span class="player-count">👥 3–8 Players</span><p>The first installment of the wildly popular drawing game. Draw bizarre doodles on your phone or tablet.</p></article>
+                <article class="game-card" data-min="2" data-max="8"><h3>Word Spud</h3><span class="player-count">👥 2–8 Players</span><p>Test your vocabulary in this racy-as-you-want-it-to-be fill-in-the-blank word game.</p></article>
+                <article class="game-card" data-min="1" data-max="100"><h3>Lie Swatter</h3><span class="player-count">👥 1–100 Players</span><p>Play true-or-false with a timer. Great for large groups — don't get swatted!</p></article>
             </div>
         </section>
 
         <!-- Pack 2 -->
-        <section class="content-section">
+        <section class="content-section" data-pack="2">
             <div class="section-header" onclick="toggleSection('pack2-content')"><h2>🎮 Jackbox Party Pack 2</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
             <div id="pack2-content" class="section-content">
-                <article class="game-card"><h3>Fibbage 2</h3><span class="player-count">👥 2–8 Players</span><p>The runaway bluffing game returns with 500+ brand-new questions and the deFIBrillator.</p></article>
-                <article class="game-card"><h3>Earwax</h3><span class="player-count">👥 3–8 Players</span><p>The hear-larious sound-effects game. Cow moo? Huge explosion? Or tiny fart? You choose.</p></article>
-                <article class="game-card"><h3>Bidiots</h3><span class="player-count">👥 3–6 Players</span><p>The absurd art auction game where you draw right on your phone. Don't be a bidiot!</p></article>
-                <article class="game-card"><h3>Quiplash XL</h3><span class="player-count">👥 3–8 Players</span><p>The say-anything, gut-busting game with 100+ brand-new prompts plus all original Quiplash content.</p></article>
-                <article class="game-card"><h3>Bomb Corp.</h3><span class="player-count">👥 1–4 Players</span><p>Defuse random bombs as interns at Bomb Corp. You'll probably die, but great work experience!</p></article>
+                <article class="game-card" data-min="2" data-max="8"><h3>Fibbage 2</h3><span class="player-count">👥 2–8 Players</span><p>The runaway bluffing game returns with 500+ brand-new questions and the deFIBrillator.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Earwax</h3><span class="player-count">👥 3–8 Players</span><p>The hear-larious sound-effects game. Cow moo? Huge explosion? Or tiny fart? You choose.</p></article>
+                <article class="game-card" data-min="3" data-max="6"><h3>Bidiots</h3><span class="player-count">👥 3–6 Players</span><p>The absurd art auction game where you draw right on your phone. Don't be a bidiot!</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Quiplash XL</h3><span class="player-count">👥 3–8 Players</span><p>The say-anything, gut-busting game with 100+ brand-new prompts plus all original Quiplash content.</p></article>
+                <article class="game-card" data-min="1" data-max="4"><h3>Bomb Corp.</h3><span class="player-count">👥 1–4 Players</span><p>Defuse random bombs as interns at Bomb Corp. You'll probably die, but great work experience!</p></article>
             </div>
         </section>
 
         <!-- Pack 3 -->
-        <section class="content-section">
+        <section class="content-section" data-pack="3">
             <div class="section-header" onclick="toggleSection('pack3-content')"><h2>🎮 Jackbox Party Pack 3</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
             <div id="pack3-content" class="section-content">
-                <article class="game-card"><h3>Quiplash 2</h3><span class="player-count">👥 3–8 Players</span><p>The say-anything sequel. Play all new questions or make your own!</p></article>
-                <article class="game-card"><h3>Trivia Murder Party</h3><span class="player-count">👥 1–8 Players</span><p>A deadly quiz show where you match wits with a trivia-obsessed killer.</p></article>
-                <article class="game-card"><h3>Guesspionage</h3><span class="player-count">👥 2–8 Players</span><p>The brain-battering data-mining guessing game.</p></article>
-                <article class="game-card"><h3>Tee K.O.</h3><span class="player-count">👥 3–8 Players</span><p>The t-shirt slugfest where you battle your custom t-shirts to the death!</p></article>
-                <article class="game-card"><h3>Fakin' It</h3><span class="player-count">👥 3–6 Players</span><p>One of your friends has something to hide in this sneaky game for tricksters.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Quiplash 2</h3><span class="player-count">👥 3–8 Players</span><p>The say-anything sequel. Play all new questions or make your own!</p></article>
+                <article class="game-card" data-min="1" data-max="8"><h3>Trivia Murder Party</h3><span class="player-count">👥 1–8 Players</span><p>A deadly quiz show where you match wits with a trivia-obsessed killer.</p></article>
+                <article class="game-card" data-min="2" data-max="8"><h3>Guesspionage</h3><span class="player-count">👥 2–8 Players</span><p>The brain-battering data-mining guessing game.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Tee K.O.</h3><span class="player-count">👥 3–8 Players</span><p>The t-shirt slugfest where you battle your custom t-shirts to the death!</p></article>
+                <article class="game-card" data-min="3" data-max="6"><h3>Fakin' It</h3><span class="player-count">👥 3–6 Players</span><p>One of your friends has something to hide in this sneaky game for tricksters.</p></article>
             </div>
         </section>
 
         <!-- Pack 4 -->
-        <section class="content-section">
+        <section class="content-section" data-pack="4">
             <div class="section-header" onclick="toggleSection('pack4-content')"><h2>🎮 Jackbox Party Pack 4</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
             <div id="pack4-content" class="section-content">
-                <article class="game-card"><h3>Fibbage 3</h3><span class="player-count">👥 2–8 Players</span><p>The blanking fun sequel with all-new question types and Fibbage: Enough About You mode.</p></article>
-                <article class="game-card"><h3>Survive the Internet</h3><span class="player-count">👥 3–8 Players</span><p>The web-based frame game where you twist your friends' "online" comments in hilarious ways.</p></article>
-                <article class="game-card"><h3>Monster Seeking Monster</h3><span class="player-count">👥 3–7 Players</span><p>The spooky date-a-thon where you message and date fellow monsters with special powers.</p></article>
-                <article class="game-card"><h3>Bracketeering</h3><span class="player-count">👥 3–16 Players</span><p>The deranged debate match where you place smart bets on stupid arguments.</p></article>
-                <article class="game-card"><h3>Civic Doodle</h3><span class="player-count">👥 3–8 Players</span><p>The one-up art game where you compete to improve the town murals.</p></article>
+                <article class="game-card" data-min="2" data-max="8"><h3>Fibbage 3</h3><span class="player-count">👥 2–8 Players</span><p>The blanking fun sequel with all-new question types and Fibbage: Enough About You mode.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Survive the Internet</h3><span class="player-count">👥 3–8 Players</span><p>The web-based frame game where you twist your friends' "online" comments in hilarious ways.</p></article>
+                <article class="game-card" data-min="3" data-max="7"><h3>Monster Seeking Monster</h3><span class="player-count">👥 3–7 Players</span><p>The spooky date-a-thon where you message and date fellow monsters with special powers.</p></article>
+                <article class="game-card" data-min="3" data-max="16"><h3>Bracketeering</h3><span class="player-count">👥 3–16 Players</span><p>The deranged debate match where you place smart bets on stupid arguments.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Civic Doodle</h3><span class="player-count">👥 3–8 Players</span><p>The one-up art game where you compete to improve the town murals.</p></article>
             </div>
         </section>
 
         <!-- Pack 5 -->
-        <section class="content-section">
+        <section class="content-section" data-pack="5">
             <div class="section-header" onclick="toggleSection('pack5-content')"><h2>🎮 Jackbox Party Pack 5</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
             <div id="pack5-content" class="section-content">
-                <article class="game-card"><h3>You Don't Know Jack: Full Stream</h3><span class="player-count">👥 1–8 Players</span><p>The classic YDKJ returns full of wild new surprises.</p></article>
-                <article class="game-card"><h3>Split The Room</h3><span class="player-count">👥 3–8 Players</span><p>Create strange and divisive hypothetical situations.</p></article>
-                <article class="game-card"><h3>Mad Verse City</h3><span class="player-count">👥 3–8 Players</span><p>Channel your inner MC as a rap battling robot.</p></article>
-                <article class="game-card"><h3>Patently Stupid</h3><span class="player-count">👥 3–8 Players</span><p>Create odd inventions to solve bizarre problems.</p></article>
-                <article class="game-card"><h3>Zeeple Dome</h3><span class="player-count">👥 1–6 Players</span><p>Fling yourself at bloodthirsty aliens to win millions of Zubabucks!</p></article>
+                <article class="game-card" data-min="1" data-max="8"><h3>You Don't Know Jack: Full Stream</h3><span class="player-count">👥 1–8 Players</span><p>The classic YDKJ returns full of wild new surprises.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Split The Room</h3><span class="player-count">👥 3–8 Players</span><p>Create strange and divisive hypothetical situations.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Mad Verse City</h3><span class="player-count">👥 3–8 Players</span><p>Channel your inner MC as a rap battling robot.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Patently Stupid</h3><span class="player-count">👥 3–8 Players</span><p>Create odd inventions to solve bizarre problems.</p></article>
+                <article class="game-card" data-min="1" data-max="6"><h3>Zeeple Dome</h3><span class="player-count">👥 1–6 Players</span><p>Fling yourself at bloodthirsty aliens to win millions of Zubabucks!</p></article>
             </div>
         </section>
 
         <!-- Pack 6 -->
-        <section class="content-section">
+        <section class="content-section" data-pack="6">
             <div class="section-header" onclick="toggleSection('pack6-content')"><h2>🎮 Jackbox Party Pack 6</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
             <div id="pack6-content" class="section-content">
-                <article class="game-card"><h3>Trivia Murder Party 2</h3><span class="player-count">👥 1–8 Players</span><p>The popular trivia deathmatch with bizarre new minigames.</p></article>
-                <article class="game-card"><h3>Role Models</h3><span class="player-count">👥 3–6 Players</span><p>The offbeat personality test. Find out what your friends really think of you.</p></article>
-                <article class="game-card"><h3>Joke Boat</h3><span class="player-count">👥 3–8 Players</span><p>Craft one-liners for a cruise ship talent show.</p></article>
-                <article class="game-card"><h3>Dictionarium</h3><span class="player-count">👥 3–8 Players</span><p>The weird word circus. May the funniest definition win.</p></article>
-                <article class="game-card"><h3>Push The Button</h3><span class="player-count">👥 4–10 Players</span><p>The hidden identity game. Can you discover the aliens in time?</p></article>
+                <article class="game-card" data-min="1" data-max="8"><h3>Trivia Murder Party 2</h3><span class="player-count">👥 1–8 Players</span><p>The popular trivia deathmatch with bizarre new minigames.</p></article>
+                <article class="game-card" data-min="3" data-max="6"><h3>Role Models</h3><span class="player-count">👥 3–6 Players</span><p>The offbeat personality test. Find out what your friends really think of you.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Joke Boat</h3><span class="player-count">👥 3–8 Players</span><p>Craft one-liners for a cruise ship talent show.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Dictionarium</h3><span class="player-count">👥 3–8 Players</span><p>The weird word circus. May the funniest definition win.</p></article>
+                <article class="game-card" data-min="4" data-max="10"><h3>Push The Button</h3><span class="player-count">👥 4–10 Players</span><p>The hidden identity game. Can you discover the aliens in time?</p></article>
             </div>
         </section>
 
         <!-- Pack 7 -->
-        <section class="content-section">
+        <section class="content-section" data-pack="7">
             <div class="section-header" onclick="toggleSection('pack7-content')"><h2>🎮 Jackbox Party Pack 7</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
             <div id="pack7-content" class="section-content">
-                <article class="game-card"><h3>Quiplash 3</h3><span class="player-count">👥 3–8 Players</span><p>The say-anything threequel. Head-to-head battle of the wits with hilarious prompts.</p></article>
-                <article class="game-card"><h3>The Devils and the Details</h3><span class="player-count">👥 3–8 Players</span><p>A family of devils working together to survive in suburbia.</p></article>
-                <article class="game-card"><h3>Champ'd Up</h3><span class="player-count">👥 3–8 Players</span><p>Create absurd characters that battle over unusual titles.</p></article>
-                <article class="game-card"><h3>Talking Points</h3><span class="player-count">👥 3–8 Players</span><p>Give a speech responding to picture slides you've never seen before.</p></article>
-                <article class="game-card"><h3>Blather 'Round</h3><span class="player-count">👥 2–6 Players</span><p>Describe your secret prompt with a very limited vocabulary.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Quiplash 3</h3><span class="player-count">👥 3–8 Players</span><p>The say-anything threequel. Head-to-head battle of the wits with hilarious prompts.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>The Devils and the Details</h3><span class="player-count">👥 3–8 Players</span><p>A family of devils working together to survive in suburbia.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Champ'd Up</h3><span class="player-count">👥 3–8 Players</span><p>Create absurd characters that battle over unusual titles.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Talking Points</h3><span class="player-count">👥 3–8 Players</span><p>Give a speech responding to picture slides you've never seen before.</p></article>
+                <article class="game-card" data-min="2" data-max="6"><h3>Blather 'Round</h3><span class="player-count">👥 2–6 Players</span><p>Describe your secret prompt with a very limited vocabulary.</p></article>
             </div>
         </section>
 
         <!-- Pack 8 -->
-        <section class="content-section">
+        <section class="content-section" data-pack="8">
             <div class="section-header" onclick="toggleSection('pack8-content')"><h2>🎮 Jackbox Party Pack 8</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
             <div id="pack8-content" class="section-content">
-                <article class="game-card"><h3>Drawful Animate</h3><span class="player-count">👥 3–10 Players</span><p>Create looping two-frame animations based on weird and random titles.</p></article>
-                <article class="game-card"><h3>Job Job</h3><span class="player-count">👥 3–10 Players</span><p>Use other people's words to craft unique and funny job interview answers.</p></article>
-                <article class="game-card"><h3>The Poll Mine</h3><span class="player-count">👥 2–10 Players</span><p>Teams must guess how the group ranked answers. How well do you know your friends?</p></article>
-                <article class="game-card"><h3>Weapons Drawn</h3><span class="player-count">👥 4–8 Players</span><p>Social deduction where everyone is both a murderer and a detective.</p></article>
-                <article class="game-card"><h3>The Wheel of Enormous Proportions</h3><span class="player-count">👥 3–8 Players</span><p>Trivia has never been so large — earn slices of the great Wheel!</p></article>
+                <article class="game-card" data-min="3" data-max="10"><h3>Drawful Animate</h3><span class="player-count">👥 3–10 Players</span><p>Create looping two-frame animations based on weird and random titles.</p></article>
+                <article class="game-card" data-min="3" data-max="10"><h3>Job Job</h3><span class="player-count">👥 3–10 Players</span><p>Use other people's words to craft unique and funny job interview answers.</p></article>
+                <article class="game-card" data-min="2" data-max="10"><h3>The Poll Mine</h3><span class="player-count">👥 2–10 Players</span><p>Teams must guess how the group ranked answers. How well do you know your friends?</p></article>
+                <article class="game-card" data-min="4" data-max="8"><h3>Weapons Drawn</h3><span class="player-count">👥 4–8 Players</span><p>Social deduction where everyone is both a murderer and a detective.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>The Wheel of Enormous Proportions</h3><span class="player-count">👥 3–8 Players</span><p>Trivia has never been so large — earn slices of the great Wheel!</p></article>
             </div>
         </section>
 
         <!-- Pack 9 -->
-        <section class="content-section">
+        <section class="content-section" data-pack="9">
             <div class="section-header" onclick="toggleSection('pack9-content')"><h2>🎮 Jackbox Party Pack 9</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
             <div id="pack9-content" class="section-content">
-                <article class="game-card"><h3>Fibbage 4</h3><span class="player-count">👥 2–8 Players</span><p>Bluffing returns with Final Fibbage, video questions, and fan-submitted content.</p></article>
-                <article class="game-card"><h3>Quixort</h3><span class="player-count">👥 1–10 Players</span><p>Sort falling answers into their proper order before they hit the floor!</p></article>
-                <article class="game-card"><h3>Junktopia</h3><span class="player-count">👥 3–8 Players</span><p>Create hilarious backstories for weird objects to avoid staying a frog forever.</p></article>
-                <article class="game-card"><h3>Nonsensory</h3><span class="player-count">👥 3–8 Players</span><p>Drawing, writing, and guessing — how close can you get on the silliest of scales?</p></article>
-                <article class="game-card"><h3>Roomerang</h3><span class="player-count">👥 4–9 Players</span><p>Channel your inner reality TV star and avoid being voted out.</p></article>
+                <article class="game-card" data-min="2" data-max="8"><h3>Fibbage 4</h3><span class="player-count">👥 2–8 Players</span><p>Bluffing returns with Final Fibbage, video questions, and fan-submitted content.</p></article>
+                <article class="game-card" data-min="1" data-max="10"><h3>Quixort</h3><span class="player-count">👥 1–10 Players</span><p>Sort falling answers into their proper order before they hit the floor!</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Junktopia</h3><span class="player-count">👥 3–8 Players</span><p>Create hilarious backstories for weird objects to avoid staying a frog forever.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Nonsensory</h3><span class="player-count">👥 3–8 Players</span><p>Drawing, writing, and guessing — how close can you get on the silliest of scales?</p></article>
+                <article class="game-card" data-min="4" data-max="9"><h3>Roomerang</h3><span class="player-count">👥 4–9 Players</span><p>Channel your inner reality TV star and avoid being voted out.</p></article>
             </div>
         </section>
 
         <!-- Pack 10 -->
-        <section class="content-section">
+        <section class="content-section" data-pack="10">
             <div class="section-header" onclick="toggleSection('pack10-content')"><h2>🎮 Jackbox Party Pack 10</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
             <div id="pack10-content" class="section-content">
-                <article class="game-card"><h3>Fixy Text</h3><span class="player-count">👥 3–8 Players</span><p>Have your friends answer texts on your behalf. All of the chaos, none of the backlash.</p></article>
-                <article class="game-card"><h3>Tee K.O. 2</h3><span class="player-count">👥 3–8 Players</span><p>The fan-favourite fashion battle returns with new tools, clothing options, and a final round.</p></article>
-                <article class="game-card"><h3>Dodo Re Mi</h3><span class="player-count">👥 1–9 Players</span><p>Musical birds must play the right songs for a carnivorous plant. Don't overthink it.</p></article>
-                <article class="game-card"><h3>Timejinx</h3><span class="player-count">👥 1–8 Players</span><p>Use a time machine to play an immersive trivia game spanning history.</p></article>
-                <article class="game-card"><h3>Hypnotorious</h3><span class="player-count">👥 4–8 Players</span><p>Everyone gets hypnotised into a new identity. Hidden roles meet quirky Q&amp;A.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Fixy Text</h3><span class="player-count">👥 3–8 Players</span><p>Have your friends answer texts on your behalf. All of the chaos, none of the backlash.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Tee K.O. 2</h3><span class="player-count">👥 3–8 Players</span><p>The fan-favourite fashion battle returns with new tools, clothing options, and a final round.</p></article>
+                <article class="game-card" data-min="1" data-max="9"><h3>Dodo Re Mi</h3><span class="player-count">👥 1–9 Players</span><p>Musical birds must play the right songs for a carnivorous plant. Don't overthink it.</p></article>
+                <article class="game-card" data-min="1" data-max="8"><h3>Timejinx</h3><span class="player-count">👥 1–8 Players</span><p>Use a time machine to play an immersive trivia game spanning history.</p></article>
+                <article class="game-card" data-min="4" data-max="8"><h3>Hypnotorious</h3><span class="player-count">👥 4–8 Players</span><p>Everyone gets hypnotised into a new identity. Hidden roles meet quirky Q&amp;A.</p></article>
             </div>
         </section>
 
         <!-- Pack 11 -->
-        <section class="content-section">
+        <section class="content-section" data-pack="11">
             <div class="section-header" onclick="toggleSection('pack11-content')"><h2>🎮 Jackbox Party Pack 11</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
             <div id="pack11-content" class="section-content">
-                <article class="game-card"><h3>Doominate</h3><span class="player-count">👥 3–8 Players</span><p>Ruin wholesome prompts, then un-ruin them in a final twist round. It's wickedly fun.</p></article>
-                <article class="game-card"><h3>Hear Say</h3><span class="player-count">👥 2–8 Players</span><p>Record sound effects from your phone then watch your voices come to life in short film clips.</p></article>
-                <article class="game-card"><h3>Cookie Haus</h3><span class="player-count">👥 3–8 Players</span><p>Decorate cookies to match bizarre customer requests. Don't play on an empty stomach!</p></article>
-                <article class="game-card"><h3>Suspectives</h3><span class="player-count">👥 4–8 Players</span><p>There's been a crime — can you find the culprit while defending your own innocence?</p></article>
-                <article class="game-card"><h3>Legends of Trivia</h3><span class="player-count">👥 1–6 Players</span><p>Assemble your team and take on the most challenging trivia game yet in a fantastical world.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Doominate</h3><span class="player-count">👥 3–8 Players</span><p>Ruin wholesome prompts, then un-ruin them in a final twist round. It's wickedly fun.</p></article>
+                <article class="game-card" data-min="2" data-max="8"><h3>Hear Say</h3><span class="player-count">👥 2–8 Players</span><p>Record sound effects from your phone then watch your voices come to life in short film clips.</p></article>
+                <article class="game-card" data-min="3" data-max="8"><h3>Cookie Haus</h3><span class="player-count">👥 3–8 Players</span><p>Decorate cookies to match bizarre customer requests. Don't play on an empty stomach!</p></article>
+                <article class="game-card" data-min="4" data-max="8"><h3>Suspectives</h3><span class="player-count">👥 4–8 Players</span><p>There's been a crime — can you find the culprit while defending your own innocence?</p></article>
+                <article class="game-card" data-min="1" data-max="6"><h3>Legends of Trivia</h3><span class="player-count">👥 1–6 Players</span><p>Assemble your team and take on the most challenging trivia game yet in a fantastical world.</p></article>
             </div>
         </section>
     </main>
@@ -167,5 +344,144 @@
     </footer>
 
     <script src="../app.js"></script>
+    <script>
+    (() => {
+        const TOTAL_PACKS = 11;
+        const STORAGE_KEY = 'jackbox_owned_packs';
+
+        // ── State ──────────────────────────────────────────────────
+        let ownedPacks = new Set();
+        let playerCount = null;
+
+        // ── Load saved preferences ─────────────────────────────────
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) ownedPacks = new Set(JSON.parse(saved));
+        } catch (_) {}
+
+        // ── Build checkboxes ───────────────────────────────────────
+        const container = document.getElementById('pack-checkboxes');
+        for (let i = 1; i <= TOTAL_PACKS; i++) {
+            const label = document.createElement('label');
+            label.className = 'pack-checkbox-item' + (ownedPacks.has(i) ? ' is-owned' : '');
+            label.innerHTML = `
+                <input type="checkbox" value="${i}" ${ownedPacks.has(i) ? 'checked' : ''}>
+                <span>Pack ${i}</span>
+            `;
+            label.querySelector('input').addEventListener('change', e => {
+                const n = Number(e.target.value);
+                if (e.target.checked) { ownedPacks.add(n); label.classList.add('is-owned'); }
+                else { ownedPacks.delete(n); label.classList.remove('is-owned'); }
+                savePrefs();
+                applyFilters();
+            });
+            container.appendChild(label);
+        }
+
+        // ── Player count input ─────────────────────────────────────
+        const playerInput = document.getElementById('player-count-input');
+        playerInput.addEventListener('input', () => {
+            const v = parseInt(playerInput.value, 10);
+            playerCount = (!playerInput.value || isNaN(v) || v < 1) ? null : v;
+            applyFilters();
+        });
+
+        // ── Buttons ────────────────────────────────────────────────
+        document.getElementById('btn-all').addEventListener('click', () => {
+            ownedPacks = new Set(Array.from({length: TOTAL_PACKS}, (_, i) => i + 1));
+            syncCheckboxes();
+            savePrefs();
+            applyFilters();
+        });
+
+        document.getElementById('btn-none').addEventListener('click', () => {
+            ownedPacks.clear();
+            syncCheckboxes();
+            savePrefs();
+            applyFilters();
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            ownedPacks.clear();
+            playerCount = null;
+            playerInput.value = '';
+            syncCheckboxes();
+            savePrefs();
+            applyFilters();
+        });
+
+        function syncCheckboxes() {
+            container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                const n = Number(cb.value);
+                cb.checked = ownedPacks.has(n);
+                cb.closest('.pack-checkbox-item').classList.toggle('is-owned', ownedPacks.has(n));
+            });
+        }
+
+        function savePrefs() {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...ownedPacks])); } catch (_) {}
+        }
+
+        // ── Core filter logic ──────────────────────────────────────
+        function applyFilters() {
+            const anyOwnershipFilter = ownedPacks.size > 0;
+            const anyPlayerFilter    = playerCount !== null;
+            let visibleGames = 0;
+            let visibleSections = 0;
+
+            document.querySelectorAll('section.content-section[data-pack]').forEach(section => {
+                const packNum = Number(section.dataset.pack);
+                const packOwned = !anyOwnershipFilter || ownedPacks.has(packNum);
+
+                if (!packOwned) {
+                    section.classList.add('section-unowned');
+                } else {
+                    section.classList.remove('section-unowned');
+                }
+
+                let gamesVisibleInSection = 0;
+                section.querySelectorAll('.game-card').forEach(card => {
+                    let show = true;
+
+                    if (!packOwned) show = false;
+
+                    if (show && anyPlayerFilter) {
+                        const min = Number(card.dataset.min);
+                        const max = Number(card.dataset.max);
+                        show = playerCount >= min && playerCount <= max;
+                    }
+
+                    card.classList.toggle('card-hidden', !show);
+                    if (show) { gamesVisibleInSection++; visibleGames++; }
+                });
+
+                // Hide the whole section if no games are visible
+                const sectionVisible = gamesVisibleInSection > 0;
+                section.classList.toggle('section-hidden', !sectionVisible);
+                if (sectionVisible) visibleSections++;
+            });
+
+            updateSummary(visibleGames, visibleSections, anyOwnershipFilter, anyPlayerFilter);
+        }
+
+        function updateSummary(games, sections, hasOwnership, hasPlayers) {
+            const el = document.getElementById('filter-summary');
+            if (!hasOwnership && !hasPlayers) { el.textContent = ''; return; }
+
+            const parts = [];
+            if (hasOwnership) parts.push(`${ownedPacks.size} pack${ownedPacks.size !== 1 ? 's' : ''} owned`);
+            if (hasPlayers)   parts.push(`${playerCount} player${playerCount !== 1 ? 's' : ''}`);
+
+            if (games === 0) {
+                el.textContent = `No games match your filters (${parts.join(', ')}).`;
+            } else {
+                el.textContent = `Showing ${games} game${games !== 1 ? 's' : ''} across ${sections} pack${sections !== 1 ? 's' : ''} — ${parts.join(', ')}.`;
+            }
+        }
+
+        // ── Run on load ────────────────────────────────────────────
+        applyFilters();
+    })();
+    </script>
 </body>
 </html>
