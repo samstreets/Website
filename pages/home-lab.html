@@ -1,240 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Showcase of Sam's home lab setup including servers, networking equipment, and configurations.">
-    <meta property="og:title" content="Home Lab - Streets Services">
-    <meta property="og:description" content="Sam's personal home lab: UniFi networking, Hyper-V, Proxmox, QNAP NAS, Plex, and more.">
-    <meta property="og:image" content="https://streetsservices.co.uk/pictures/icon.png">
-    <meta property="og:url" content="https://streetsservices.co.uk/pages/home-lab.html">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary">
-    <title>Home Lab - Streets Services</title>
-    <link rel="icon" type="image/png" href="../pictures/icon.png">
-    <link rel="stylesheet" href="../styles.css">
-    <style>
-        .server-card { background:var(--bg-dark);padding:1.5rem;border-radius:var(--radius-lg);border:2px solid var(--border-color);transition:all var(--transition-base); }
-        .server-card:hover { border-color:var(--primary-color);transform:translateY(-5px);box-shadow:0 8px 16px rgba(59,130,246,0.2); }
-        .server-header { display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:2px solid var(--border-color); }
-        .server-icon { font-size:2.5rem; }
-        .server-title { flex:1; }
-        .server-title h3 { color:var(--accent-color);margin-bottom:0.25rem;font-size:var(--font-size-2xl); }
-        .server-subtitle { color:var(--text-secondary);font-size:0.875rem; }
-        .server-status { display:inline-block;padding:0.25rem 0.75rem;border-radius:20px;font-size:0.75rem;font-weight:600; }
-        .status-online { background:#10b981;color:white; }
-        .spec-list { display:grid;gap:0.75rem;margin-top:1rem; }
-        .spec-item { display:flex;justify-content:space-between;align-items:center;padding:0.5rem;background:var(--bg-card);border-radius:var(--radius-sm); }
-        .spec-label { color:var(--text-secondary);font-size:0.875rem; }
-        .spec-value { color:var(--text-primary);font-weight:600;font-family:'Courier New',monospace; }
-        .services-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.75rem;margin-top:1rem; }
-        .service-badge { background:var(--bg-card);padding:0.75rem;border-radius:var(--radius-sm);text-align:center;border:1px solid var(--border-color);transition:all var(--transition-base); }
-        .service-badge:hover { border-color:var(--primary-color);transform:scale(1.05); }
-        .service-icon { font-size:1.5rem;margin-bottom:0.25rem; }
-        .service-name { color:var(--text-secondary);font-size:0.75rem; }
-        .network-diagram { background:var(--bg-dark);padding:2rem;border-radius:var(--radius-lg);border:2px solid var(--border-color);text-align:center; }
-        .network-tier { margin-bottom:2rem; }
-        .network-tier:last-child { margin-bottom:0; }
-        .tier-label { color:var(--accent-color);font-size:0.875rem;font-weight:600;margin-bottom:1rem; }
-        .network-devices { display:flex;justify-content:center;align-items:center;gap:2rem;flex-wrap:wrap; }
-        .network-device { background:var(--bg-card);padding:1rem 1.5rem;border-radius:var(--radius-sm);border:2px solid var(--primary-color);min-width:120px;text-align:center; }
-        .device-name { color:var(--text-primary);font-weight:600;margin-bottom:0.25rem; }
-        .device-model { color:var(--text-secondary);font-size:0.75rem; }
-        .connection-line { color:var(--primary-color);font-size:2rem;margin:0 1rem; }
-        .stat-card { background:linear-gradient(135deg,var(--primary-color) 0%,var(--secondary-color) 100%);padding:1.5rem;border-radius:var(--radius-lg);text-align:center;color:white; }
-        .stat-number { font-size:3rem;font-weight:700;line-height:1;margin-bottom:0.5rem; }
-        .stat-label { font-size:1rem;opacity:0.9; }
-        .stats-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:2rem; }
-        @media (max-width:768px) { .network-devices{flex-direction:column;gap:1rem;} .stat-number{font-size:2.5rem;} }
-    </style>
-    <link rel="canonical" href="https://streetsservices.co.uk/pages/home-lab.html">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Sam's home lab — UniFi networking, Hyper-V, Proxmox, QNAP NAS, and Plex.">
+<title>Home Lab — Streets Services</title>
+<link rel="icon" type="image/png" href="../pictures/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0e0e;--bg-card:#161616;--bg-hover:#1e1e1e;--border:#272727;
+  --text:#f0ebe0;--text-muted:#7a7570;--text-dim:#444;
+  --accent:#00e5cc;--accent-dim:rgba(0,229,204,0.12);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-mono:'JetBrains Mono','Courier New',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-mono);font-size:14px;line-height:1.7;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,204,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,204,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#333;border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+a{color:var(--accent);text-decoration:none}
+.nav-bar{position:sticky;top:0;z-index:100;background:rgba(14,14,14,0.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 60px;display:flex;align-items:center}
+.nav-prompt{font-family:var(--font-mono);font-size:11px;color:var(--accent);padding:14px 0;margin-right:16px;white-space:nowrap}
+.nav-links{display:flex;align-items:center;list-style:none;flex:1}
+.nav-links a{display:block;padding:14px 20px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.08em;color:var(--text-muted);text-decoration:none;transition:color .2s,background .2s;border-right:1px solid var(--border)}
+.nav-links li:first-child a{border-left:1px solid var(--border)}
+.nav-links a:hover{color:var(--accent);background:var(--accent-dim)}
+.nav-right{font-size:10px;color:var(--text-dim);letter-spacing:0.1em;margin-left:auto}
+.page-header{position:relative;z-index:1;padding:72px 60px 56px;max-width:1100px;margin:0 auto;border-bottom:1px solid var(--border)}
+.page-eyebrow{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.page-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--accent)}
+.page-header h1{font-family:var(--font-display);font-size:clamp(36px,5vw,64px);font-weight:900;line-height:1.0;color:var(--text);letter-spacing:-1.5px;margin-bottom:14px}
+.page-header p{font-size:13px;color:var(--text-muted);max-width:520px;line-height:1.8}
+.breadcrumb{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:14px 60px;font-size:11px;color:var(--text-dim);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.breadcrumb a{color:var(--text-muted)}.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb .sep{color:var(--text-dim)}
+.content{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:60px}
+.section-block{margin-bottom:60px}
+.block-header{display:flex;align-items:baseline;gap:16px;margin-bottom:32px}
+.block-num{font-size:10px;letter-spacing:0.2em;color:var(--accent);opacity:0.5;white-space:nowrap}
+.block-title{font-family:var(--font-display);font-size:clamp(20px,2.5vw,28px);font-weight:700;color:var(--text);letter-spacing:-0.5px}
+.block-line{flex:1;height:1px;background:var(--border);margin-left:16px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
+.info-card{background:var(--bg-card);padding:28px;transition:background .2s}
+.info-card:hover{background:var(--bg-hover)}
+.info-card h3{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.info-card p,.info-card ul{color:var(--text-muted);font-size:13px;line-height:1.8}
+.info-card ul{list-style:none;padding:0}
+.info-card ul li{padding:4px 0;border-bottom:1px solid rgba(39,39,39,0.5)}
+.info-card ul li:last-child{border-bottom:none}
+.info-card ul li::before{content:'▹ ';color:var(--accent);opacity:0.6}
+site-footer{position:relative;z-index:1;padding:32px 60px;display:flex;justify-content:space-between;align-items:center;max-width:1100px;margin:0 auto;flex-wrap:wrap;gap:12px;border-top:1px solid var(--border)}
+.site-footer{position:relative;z-index:1;padding:32px 60px;display:flex;justify-content:space-between;align-items:center;max-width:1100px;margin:0 auto;flex-wrap:wrap;gap:12px;border-top:1px solid var(--border)}
+.site-footer p{font-size:11px;color:var(--text-dim);letter-spacing:0.08em}
+.site-footer a{color:var(--text-muted)}.site-footer a:hover{color:var(--accent)}
+@media(max-width:768px){
+  .nav-bar,.page-header,.breadcrumb,.content,.site-footer{padding-left:24px;padding-right:24px}
+  .page-header{padding-top:48px;padding-bottom:36px}
+  .nav-right{display:none}
+  .card-grid{grid-template-columns:1fr}
+}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:48px}
+.stat-cell{background:var(--bg-card);padding:28px 32px;text-align:center}
+.stat-num{font-family:var(--font-display);font-size:40px;font-weight:700;color:var(--accent);line-height:1;margin-bottom:6px}
+.stat-label{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted)}
+.server-card{background:var(--bg-card);border:1px solid var(--border);padding:28px;transition:background .2s,border-color .2s}
+.server-card:hover{background:var(--bg-hover);border-color:var(--accent)}
+.server-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.server-icon{font-size:28px;line-height:1}
+.server-title h3{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px}
+.server-title p{font-size:11px;color:var(--text-muted)}
+.status-dot{display:inline-flex;align-items:center;gap:5px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#10b981;margin-left:auto;white-space:nowrap}
+.status-dot::before{content:'';width:6px;height:6px;border-radius:50%;background:#10b981;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.spec-list{display:flex;flex-direction:column;gap:8px}
+.spec-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 0;border-bottom:1px solid rgba(39,39,39,0.5)}
+.spec-row:last-child{border-bottom:none}
+.spec-key{color:var(--text-muted)}
+.spec-val{color:var(--text);font-family:var(--font-mono);font-size:11px}
+.servers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:48px}
+.network-map{border:1px solid var(--border);background:var(--bg-card);padding:40px;text-align:center}
+.net-tier{margin-bottom:0}
+.net-tier-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);opacity:0.6;margin-bottom:10px}
+.net-devices{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}
+.net-device{background:var(--bg);border:1px solid var(--border);padding:12px 20px;min-width:120px;text-align:center;transition:border-color .2s}
+.net-device:hover{border-color:var(--accent)}
+.net-device-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
+.net-device-model{font-size:10px;color:var(--text-muted)}
+.net-arrow{color:var(--accent);opacity:0.4;font-size:20px;margin:12px auto;display:block;text-align:center}
+</style>
 </head>
 <body>
-    <header class="main-header">
-        <div class="header-content">
-            <img src="../pictures/icon.png" alt="Streets Services Icon" class="header-icon" width="28" height="28">
-            <h1>Home Lab</h1>
+<nav class="nav-bar">
+  <span class="nav-prompt">sam@streets:~$</span>
+  <ul class="nav-links">
+    <li><a href="../index.html">~/home</a></li>
+    <li><a href="../index.html#resources">~/resources</a></li>
+  </ul>
+  <span class="nav-right">streetsservices.co.uk</span>
+</nav>
+
+<header class="page-header">
+  <p class="page-eyebrow">Infrastructure · Personal Lab</p>
+  <h1>Home Lab</h1>
+  <p>My personal IT infrastructure — servers, networking, and services running 24/7.</p>
+</header>
+
+<nav class="breadcrumb"><a href="../index.html">Home</a><span class="sep">→</span><span>Home Lab</span></nav>
+
+<main class="content">
+
+  <div class="section-block">
+    <div class="stat-row">
+      <div class="stat-cell"><div class="stat-num">12+</div><div class="stat-label">Network Devices</div></div>
+      <div class="stat-cell"><div class="stat-num">15+</div><div class="stat-label">Services Running</div></div>
+      <div class="stat-cell"><div class="stat-num">24/7</div><div class="stat-label">Uptime Goal</div></div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="block-header">
+      <span class="block-num">01 —</span>
+      <h2 class="block-title">Network Equipment</h2>
+      <div class="block-line"></div>
+    </div>
+    <div class="servers-grid">
+      <div class="server-card">
+        <div class="server-top">
+          <span class="server-icon">🌐</span>
+          <div class="server-title"><h3>UniFi USG Ultra</h3><p>Gateway &amp; Controller</p></div>
+          <span class="status-dot">Online</span>
         </div>
-        <p class="tagline">My Personal IT Infrastructure</p>
-    </header>
+        <div class="spec-list">
+          <div class="spec-row"><span class="spec-key">Model</span><span class="spec-val">USG Ultra</span></div>
+          <div class="spec-row"><span class="spec-key">Role</span><span class="spec-val">Router &amp; Controller</span></div>
+          <div class="spec-row"><span class="spec-key">Management</span><span class="spec-val">UniFi Network</span></div>
+        </div>
+      </div>
+      <div class="server-card">
+        <div class="server-top">
+          <span class="server-icon">📡</span>
+          <div class="server-title"><h3>UniFi U7 PRO</h3><p>WiFi 7 Access Point</p></div>
+          <span class="status-dot">Online</span>
+        </div>
+        <div class="spec-list">
+          <div class="spec-row"><span class="spec-key">Model</span><span class="spec-val">U7 PRO</span></div>
+          <div class="spec-row"><span class="spec-key">Standard</span><span class="spec-val">WiFi 7</span></div>
+          <div class="spec-row"><span class="spec-key">Power</span><span class="spec-val">PoE</span></div>
+        </div>
+      </div>
+      <div class="server-card">
+        <div class="server-top">
+          <span class="server-icon">🔌</span>
+          <div class="server-title"><h3>UniFi Switches</h3><p>Managed PoE</p></div>
+          <span class="status-dot">Online</span>
+        </div>
+        <div class="spec-list">
+          <div class="spec-row"><span class="spec-key">Brand</span><span class="spec-val">Ubiquiti UniFi</span></div>
+          <div class="spec-row"><span class="spec-key">Features</span><span class="spec-val">Managed, PoE</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <main class="container">
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a> <span aria-hidden="true">→</span> <span id="breadcrumb-current"></span></nav>
+  <div class="section-block">
+    <div class="block-header">
+      <span class="block-num">02 —</span>
+      <h2 class="block-title">Servers &amp; Storage</h2>
+      <div class="block-line"></div>
+    </div>
+    <div class="servers-grid">
+      <div class="server-card">
+        <div class="server-top">
+          <span class="server-icon">💾</span>
+          <div class="server-title"><h3>QNAP NAS</h3><p>Backup &amp; Storage</p></div>
+          <span class="status-dot">Online</span>
+        </div>
+        <div class="spec-list">
+          <div class="spec-row"><span class="spec-key">Role</span><span class="spec-val">Primary Backup</span></div>
+          <div class="spec-row"><span class="spec-key">Storage</span><span class="spec-val">14 TB RAID 1</span></div>
+        </div>
+      </div>
+      <div class="server-card">
+        <div class="server-top">
+          <span class="server-icon">🖥️</span>
+          <div class="server-title"><h3>Main Server</h3><p>Virtualisation &amp; File Services</p></div>
+          <span class="status-dot">Online</span>
+        </div>
+        <div class="spec-list">
+          <div class="spec-row"><span class="spec-key">OS</span><span class="spec-val">Windows Server</span></div>
+          <div class="spec-row"><span class="spec-key">Hypervisor</span><span class="spec-val">Hyper-V</span></div>
+          <div class="spec-row"><span class="spec-key">Backup</span><span class="spec-val">Veeam</span></div>
+        </div>
+      </div>
+      <div class="server-card">
+        <div class="server-top">
+          <span class="server-icon">🎬</span>
+          <div class="server-title"><h3>Plex Server</h3><p>Media Hosting</p></div>
+          <span class="status-dot">Online</span>
+        </div>
+        <div class="spec-list">
+          <div class="spec-row"><span class="spec-key">OS</span><span class="spec-val">Ubuntu</span></div>
+          <div class="spec-row"><span class="spec-key">Role</span><span class="spec-val">Plex Media Server</span></div>
+        </div>
+      </div>
+      <div class="server-card">
+        <div class="server-top">
+          <span class="server-icon">🧪</span>
+          <div class="server-title"><h3>Proxmox Server</h3><p>Dev &amp; Testing</p></div>
+          <span class="status-dot">Online</span>
+        </div>
+        <div class="spec-list">
+          <div class="spec-row"><span class="spec-key">Purpose</span><span class="spec-val">Test Environment</span></div>
+          <div class="spec-row"><span class="spec-key">Use</span><span class="spec-val">Lab &amp; Development</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <section class="content-section">
-            <div class="section-header" onclick="toggleSection('stats-content')"><h2>Overview</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
-            <div id="stats-content" class="section-content active">
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-number">12+</div><div class="stat-label">Network Devices</div></div>
-                    <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Services Running</div></div>
-                    <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Uptime Goal</div></div>
-                </div>
-            </div>
-        </section>
+  <div class="section-block">
+    <div class="block-header">
+      <span class="block-num">03 —</span>
+      <h2 class="block-title">Network Topology</h2>
+      <div class="block-line"></div>
+    </div>
+    <div class="network-map">
+      <div class="net-tier">
+        <div class="net-tier-label">Internet Service Provider</div>
+        <div class="net-devices"><div class="net-device"><div class="net-device-name">🌐 Virgin Media</div><div class="net-device-model">ISP Connection</div></div></div>
+      </div>
+      <div class="net-arrow">↓</div>
+      <div class="net-tier">
+        <div class="net-tier-label">Network Gateway</div>
+        <div class="net-devices"><div class="net-device"><div class="net-device-name">🔒 USG Ultra</div><div class="net-device-model">UniFi Gateway</div></div></div>
+      </div>
+      <div class="net-arrow">↓</div>
+      <div class="net-tier">
+        <div class="net-tier-label">Infrastructure</div>
+        <div class="net-devices">
+          <div class="net-device"><div class="net-device-name">🔌 UniFi Switch</div><div class="net-device-model">Managed PoE</div></div>
+          <div class="net-device"><div class="net-device-name">📡 U7 PRO</div><div class="net-device-model">WiFi 7 AP</div></div>
+        </div>
+      </div>
+      <div class="net-arrow">↓</div>
+      <div class="net-tier">
+        <div class="net-tier-label">Servers &amp; Devices</div>
+        <div class="net-devices">
+          <div class="net-device"><div class="net-device-name">💾 QNAP NAS</div><div class="net-device-model">Backup</div></div>
+          <div class="net-device"><div class="net-device-name">🖥️ Main Server</div><div class="net-device-model">Hyper-V Host</div></div>
+          <div class="net-device"><div class="net-device-name">🧪 Proxmox</div><div class="net-device-model">Test Env</div></div>
+          <div class="net-device"><div class="net-device-name">🎬 Plex</div><div class="net-device-model">Media Server</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <section class="content-section">
-            <div class="section-header" onclick="toggleSection('network-equipment-content')"><h2>Network Equipment</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
-            <div id="network-equipment-content" class="section-content active">
-                <div class="about-grid">
-                    <article class="server-card">
-                        <div class="server-header">
-                            <div class="server-icon">🌐</div>
-                            <div class="server-title"><h3>UniFi USG Ultra</h3><div class="server-subtitle">Gateway &amp; Controller</div></div>
-                            <span class="server-status status-online">● Online</span>
-                        </div>
-                        <div class="spec-list">
-                            <div class="spec-item"><span class="spec-label">Model</span><span class="spec-value">USG Ultra</span></div>
-                            <div class="spec-item"><span class="spec-label">Role</span><span class="spec-value">Router &amp; Controller</span></div>
-                            <div class="spec-item"><span class="spec-label">Management</span><span class="spec-value">UniFi Network</span></div>
-                        </div>
-                    </article>
-                    <article class="server-card">
-                        <div class="server-header">
-                            <div class="server-icon">📡</div>
-                            <div class="server-title"><h3>UniFi Access Point</h3><div class="server-subtitle">U7 PRO</div></div>
-                            <span class="server-status status-online">● Online</span>
-                        </div>
-                        <div class="spec-list">
-                            <div class="spec-item"><span class="spec-label">Model</span><span class="spec-value">U7 PRO</span></div>
-                            <div class="spec-item"><span class="spec-label">WiFi Standard</span><span class="spec-value">WiFi 7</span></div>
-                            <div class="spec-item"><span class="spec-label">Power</span><span class="spec-value">PoE</span></div>
-                        </div>
-                    </article>
-                    <article class="server-card">
-                        <div class="server-header">
-                            <div class="server-icon">🔌</div>
-                            <div class="server-title"><h3>Network Switches</h3><div class="server-subtitle">UniFi Managed</div></div>
-                            <span class="server-status status-online">● Online</span>
-                        </div>
-                        <div class="spec-list">
-                            <div class="spec-item"><span class="spec-label">Brand</span><span class="spec-value">Ubiquiti UniFi</span></div>
-                            <div class="spec-item"><span class="spec-label">Features</span><span class="spec-value">Managed, PoE</span></div>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
+  <div class="section-block">
+    <div class="block-header">
+      <span class="block-num">04 —</span>
+      <h2 class="block-title">Technologies &amp; Tools</h2>
+      <div class="block-line"></div>
+    </div>
+    <div class="card-grid">
+      <div class="info-card"><h3>🌐 Networking</h3><ul><li>Ubiquiti UniFi Ecosystem</li><li>USG Ultra Gateway</li><li>WiFi 7 Access Points</li><li>Managed PoE Switches</li><li>VLAN Segmentation</li></ul></div>
+      <div class="info-card"><h3>🔐 Security</h3><ul><li>UniFi Firewall &amp; Content Filtering</li><li>Cloudflare Tunnels</li><li>Zero Trust Architecture</li><li>Network Segmentation</li></ul></div>
+      <div class="info-card"><h3>💾 Storage &amp; Backup</h3><ul><li>QNAP NAS with RAID</li><li>Veeam Backup &amp; Replication</li><li>Daily Automated Backups</li><li>Network File Shares</li></ul></div>
+      <div class="info-card"><h3>🖥️ Virtualisation</h3><ul><li>Microsoft Hyper-V</li><li>Multiple Guest VMs</li><li>Proxmox Dev Environments</li><li>Isolated Network Segments</li></ul></div>
+      <div class="info-card"><h3>🐳 Containers</h3><ul><li>Docker Containers</li><li>Linux-based Services</li><li>Microservices Architecture</li></ul></div>
+      <div class="info-card"><h3>📊 Monitoring</h3><ul><li>UniFi Network Application</li><li>Uptime Kuma</li><li>Server Health Monitoring</li><li>Backup Job Verification</li></ul></div>
+    </div>
+  </div>
 
-        <section class="content-section">
-            <div class="section-header" onclick="toggleSection('servers-content')"><h2>Servers &amp; Storage</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
-            <div id="servers-content" class="section-content active">
-                <div class="about-grid">
-                    <article class="server-card">
-                        <div class="server-header">
-                            <div class="server-icon">💾</div>
-                            <div class="server-title"><h3>QNAP NAS</h3><div class="server-subtitle">Network Attached Storage</div></div>
-                            <span class="server-status status-online">● Online</span>
-                        </div>
-                        <div class="spec-list">
-                            <div class="spec-item"><span class="spec-label">Model</span><span class="spec-value">QNAP NAS</span></div>
-                            <div class="spec-item"><span class="spec-label">Primary Role</span><span class="spec-value">Backup</span></div>
-                            <div class="spec-item"><span class="spec-label">Storage</span><span class="spec-value">14 TB RAID 1</span></div>
-                        </div>
-                        <h4 style="color:var(--accent-color);margin-top:1.5rem;margin-bottom:0.75rem;">Services</h4>
-                        <div class="services-grid">
-                            <div class="service-badge"><div class="service-icon">💾</div><div class="service-name">Backups</div></div>
-                        </div>
-                    </article>
-                    <article class="server-card">
-                        <div class="server-header">
-                            <div class="server-icon">🖥️</div>
-                            <div class="server-title"><h3>Main Server</h3><div class="server-subtitle">Virtualisation &amp; Services</div></div>
-                            <span class="server-status status-online">● Online</span>
-                        </div>
-                        <div class="spec-list">
-                            <div class="spec-item"><span class="spec-label">OS</span><span class="spec-value">Windows Server</span></div>
-                            <div class="spec-item"><span class="spec-label">Virtualisation</span><span class="spec-value">Hyper-V</span></div>
-                            <div class="spec-item"><span class="spec-label">Primary Role</span><span class="spec-value">VMs &amp; File Shares</span></div>
-                        </div>
-                        <h4 style="color:var(--accent-color);margin-top:1.5rem;margin-bottom:0.75rem;">Services</h4>
-                        <div class="services-grid">
-                            <div class="service-badge"><div class="service-icon">🖥️</div><div class="service-name">Hyper-V</div></div>
-                            <div class="service-badge"><div class="service-icon">🔐</div><div class="service-name">Veeam</div></div>
-                            <div class="service-badge"><div class="service-icon">📁</div><div class="service-name">File Server</div></div>
-                        </div>
-                    </article>
-                    <article class="server-card">
-                        <div class="server-header">
-                            <div class="server-icon">🖥️</div>
-                            <div class="server-title"><h3>Plex Server</h3><div class="server-subtitle">Media Hosting</div></div>
-                            <span class="server-status status-online">● Online</span>
-                        </div>
-                        <div class="spec-list">
-                            <div class="spec-item"><span class="spec-label">OS</span><span class="spec-value">Ubuntu</span></div>
-                            <div class="spec-item"><span class="spec-label">Primary Role</span><span class="spec-value">Plex</span></div>
-                        </div>
-                    </article>
-                    <article class="server-card">
-                        <div class="server-header">
-                            <div class="server-icon">🧪</div>
-                            <div class="server-title"><h3>Proxmox Server</h3><div class="server-subtitle">Development &amp; Testing</div></div>
-                            <span class="server-status status-online">● Online</span>
-                        </div>
-                        <div class="spec-list">
-                            <div class="spec-item"><span class="spec-label">Purpose</span><span class="spec-value">Test Environment</span></div>
-                            <div class="spec-item"><span class="spec-label">Use Case</span><span class="spec-value">Lab &amp; Development</span></div>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
+</main>
 
-        <section class="content-section">
-            <div class="section-header" onclick="toggleSection('apps-content')"><h2>Applications &amp; Services</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
-            <div id="apps-content" class="section-content active">
-                <div class="about-grid">
-                    <article class="about-card"><h3>🎬 Media Services</h3><ul><li>Plex Media Server</li><li>Photo Management</li></ul></article>
-                    <article class="about-card"><h3>💾 Storage &amp; Backup</h3><ul><li>Veeam Backup &amp; Replication</li><li>Network File Shares</li><li>Automated Backup Jobs</li></ul></article>
-                    <article class="about-card"><h3>🐳 Containerised Services</h3><ul><li>Docker Containers</li><li>Linux-based Applications</li><li>Microservices</li><li>Easy Deployment</li></ul></article>
-                    <article class="about-card"><h3>🔧 Management Tools</h3><ul><li>UniFi Network Controller</li><li>Hyper-V Manager</li><li>Remote Access Tools</li></ul></article>
-                </div>
-            </div>
-        </section>
-
-        <section class="content-section">
-            <div class="section-header" onclick="toggleSection('network-content')"><h2>Network Topology</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
-            <div id="network-content" class="section-content active">
-                <div class="network-diagram">
-                    <div class="network-tier"><div class="tier-label">Internet Service Provider</div><div class="network-devices"><div class="network-device"><div class="device-name">🌐 Virgin Media</div><div class="device-model">ISP Connection</div></div></div></div>
-                    <div class="connection-line">↓</div>
-                    <div class="network-tier"><div class="tier-label">Network Gateway</div><div class="network-devices"><div class="network-device"><div class="device-name">🔒 USG Ultra</div><div class="device-model">UniFi USG Ultra</div></div></div></div>
-                    <div class="connection-line">↓</div>
-                    <div class="network-tier"><div class="tier-label">Network Infrastructure</div><div class="network-devices"><div class="network-device"><div class="device-name">🔌 UniFi Switch</div><div class="device-model">Managed PoE</div></div><div class="network-device"><div class="device-name">📡 U7 PRO</div><div class="device-model">WiFi 7 AP</div></div></div></div>
-                    <div class="connection-line">↓</div>
-                    <div class="network-tier"><div class="tier-label">Servers &amp; Devices</div><div class="network-devices"><div class="network-device"><div class="device-name">💾 QNAP NAS</div><div class="device-model">Backup Server</div></div><div class="network-device"><div class="device-name">🖥️ Main Server</div><div class="device-model">Hyper-V Host</div></div><div class="network-device"><div class="device-name">🧪 Proxmox</div><div class="device-model">Test Environment</div></div><div class="network-device"><div class="device-name">🎬 Plex</div><div class="device-model">Media Server</div></div></div></div>
-                </div>
-            </div>
-        </section>
-
-        <section class="content-section">
-            <div class="section-header" onclick="toggleSection('tech-content')"><h2>Technologies &amp; Tools</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
-            <div id="tech-content" class="section-content active">
-                <div class="about-grid">
-                    <article class="about-card"><h3>🌐 Networking</h3><ul><li>Ubiquiti UniFi Ecosystem</li><li>USG Ultra Gateway</li><li>WiFi 7 Access Points</li><li>Managed PoE Switches</li><li>VLAN Segmentation</li><li>UniFi Network Controller</li></ul></article>
-                    <article class="about-card"><h3>🔐 Security</h3><ul><li>UniFi Firewall &amp; Content Filtering</li><li>Cloudflare Tunnels</li><li>Zero Trust Architecture</li><li>Network Segmentation</li><li>Regular Security Updates</li></ul></article>
-                    <article class="about-card"><h3>💾 Storage &amp; Backup</h3><ul><li>QNAP NAS with RAID</li><li>Veeam Backup &amp; Replication</li><li>Daily Automated Backups</li><li>Network File Shares</li><li>Regular Recovery Testing</li></ul></article>
-                    <article class="about-card"><h3>🖥️ Virtualisation</h3><ul><li>Microsoft Hyper-V</li><li>Multiple Guest VMs</li><li>Proxmox Test &amp; Dev Environments</li><li>Isolated Network Segments</li><li>Resource Management</li></ul></article>
-                    <article class="about-card"><h3>🐳 Containerisation</h3><ul><li>Docker Containers</li><li>Linux-based Services</li><li>Microservices Architecture</li><li>Easy Deployment &amp; Updates</li><li>Resource Isolation</li></ul></article>
-                    <article class="about-card"><h3>📊 Monitoring</h3><ul><li>UniFi Network Application</li><li>Uptime Kuma</li><li>Server Health Monitoring</li><li>Network Performance Tracking</li><li>Backup Job Verification</li><li>Alert Notifications</li></ul></article>
-                </div>
-            </div>
-        </section>
-
-        <section class="content-section">
-            <div class="section-header" onclick="toggleSection('future-content')"><h2>Future Enhancements</h2><span class="toggle-icon" aria-hidden="true">▼</span></div>
-            <div id="future-content" class="section-content">
-                <div class="about-grid">
-                    <article class="about-card"><h3>🎯 Short Term</h3><ul><li>Expand storage capacity</li><li>Deploy more containerised services</li><li>Upgrade network switches</li></ul></article>
-                    <article class="about-card"><h3>🚀 Long Term</h3><ul><li>Build dedicated Kubernetes cluster</li><li>Expand virtualisation capacity</li></ul></article>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="main-footer">
-        <p>&copy; 2026 Sam Streets. All rights reserved.</p>
-    </footer>
-
-    <script src="../app.js"></script>
+<footer class="site-footer">
+  <p>© 2026 Sam Streets — streetsservices.co.uk</p>
+  <p><a href="../index.html">← Back to Home</a></p>
+</footer>
 </body>
 </html>
