@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Page not found — Streets Services">
+<meta name="author" content="Sam Streets">
+<meta name="theme-color" content="#00e5cc">
+<title>404 — Streets Services</title>
+<link rel="icon" type="image/png" sizes="32x32" href="pictures/favicon-32.png">
+<link rel="icon" href="pictures/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap"></noscript>
+<link rel="stylesheet" href="styles.css">
+<style>
+.error-page{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:120px 60px;text-align:center}
+.error-code{font-family:var(--font-display);font-size:clamp(80px,15vw,160px);font-weight:900;color:var(--accent);line-height:1;letter-spacing:-4px;margin-bottom:24px;opacity:0.15}
+.error-title{font-family:var(--font-display);font-size:clamp(24px,4vw,42px);font-weight:700;color:var(--text);letter-spacing:-1px;margin-bottom:16px}
+.error-msg{font-size:14px;color:var(--text-muted);margin-bottom:48px;line-height:1.8}
+.error-links{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.error-link{padding:12px 28px;border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;transition:background .2s,color .2s}
+.error-link:hover{background:var(--accent);color:#0e0e0e}
+.error-wrap{position:relative}
+.error-wrap .error-code{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;user-select:none}
+@media(max-width:768px){.error-page{padding:80px 24px}}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<nav class="nav-bar" aria-label="Main navigation">
+  <span class="nav-prompt" aria-hidden="true">sam@streets:~$</span>
+  <ul class="nav-links">
+    <li><a href="index.html">~/home</a></li>
+    <li><a href="index.html#resources">~/resources</a></li>
+    <li><a href="contact.html">~/contact</a></li>
+  </ul>
+  <span class="nav-right" aria-hidden="true">streetsservices.co.uk</span>
+</nav>
+
+<main id="main">
+  <div class="error-page">
+    <div class="error-wrap" aria-hidden="true">
+      <div class="error-code">404</div>
+    </div>
+    <h1 class="error-title">Page not found</h1>
+    <p class="error-msg">The page you're looking for doesn't exist or has been moved.<br>Let's get you back on track.</p>
+    <nav class="error-links" aria-label="Recovery options">
+      <a href="index.html" class="error-link">Go Home</a>
+      <a href="contact.html" class="error-link">Contact</a>
+      <a href="home-lab.html" class="error-link">Home Lab</a>
+    </nav>
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 Sam Streets — streetsservices.co.uk</p>
+</footer>
+
+</body>
+</html>

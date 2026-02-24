@@ -13,40 +13,51 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <title>Streets Services — Your Personal IT Hub</title>
-<link rel="icon" type="image/png" href="pictures/icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="pictures/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="pictures/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="pictures/apple-touch-icon.png">
+<link rel="icon" href="pictures/favicon.ico">
+<!-- Fonts: preconnect kept as fallback while self-hosting fonts/
+     Remove these two lines once fonts/ folder is in place -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap"></noscript>
 <link rel="canonical" href="https://streetsservices.co.uk/">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
+<a href="#main" class="skip-link">Skip to content</a>
+
 <nav class="nav-bar" aria-label="Main navigation">
-  <span class="nav-prompt">sam@streets:~$</span>
+  <span class="nav-prompt" aria-hidden="true">sam@streets:~$</span>
   <ul class="nav-links">
     <li><a href="#about">~/about</a></li>
     <li><a href="#tools">~/tools</a></li>
     <li><a href="#resources">~/resources</a></li>
   </ul>
-  <span class="nav-right">streetsservices.co.uk</span>
+  <span class="nav-right" aria-hidden="true">streetsservices.co.uk</span>
 </nav>
 
 <header class="hero">
   <p class="hero-label">IT Support Engineer · Sam Streets</p>
-  <h1>Streets<br><span class="accent">Services</span><span class="cursor"></span></h1>
+  <h1>Streets<br><span class="accent">Services</span><span class="cursor" aria-hidden="true"></span></h1>
   <p class="hero-sub">A personal IT hub. Tools, resources, and knowledge built by a Second Line Support Engineer with a passion for clean systems and good craft.</p>
-  <div class="hero-meta">
+  <div class="hero-meta" aria-label="Quick stats">
     <div class="hero-meta-item"><span class="num">20+</span><span class="label">Tools &amp; Utilities</span></div>
     <div class="hero-meta-item"><span class="num">4+</span><span class="label">Years Experience</span></div>
     <div class="hero-meta-item"><span class="num">∞</span><span class="label">Tabs Open</span></div>
   </div>
 </header>
 
-<section class="section" id="about">
+<main id="main">
+
+<section class="section" id="about" aria-labelledby="about-heading">
   <div class="section-header">
-    <span class="section-num">01 —</span>
-    <h2 class="section-title">About Me</h2>
-    <div class="section-line"></div>
+    <span class="section-num" aria-hidden="true">01 —</span>
+    <h2 class="section-title" id="about-heading">About Me</h2>
+    <div class="section-line" aria-hidden="true"></div>
   </div>
   <div class="about-grid">
     <div class="about-card">
@@ -69,16 +80,16 @@
     </div>
     <div class="about-card">
       <h3>Contact</h3>
-      <p>Reach me at <a href="mailto:sam@streetsservices.co.uk">sam@streetsservices.co.uk</a> or connect on <a href="https://www.linkedin.com/in/sam-streets-535a90187/" target="_blank" rel="noopener noreferrer">LinkedIn</a>. Always happy to chat tech.</p>
+      <p>Reach me at <a href="mailto:sam@streetsservices.co.uk">sam@streetsservices.co.uk</a> or connect on <a href="https://www.linkedin.com/in/sam-streets-535a90187/" target="_blank" rel="noopener noreferrer">LinkedIn <span class="visually-hidden">(opens in new tab)</span></a>. Always happy to chat tech.</p>
     </div>
   </div>
 </section>
 
-<section class="section" id="tools">
+<section class="section" id="tools" aria-labelledby="tools-heading">
   <div class="section-header">
-    <span class="section-num">02 —</span>
-    <h2 class="section-title">Tools &amp; Utilities</h2>
-    <div class="section-line"></div>
+    <span class="section-num" aria-hidden="true">02 —</span>
+    <h2 class="section-title" id="tools-heading">Tools &amp; Utilities</h2>
+    <div class="section-line" aria-hidden="true"></div>
   </div>
   <div class="tools-cta">
     <div class="tools-cta-text">
@@ -86,33 +97,37 @@
       <h3>tools.streetsservices.co.uk</h3>
       <p class="desc">20+ free utilities — subnet calculators, password generators, converters, food pickers, and more. No sign-up required, works in any browser.</p>
     </div>
-    <a href="https://tools.streetsservices.co.uk" class="tools-cta-link" target="_blank" rel="noopener noreferrer">Open Tools Hub &nbsp;↗</a>
+    <a href="https://tools.streetsservices.co.uk" class="tools-cta-link" target="_blank" rel="noopener noreferrer">
+      Open Tools Hub <span aria-hidden="true">&nbsp;↗</span><span class="visually-hidden">(opens in new tab)</span>
+    </a>
   </div>
 </section>
 
-<section class="section" id="resources">
+<section class="section" id="resources" aria-labelledby="resources-heading">
   <div class="section-header">
-    <span class="section-num">03 —</span>
-    <h2 class="section-title">Resources</h2>
-    <div class="section-line"></div>
+    <span class="section-num" aria-hidden="true">03 —</span>
+    <h2 class="section-title" id="resources-heading">Resources</h2>
+    <div class="section-line" aria-hidden="true"></div>
   </div>
   <div class="resources-grid">
     <a href="home-lab.html" class="resource-card">
-      <span class="icon">🖥️</span>
+      <span class="icon" aria-hidden="true">🖥️</span>
       <h3>Home Lab</h3>
       <p>My home infrastructure — servers, services, and network topology.</p>
     </a>
     <a href="contact.html" class="resource-card">
-      <span class="icon">✉️</span>
+      <span class="icon" aria-hidden="true">✉️</span>
       <h3>Contact</h3>
       <p>Get in touch via email or the contact form. Response time: reasonable.</p>
     </a>
   </div>
 </section>
 
+</main>
+
 <footer>
   <p>© 2026 Sam Streets — streetsservices.co.uk</p>
-  <p><a href="mailto:sam@streetsservices.co.uk">sam@streetsservices.co.uk</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/sam-streets-535a90187/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+  <p><a href="mailto:sam@streetsservices.co.uk">sam@streetsservices.co.uk</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/sam-streets-535a90187/" target="_blank" rel="noopener noreferrer">LinkedIn <span class="visually-hidden">(opens in new tab)</span></a></p>
 </footer>
 
 <script src="app.js" defer></script>

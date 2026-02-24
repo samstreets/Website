@@ -4,21 +4,33 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Contact Sam Streets — IT support, consultations, or questions.">
+<meta name="author" content="Sam Streets">
+<meta name="theme-color" content="#00e5cc">
 <title>Contact — Streets Services</title>
-<link rel="icon" type="image/png" href="../pictures/icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="../pictures/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../pictures/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../pictures/apple-touch-icon.png">
+<link rel="icon" href="../pictures/favicon.ico">
+<!-- Fonts: remove once fonts/ folder is self-hosted -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap"></noscript>
+<!-- FIX: was styles.css (wrong path), corrected to ../styles.css -->
+<link rel="stylesheet" href="../styles.css">
 </head>
 <body>
 
-<nav class="nav-bar">
-  <span class="nav-prompt">sam@streets:~$</span>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<nav class="nav-bar" aria-label="Main navigation">
+  <span class="nav-prompt" aria-hidden="true">sam@streets:~$</span>
   <ul class="nav-links">
     <li><a href="../index.html">~/home</a></li>
     <li><a href="../index.html#resources">~/resources</a></li>
+    <li><a href="contact.html" aria-current="page">~/contact</a></li>
   </ul>
-  <span class="nav-right">streetsservices.co.uk</span>
+  <span class="nav-right" aria-hidden="true">streetsservices.co.uk</span>
 </nav>
 
 <header class="page-header">
@@ -27,37 +39,37 @@
   <p>Questions, IT support enquiries, or just want to say hello.</p>
 </header>
 
-<nav class="breadcrumb">
+<nav class="breadcrumb" aria-label="Breadcrumb">
   <a href="../index.html">Home</a>
-  <span class="sep">&#8594;</span>
-  <span>Contact</span>
+  <span class="sep" aria-hidden="true">&#8594;</span>
+  <span aria-current="page">Contact</span>
 </nav>
 
-<main class="content">
+<main id="main" class="content">
   <div class="contact-layout">
     <div class="contact-form-area">
-      <div id="status-msg" class="status-msg" role="alert"></div>
-      <form id="contact-form" novalidate>
+      <div id="status-msg" class="status-msg" role="alert" aria-live="polite"></div>
+      <form id="contact-form" novalidate aria-label="Contact form">
         <div class="form-row">
           <div class="form-group">
-            <label for="first-name">First Name <span class="required">*</span></label>
-            <input type="text" id="first-name" name="firstName" placeholder="John" required>
+            <label for="first-name">First Name <span class="required" aria-label="required">*</span></label>
+            <input type="text" id="first-name" name="firstName" placeholder="John" required autocomplete="given-name">
           </div>
           <div class="form-group">
-            <label for="last-name">Last Name <span class="required">*</span></label>
-            <input type="text" id="last-name" name="lastName" placeholder="Smith" required>
+            <label for="last-name">Last Name <span class="required" aria-label="required">*</span></label>
+            <input type="text" id="last-name" name="lastName" placeholder="Smith" required autocomplete="family-name">
           </div>
         </div>
         <div class="form-group">
-          <label for="email">Email Address <span class="required">*</span></label>
-          <input type="email" id="email" name="email" placeholder="john@example.com" required>
+          <label for="email">Email Address <span class="required" aria-label="required">*</span></label>
+          <input type="email" id="email" name="email" placeholder="john@example.com" required autocomplete="email">
         </div>
         <div class="form-group">
           <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" name="phone" placeholder="+44 7700 900000">
+          <input type="tel" id="phone" name="phone" placeholder="+44 7700 900000" autocomplete="tel">
         </div>
         <div class="form-group">
-          <label for="subject">Subject <span class="required">*</span></label>
+          <label for="subject">Subject <span class="required" aria-label="required">*</span></label>
           <select id="subject" name="subject" required>
             <option value="">Select a subject...</option>
             <option value="general">General Enquiry</option>
@@ -68,37 +80,37 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="message">Message <span class="required">*</span></label>
+          <label for="message">Message <span class="required" aria-label="required">*</span></label>
           <textarea id="message" name="message" placeholder="Tell me about your project or question..." required></textarea>
         </div>
         <button type="submit" class="submit-btn" id="submit-btn">Send Message</button>
-        <p class="formspree-note">To receive form submissions by email, replace YOUR_FORM_ID in app.js with your <a href="https://formspree.io" target="_blank" rel="noopener noreferrer">Formspree</a> ID. Until then the form opens your email client.</p>
+        <p class="formspree-note">To receive form submissions by email, replace YOUR_FORM_ID in app.js with your <a href="https://formspree.io" target="_blank" rel="noopener noreferrer">Formspree <span class="visually-hidden">(opens in new tab)</span></a> ID. Until then the form opens your email client.</p>
       </form>
     </div>
     <div class="contact-info-area">
       <div class="contact-method">
-        <span class="cm-icon">&#128231;</span>
+        <span class="cm-icon" aria-hidden="true">&#128231;</span>
         <div>
           <div class="cm-label">Email</div>
           <div class="cm-value"><a href="mailto:sam@streetsservices.co.uk">sam@streetsservices.co.uk</a><br>Best for detailed enquiries.</div>
         </div>
       </div>
       <div class="contact-method">
-        <span class="cm-icon">&#128188;</span>
+        <span class="cm-icon" aria-hidden="true">&#128188;</span>
         <div>
           <div class="cm-label">LinkedIn</div>
-          <div class="cm-value"><a href="https://www.linkedin.com/in/sam-streets-535a90187/" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a><br>Professional networking.</div>
+          <div class="cm-value"><a href="https://www.linkedin.com/in/sam-streets-535a90187/" target="_blank" rel="noopener noreferrer">Connect on LinkedIn <span class="visually-hidden">(opens in new tab)</span></a><br>Professional networking.</div>
         </div>
       </div>
       <div class="contact-method">
-        <span class="cm-icon">&#128336;</span>
+        <span class="cm-icon" aria-hidden="true">&#128336;</span>
         <div>
           <div class="cm-label">Response Time</div>
           <div class="cm-value">Typically within 24&#8211;48 hours on business days.</div>
         </div>
       </div>
       <div class="contact-method">
-        <span class="cm-icon">&#128205;</span>
+        <span class="cm-icon" aria-hidden="true">&#128205;</span>
         <div>
           <div class="cm-label">Location</div>
           <div class="cm-value">Based in the UK.</div>
@@ -113,6 +125,7 @@
   <p><a href="../index.html">&larr; Back to Home</a></p>
 </footer>
 
-<script src="app.js" defer></script>
+<!-- FIX: was app.js (wrong path), corrected to ../app.js -->
+<script src="../app.js" defer></script>
 </body>
 </html>
